@@ -1,0 +1,1 @@
+./Scripts/prepare_dependencies__build__run.sh /home/ilya_external/Ogre/ogre-next/ /home/ilya_external/Ogre/ogre-next-deps/ /home/ilya_external/JoltPhysics/
