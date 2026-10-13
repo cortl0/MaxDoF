@@ -4,12 +4,11 @@
 # GPL-3.0 license
 
 # Usage:
-# Note: This file must be run from the project root directory
-# ./Scripts/prepare_dependencies__build__run.sh [path-jolt-physics [path-ogre-next-deps [path-ogre-next]]]
+# Note: This file must be run from the ./Scripts/ directory
+# ./prepare_dependencies__build__run.sh [path-jolt-physics [path-ogre-next-deps [path-ogre-next]]]
 
-MAXDOF_PATH=$(pwd)
+MAXDOF_PATH=$(pwd)/..
 MAXDOF_PATH_DEPENDENCIES=${MAXDOF_PATH}/../MaxDoF-Dependencies
-mkdir ${MAXDOF_PATH_DEPENDENCIES}
 
 MAXDOF_DIR_JOLT_PHYSICS="jolt-physics"
 MAXDOF_DIR_OGRE_NEXT_DEPS="ogre-next-deps"
@@ -19,9 +18,9 @@ MAXDOF_DEFAULT_PATH_JOLT_PHYSICS="${MAXDOF_PATH_DEPENDENCIES}/${MAXDOF_DIR_JOLT_
 MAXDOF_DEFAULT_PATH_OGRE_NEXT_DEPS="${MAXDOF_PATH_DEPENDENCIES}/${MAXDOF_DIR_OGRE_NEXT_DEPS}"
 MAXDOF_DEFAULT_PATH_OGRE_NEXT="${MAXDOF_PATH_DEPENDENCIES}/${MAXDOF_DIR_OGRE_NEXT}"
 
-MAXDOF_PATH_JOLT_PHYSICS="${3:-${MAXDOF_DEFAULT_PATH_JOLT_PHYSICS}}"
+MAXDOF_PATH_JOLT_PHYSICS="${1:-${MAXDOF_DEFAULT_PATH_JOLT_PHYSICS}}"
 MAXDOF_PATH_OGRE_NEXT_DEPS="${2:-${MAXDOF_DEFAULT_PATH_OGRE_NEXT_DEPS}}"
-MAXDOF_PATH_OGRE_NEXT="${1:-${MAXDOF_DEFAULT_PATH_OGRE_NEXT}}"
+MAXDOF_PATH_OGRE_NEXT="${3:-${MAXDOF_DEFAULT_PATH_OGRE_NEXT}}"
 
 echo "MAXDOF_PATH_OGRE_NEXT: ${MAXDOF_PATH_OGRE_NEXT}"
 echo "MAXDOF_PATH_OGRE_NEXT_DEPS: ${MAXDOF_PATH_OGRE_NEXT_DEPS}"
@@ -31,6 +30,8 @@ sudo apt update || exit $?
 sudo apt-get install -y git || exit $?
 echo "Installing dependencies of OGRE Next" 
 sudo apt-get install -y libfreetype6-dev libfreeimage-dev libzzip-dev libxrandr-dev libxaw7-dev freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev libxcb-randr0-dev libx11-xcb-dev libxcb-keysyms1-dev doxygen graphviz python3-clang libsdl2-dev cmake ninja-build || exit $?
+
+mkdir ${MAXDOF_PATH_DEPENDENCIES}
 
 if [ ! -d "${MAXDOF_PATH_JOLT_PHYSICS}" ]; then
     echo "Cloning https://github.com/jrouwe/joltphysics"
@@ -66,7 +67,7 @@ if [ ! -d "${MAXDOF_PATH_OGRE_NEXT}" ]; then
     cd ${MAXDOF_PATH_OGRE_NEXT}/build
     mkdir Debug
     cd Debug
-    cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Debug ../../ || exit $?
+    cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Debug ../.. || exit $?
     make -j12 || exit $?
     #make install || exit $?
 
@@ -74,7 +75,7 @@ if [ ! -d "${MAXDOF_PATH_OGRE_NEXT}" ]; then
     #cd ${MAXDOF_PATH_OGRE_NEXT}/build
     #mkdir Release
     #cd Release
-    #cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Release ../../ || exit $?
+    #cmake -D OGRE_BUILD_SAMPLES2=1 -D OGRE_CONFIG_THREAD_PROVIDER=0 -D OGRE_CONFIG_THREADS=0 -D CMAKE_BUILD_TYPE=Release ../.. || exit $?
     #make -j12 || exit $?
     #make install || exit $?
 fi

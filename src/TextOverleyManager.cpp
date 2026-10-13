@@ -88,7 +88,7 @@ namespace MaxDoF
             finalText += " ms\n";
             finalText += "Avg FPS:\t";
             finalText += Ogre::StringConverter::toString( frameStats->getRollingAverageFps() );
-            finalText += "\n\nPress F1 to toggle help";
+            //finalText += "\n\nPress F1 to toggle help";
         }
 
         mDebugText->setCaption( finalText );

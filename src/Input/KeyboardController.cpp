@@ -21,9 +21,10 @@ namespace MaxDoF::Input
 
     bool KeyboardController::keyPressed( const SDL_KeyboardEvent &arg )
     {
-        if( arg.keysym.scancode == SDL_SCANCODE_LSHIFT )
+        /*if( arg.keysym.scancode == SDL_SCANCODE_LSHIFT )
             mSpeedModifier = true;
-        else if( arg.keysym.scancode == SDL_SCANCODE_W )
+        else*/
+        if( arg.keysym.scancode == SDL_SCANCODE_W )
             mWASD[0] = true;
         else if( arg.keysym.scancode == SDL_SCANCODE_A )
             mWASD[1] = true;
@@ -33,7 +34,7 @@ namespace MaxDoF::Input
             mWASD[3] = true;
         else if( arg.keysym.scancode == SDL_SCANCODE_SPACE )
             mSlideUpDown[0] = true;
-        else if( arg.keysym.scancode == SDL_SCANCODE_LCTRL )
+        else if( arg.keysym.scancode == SDL_SCANCODE_LSHIFT )
             mSlideUpDown[1] = true;
         else
             return false;
@@ -43,9 +44,10 @@ namespace MaxDoF::Input
 
     bool KeyboardController::keyReleased( const SDL_KeyboardEvent &arg )
     {
-        if( arg.keysym.scancode == SDL_SCANCODE_LSHIFT )
+        /*if( arg.keysym.scancode == SDL_SCANCODE_LSHIFT )
             mSpeedModifier = false;
-        else if( arg.keysym.scancode == SDL_SCANCODE_W )
+        else*/
+        if( arg.keysym.scancode == SDL_SCANCODE_W )
             mWASD[0] = false;
         else if( arg.keysym.scancode == SDL_SCANCODE_A )
             mWASD[1] = false;
@@ -55,7 +57,7 @@ namespace MaxDoF::Input
             mWASD[3] = false;
         else if( arg.keysym.scancode == SDL_SCANCODE_SPACE )
             mSlideUpDown[0] = false;
-        else if( arg.keysym.scancode == SDL_SCANCODE_LCTRL )
+        else if( arg.keysym.scancode == SDL_SCANCODE_LSHIFT )
             mSlideUpDown[1] = false;
         else
             return false;
