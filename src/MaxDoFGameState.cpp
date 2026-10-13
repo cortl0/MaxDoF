@@ -43,68 +43,80 @@ namespace MaxDoF
         mGraphicsSystem = graphicsSystem;
         mTextOverleyManager._notifyGraphicsSystem(graphicsSystem);
     }
-    //-----------------------------------------------------------------------------------
-    void MaxDoFGameState::createScene01()
+
+    void MaxDoFGameState::createCube()
+    {
+        auto* node = createGraphicShape(ortCubeMeshName);
+        node->setPosition( Ogre::Vector3( 2.0f, 0.0f, -5.0f ) );
+        // node->setOrientation( Ogre::Quaternion::IDENTITY );
+        // node->setScale(Ogre::Vector3::UNIT_SCALE);
+        mPhysicsManager.createEntity( node, 1.0f, 1000.0f );
+    }
+
+    void MaxDoFGameState::createLight()
     {
         Ogre::SceneManager *sceneManager = mGraphicsSystem->getSceneManager();
-
-        // Свет
-        Ogre::Light *light = sceneManager->createLight();
         Ogre::SceneNode *lightNode = sceneManager->getRootSceneNode()->createChildSceneNode();
+        Ogre::Light *light = sceneManager->createLight();
         lightNode->attachObject( light );
         light->setType( Ogre::Light::LT_DIRECTIONAL );
-        light->setDirection( Ogre::Vector3( 1.0f, -1.0f, -1.0f ).normalisedCopy() );
+        light->setDirection( Ogre::Vector3( -1.0f, -1.0f, -1.0f ).normalisedCopy() );
+    }
 
-        // Инициализируем физику через ТОЧКУ (так как это объект по значению)
-        mPhysicsManager.initialize( mMaxBodiesLimit );
-
-        // ================= СОЗДАНИЕ КОРАБЛЯ В ФОРМАТЕ V2 ПРЯМО В ПАМЯТИ =================
-
-        // 1. Генерируем меш сферы v2 с радиусом 30 юнитов
-        Utils::createProceduralSphereV2(sceneManager, "MyV2SpaceShipSphere", 3.0f, 32, 32);
-
-        // 2. Создаем узел корабля
-        Ogre::SceneNode *shipNode = sceneManager->getRootSceneNode()->createChildSceneNode( Ogre::SCENE_DYNAMIC );
-        shipNode->setPosition( Ogre::Vector3::ZERO );
-
-        // 3. Создаем Item на основе созданного в памяти v2-меша (теперь никакой ошибки сериализатора!)
-        Ogre::Item *shipMeshItem = sceneManager->createItem(
-            "MyV2SpaceShipSphere",
+    Ogre::SceneNode* MaxDoFGameState::createGraphicShape(const Ogre::String& meshName)
+    {
+        auto* sceneManager = mGraphicsSystem->getSceneManager();
+        auto* node = sceneManager->getRootSceneNode()->createChildSceneNode( Ogre::SCENE_DYNAMIC );
+        Ogre::Item *item = sceneManager->createItem(
+            meshName,
             Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
             Ogre::SCENE_DYNAMIC
         );
-        shipNode->attachObject( shipMeshItem );
+        node->attachObject( item );
+        return node;
+    }
 
-        // 4. Прикрепляем камеру
+    void MaxDoFGameState::createSphere()
+    {
+        auto* node = createGraphicShape(ortSphereMeshName);
+        node->setPosition( Ogre::Vector3( -2.0f, 0.0f, -5.0f ) );
+        // node->setOrientation( Ogre::Quaternion::IDENTITY );
+        // node->setScale(Ogre::Vector3::UNIT_SCALE);
+        mPhysicsManager.createEntity( node, 1.0f, 1000.0f );
+    }
+
+    void MaxDoFGameState::createShip()
+    {
+        auto* shipNode = createGraphicShape(ortSphereMeshName);
+
         Ogre::Camera *camera = mGraphicsSystem->getCamera();
         if( camera->getParentSceneNode() )
             camera->getParentSceneNode()->detachObject( camera );
         shipNode->attachObject( camera );
         camera->setPosition( Ogre::Vector3::ZERO );
-        //camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
+        // camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
-        // ================= КУБ ПЕРЕД НОСОМ =================
-        Ogre::Item *cubeItem = sceneManager->createItem(
-            "Cube_d.mesh",
-            Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
-            Ogre::SCENE_DYNAMIC
-        );
-        Ogre::SceneNode *cubeNode = sceneManager->getRootSceneNode()->createChildSceneNode( Ogre::SCENE_DYNAMIC );
-        cubeNode->attachObject( cubeItem );
-        cubeNode->setPosition( Ogre::Vector3( 0.0f, 0.0f, -10.0f ) );
-        cubeNode->yaw( Ogre::Degree( 35.0f ) );
-        cubeNode->pitch( Ogre::Degree( 15.0f ) );
-
-        // Регистрируем корабль в векторе физики через ТОЧКУ
-        mShip = mPhysicsManager.createEntity( shipNode, 3.0f, 1500.0f );
-
+        mShip = mPhysicsManager.createEntity( shipNode, 1.0f, 2000.0f );
         mSpacecraftController = std::make_unique<SpacecraftController>(
             mGraphicsSystem,
             shipNode,
-            mPhysicsManager.getBodyInterface(), // Получаем JPH::BodyInterface
-            &mShip.physId                 // Передаем адрес JPH::BodyID нашего корабля
+            mPhysicsManager.getBodyInterface(),
+            &mShip.physId
         );
+    }
+
+    void MaxDoFGameState::createScene01()
+    {
+        Ogre::SceneManager *sceneManager = mGraphicsSystem->getSceneManager();
+        mPhysicsManager.initialize( mMaxBodiesLimit );
+        Utils::createProceduralSphereV2(sceneManager, ortSphereMeshName, 0.5f, 16, 16);
+        Utils::createProceduralCubeV2( sceneManager, ortCubeMeshName, 0.5f, 0.5f, 0.5f );
+
+        createLight();
+        createShip();
+        createCube();
+        createSphere();
 
         mTextOverleyManager.createCrosshair();
         mTextOverleyManager.createDebugTextOverlay();

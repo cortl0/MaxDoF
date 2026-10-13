@@ -42,10 +42,18 @@ namespace MaxDoF
 
         Demo::GraphicsSystem *mGraphicsSystem;
 
+        const Ogre::String ortSphereMeshName{"MyV2Sphere"};
+        const Ogre::String ortCubeMeshName{"MyV2Cube"};
+
     public:
         MaxDoFGameState( const Ogre::String &helpDescription );
         ~MaxDoFGameState() override;
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
+        void createCube();
+        void createLight();
+        void createShip();
+        Ogre::SceneNode* createGraphicShape( const Ogre::String& meshName );
+        void createSphere();
         void createScene01() override;
         void update( float timeSinceLast ) override;
         void keyPressed( const SDL_KeyboardEvent &arg ) override;

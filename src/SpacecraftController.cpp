@@ -61,7 +61,7 @@ namespace MaxDoF
             // МГНОВЕННАЯ СИНХРОНИЗАЦИЯ НОВОГО ВРАЩЕНИЯ В JOLT:
             Ogre::Quaternion ogreQuat = mShipNode->getOrientation();
             JPH::Quat joltQuat( ogreQuat.x, ogreQuat.y, ogreQuat.z, ogreQuat.w );
-            mBodyInterface->SetRotation( *mShipBodyId, joltQuat, JPH::EActivation::DontActivate );
+            mBodyInterface->SetRotation( *mShipBodyId, joltQuat, JPH::EActivation::Activate );
 
             result = true;
         }

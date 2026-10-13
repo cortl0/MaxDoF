@@ -5,22 +5,87 @@
 #include "OgreManualObject2.h"
 
 #include "OgreMesh2.h"
+#include "OgreMeshManager.h"
+#include "OgreMeshManager2.h"
 
 namespace MaxDoF::Utils
 {
+    bool testName(const Ogre::String &meshName)
+    {
+        Ogre::MeshManager *meshManager = Ogre::MeshManager::getSingletonPtr();
+        return meshManager->getByName(meshName).operator bool();
+    }
+
+    void createProceduralCubeV2( Ogre::SceneManager *sceneManager, const Ogre::String &meshName, float hX, float hY, float hZ )
+    {
+        if (testName(meshName))
+            return;
+
+        Ogre::ManualObject* manual = sceneManager->createManualObject();
+        
+        // Используем стандартный HLMS-материал "BaseWhite", который умеет обрабатывать свет!
+        manual->begin("BaseWhite", Ogre::OT_TRIANGLE_LIST); 
+
+        // --- 1. ПЕРЕДНЯЯ ГРАНЬ (Нормаль смотрит строго на вас: 0, 0, 1) ---
+        manual->position(-hX, -hY,  hZ); manual->normal(0, 0, 1);
+        manual->position( hX, -hY,  hZ); manual->normal(0, 0, 1);
+        manual->position( hX,  hY,  hZ); manual->normal(0, 0, 1);
+        manual->position(-hX,  hY,  hZ); manual->normal(0, 0, 1);
+        manual->quad(0, 1, 2, 3);
+
+        // --- 2. ЗАДНЯЯ ГРАНЬ (Нормаль смотрит вглубь экрана: 0, 0, -1) ---
+        manual->position( hX, -hY, -hZ); manual->normal(0, 0, -1);
+        manual->position(-hX, -hY, -hZ); manual->normal(0, 0, -1);
+        manual->position(-hX,  hY, -hZ); manual->normal(0, 0, -1);
+        manual->position( hX,  hY, -hZ); manual->normal(0, 0, -1);
+        manual->quad(4, 5, 6, 7);
+
+        // --- 3. ЛЕВАЯ ГРАНЬ (Нормаль смотрит влево: -1, 0, 0) ---
+        manual->position(-hX, -hY, -hZ); manual->normal(-1, 0, 0);
+        manual->position(-hX, -hY,  hZ); manual->normal(-1, 0, 0);
+        manual->position(-hX,  hY,  hZ); manual->normal(-1, 0, 0);
+        manual->position(-hX,  hY, -hZ); manual->normal(-1, 0, 0);
+        manual->quad(8, 9, 10, 11);
+
+        // --- 4. ПРАВАЯ ГРАНЬ (Нормаль смотрит вправо: 1, 0, 0) ---
+        manual->position( hX, -hY,  hZ); manual->normal(1, 0, 0);
+        manual->position( hX, -hY, -hZ); manual->normal(1, 0, 0);
+        manual->position( hX,  hY, -hZ); manual->normal(1, 0, 0);
+        manual->position( hX,  hY,  hZ); manual->normal(1, 0, 0);
+        manual->quad(12, 13, 14, 15);
+
+        // --- 5. ВЕРХНЯЯ ГРАНЬ (Нормаль смотрит вверх: 0, 1, 0) ---
+        manual->position(-hX,  hY,  hZ); manual->normal(0, 1, 0);
+        manual->position( hX,  hY,  hZ); manual->normal(0, 1, 0);
+        manual->position( hX,  hY, -hZ); manual->normal(0, 1, 0);
+        manual->position(-hX,  hY, -hZ); manual->normal(0, 1, 0);
+        manual->quad(16, 17, 18, 19);
+
+        // --- 6. НИЖНЯЯ ГРАНЬ (Нормаль смотрит вниз: 0, -1, 0) ---
+        manual->position(-hX, -hY, -hZ); manual->normal(0, -1, 0);
+        manual->position( hX, -hY, -hZ); manual->normal(0, -1, 0);
+        manual->position( hX, -hY,  hZ); manual->normal(0, -1, 0);
+        manual->position(-hX, -hY,  hZ); manual->normal(0, -1, 0);
+        manual->quad(20, 21, 22, 23);
+
+        manual->end();
+
+        Ogre::MeshPtr mesh = manual->convertToMesh(meshName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        mesh->load();
+        sceneManager->destroyManualObject(manual);
+    }
+
     void createProceduralSphereV2(Ogre::SceneManager* sceneManager, const Ogre::String& meshName, float radius, unsigned int rings, unsigned int segments)
     {
-        Ogre::ManualObject* manual = sceneManager->createManualObject(Ogre::SCENE_DYNAMIC);
+        if (testName(meshName))
+            return;
 
-        // 1. Обязательно резервируем место в видеопамяти (Estimate)
-        // Количество вершин = (rings + 1) * (segments + 1)
-        // Количество индексов для треугольников = rings * segments * 6
+        auto* manual = sceneManager->createManualObject();
         unsigned int numVertices = (rings + 1) * (segments + 1);
         unsigned int numIndices = rings * segments * 6;
         manual->estimateVertexCount(numVertices);
         manual->estimateIndexCount(numIndices);
 
-        // Начинаем геометрию
         manual->begin("BaseWhite", Ogre::OT_TRIANGLE_LIST);
 
         float fDeltaRingAngle = (Ogre::Math::PI / rings);
@@ -72,12 +137,9 @@ namespace MaxDoF::Utils
             }
         }
 
-        manual->end(); // Теперь индексы определены, и метод выполнится успешно!
-
-        // Превращаем в Mesh и принудительно активируем в памяти
+        manual->end();
         Ogre::MeshPtr mesh = manual->convertToMesh(meshName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
         mesh->load();
-
         sceneManager->destroyManualObject(manual);
     }
 }  // namespace MaxDoF::Utils
