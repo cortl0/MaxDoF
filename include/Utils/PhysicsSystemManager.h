@@ -72,7 +72,8 @@ namespace MaxDoF
 
         void initialize(unsigned int maxBodies = 1024);
         JPH::BodyID createShipBody(float radius, float massInKg);
-        World::Entity createPhysBox(Ogre::SceneNode* ogreNode, const Ogre::Vector3& size, float massInKg);
+        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Ogre::SceneNode* ogreNode, float massInKg);
+        World::Entity createPhysBox(Ogre::SceneNode* ogreNode, const Ogre::Vector3& halfSize, float massInKg);
         World::Entity createPhysSphere(Ogre::SceneNode* ogreNode, float radius, float massInKg);
         World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);
         void update(float timeSinceLast);

@@ -1,12 +1,12 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
-#include "OgreSceneManager.h"
+#include "Utils/MeshProcedures.h"
 
-#include "OgreManualObject2.h"
-
-#include "OgreMesh2.h"
-#include "OgreMeshManager.h"
-#include "OgreMeshManager2.h"
+#include <OgreSceneManager.h>
+#include <OgreManualObject2.h>
+#include <OgreMesh2.h>
+#include <OgreMeshManager.h>
+#include <OgreMeshManager2.h>
 
 namespace MaxDoF::Utils
 {

@@ -2,6 +2,9 @@
 // GPL-3.0 license
 #include "Utils/PhysicsSystemManager.h"
 
+#include <algorithm>
+#include <thread>
+
 #include <Jolt/Jolt.h>
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
@@ -13,9 +16,9 @@
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 
-#include "OgreSceneNode.h"
-#include <algorithm>
-#include <thread>
+#include <OgreSceneNode.h>
+
+#include "Utils/Converters.h"
 
 namespace MaxDoF
 {
@@ -133,63 +136,34 @@ namespace MaxDoF
         ogreNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
     }
 
-    World::Entity PhysicsSystemManager::createPhysBox(Ogre::SceneNode* ogreNode, const Ogre::Vector3& size, float massInKg)
+    JPH::BodyID PhysicsSystemManager::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Ogre::SceneNode* ogreNode, float massInKg)
     {
-        // 1. Jolt Physics требует полуразмеры (half-extents) — расстояние от центра до грани
-        JPH::Vec3 halfExtents(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f);
-        
-        // 2. Создаем настройки формы коробки
-        JPH::BoxShapeSettings boxSettings(halfExtents);
-        JPH::ShapeRefC boxShape = boxSettings.Create().Get();
-
-        // 3. Считываем начальную позицию и вращение из узла Ogre-Next
-        Ogre::Vector3 ogrePos = ogreNode->getPosition();
-        JPH::RVec3 startPosition(ogrePos.x, ogrePos.y, ogrePos.z);
-        
-        Ogre::Quaternion ogreQuat = ogreNode->getOrientation();
-        JPH::Quat startRotation(ogreQuat.x, ogreQuat.y, ogreQuat.z, ogreQuat.w);
-
-        // 4. Настраиваем физическое динамическое тело
         JPH::BodyCreationSettings bodySettings(
-            boxShape, startPosition, startRotation, 
+            shapeResult.Get(),
+            Utils::OgreVector3ToJphRVec3( ogreNode->getPosition() ),
+            Utils::OgreQuaternionToJphQuat( ogreNode->getOrientation() ), 
             JPH::EMotionType::Dynamic, JPH::ObjectLayer(0)
         );
-        
-        // Jolt автоматически посчитает тензор инерции для куба, чтобы он правильно крутился при ударах
+
         bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
         bodySettings.mMassPropertiesOverride.mMass = massInKg;
         bodySettings.mLinearDamping = 0.0f;
         bodySettings.mAngularDamping = 0.0f;
 
-        // 5. Создаем тело в физическом мире
-        JPH::BodyID bodyId = mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
+        return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
+    }
 
+    World::Entity PhysicsSystemManager::createPhysBox(Ogre::SceneNode* ogreNode, const Ogre::Vector3& halfSize, float massInKg)
+    {
+        JPH::BoxShapeSettings shapeSettings(Utils::OgreVector3ToJphRVec3( halfSize ));
+        auto bodyId = setBodySettings(shapeSettings.Create(), ogreNode, massInKg);
         return createEntity(ogreNode, bodyId);
     }
 
     World::Entity PhysicsSystemManager::createPhysSphere(Ogre::SceneNode* ogreNode, float radius, float massInKg)
     {
-        JPH::SphereShapeSettings sphereSettings(radius);
-        JPH::ShapeRefC shipShape = sphereSettings.Create().Get();
-
-        JPH::RVec3 startPosition(ogreNode->getPosition().x, ogreNode->getPosition().y, ogreNode->getPosition().z);
-
-        // Правильный порядок кватерниона из Ogre в Jolt (x, y, z, w)
-        Ogre::Quaternion ogreQuat = ogreNode->getOrientation();
-        JPH::Quat startRotation(ogreQuat.x, ogreQuat.y, ogreQuat.z, ogreQuat.w);
-
-        JPH::BodyCreationSettings bodySettings(
-            shipShape, startPosition, startRotation,
-            JPH::EMotionType::Dynamic, JPH::ObjectLayer(0)
-        );
-
-        bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-        bodySettings.mMassPropertiesOverride.mMass = massInKg;
-        bodySettings.mLinearDamping = 0.0f;
-        bodySettings.mAngularDamping = 0.0f;
-
-        JPH::BodyID bodyId = mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
-
+        JPH::SphereShapeSettings shapeSettings(radius);
+        auto bodyId = setBodySettings(shapeSettings.Create(), ogreNode, massInKg);
         return createEntity(ogreNode, bodyId);
     }
 
