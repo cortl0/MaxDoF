@@ -22,8 +22,10 @@ namespace MaxDoF::Utils
             return;
 
         Ogre::ManualObject* manual = sceneManager->createManualObject();
-        
-        // Используем стандартный HLMS-материал "BaseWhite", который умеет обрабатывать свет!
+        unsigned int numVertices = 24;
+        unsigned int numIndices = 36;
+        manual->estimateVertexCount(numVertices);
+        manual->estimateIndexCount(numIndices);
         manual->begin("BaseWhite", Ogre::OT_TRIANGLE_LIST); 
 
         // --- 1. ПЕРЕДНЯЯ ГРАНЬ (Нормаль смотрит строго на вас: 0, 0, 1) ---
@@ -85,7 +87,6 @@ namespace MaxDoF::Utils
         unsigned int numIndices = rings * segments * 6;
         manual->estimateVertexCount(numVertices);
         manual->estimateIndexCount(numIndices);
-
         manual->begin("BaseWhite", Ogre::OT_TRIANGLE_LIST);
 
         float fDeltaRingAngle = (Ogre::Math::PI / rings);

@@ -10,6 +10,7 @@
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 
 #include "OgreSceneNode.h"
@@ -132,7 +133,41 @@ namespace MaxDoF
         ogreNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
     }
 
-    World::Entity PhysicsSystemManager::createEntity(Ogre::SceneNode* ogreNode, float radius, float massInKg)
+    World::Entity PhysicsSystemManager::createPhysBox(Ogre::SceneNode* ogreNode, const Ogre::Vector3& size, float massInKg)
+    {
+        // 1. Jolt Physics требует полуразмеры (half-extents) — расстояние от центра до грани
+        JPH::Vec3 halfExtents(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f);
+        
+        // 2. Создаем настройки формы коробки
+        JPH::BoxShapeSettings boxSettings(halfExtents);
+        JPH::ShapeRefC boxShape = boxSettings.Create().Get();
+
+        // 3. Считываем начальную позицию и вращение из узла Ogre-Next
+        Ogre::Vector3 ogrePos = ogreNode->getPosition();
+        JPH::RVec3 startPosition(ogrePos.x, ogrePos.y, ogrePos.z);
+        
+        Ogre::Quaternion ogreQuat = ogreNode->getOrientation();
+        JPH::Quat startRotation(ogreQuat.x, ogreQuat.y, ogreQuat.z, ogreQuat.w);
+
+        // 4. Настраиваем физическое динамическое тело
+        JPH::BodyCreationSettings bodySettings(
+            boxShape, startPosition, startRotation, 
+            JPH::EMotionType::Dynamic, JPH::ObjectLayer(0)
+        );
+        
+        // Jolt автоматически посчитает тензор инерции для куба, чтобы он правильно крутился при ударах
+        bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
+        bodySettings.mMassPropertiesOverride.mMass = massInKg;
+        bodySettings.mLinearDamping = 0.0f;
+        bodySettings.mAngularDamping = 0.0f;
+
+        // 5. Создаем тело в физическом мире
+        JPH::BodyID bodyId = mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
+
+        return createEntity(ogreNode, bodyId);
+    }
+
+    World::Entity PhysicsSystemManager::createPhysSphere(Ogre::SceneNode* ogreNode, float radius, float massInKg)
     {
         JPH::SphereShapeSettings sphereSettings(radius);
         JPH::ShapeRefC shipShape = sphereSettings.Create().Get();
@@ -155,9 +190,16 @@ namespace MaxDoF
 
         JPH::BodyID bodyId = mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
 
-        World::Entity entity;
-        entity.physId = bodyId;
-        entity.graphNode = ogreNode;
+        return createEntity(ogreNode, bodyId);
+    }
+
+    World::Entity PhysicsSystemManager::createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId)
+    {
+        World::Entity entity
+        {
+            .physId = bodyId,
+            .graphNode = ogreNode
+        };
 
         mEntities.push_back(entity);
         mEntitiesIndex[bodyId.GetIndex()] = mEntities.size() - 1;
