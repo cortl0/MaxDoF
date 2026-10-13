@@ -24,7 +24,9 @@
 #include "OgreHlmsCompute.h"
 #include "OgreHlmsManager.h"
 
+#include "Utils/Converters.h"
 #include "Utils/MeshProcedures.h"
+#include "Utils/Types.h"
 
 namespace MaxDoF
 {
@@ -47,10 +49,15 @@ namespace MaxDoF
     void MaxDoFGameState::createCube()
     {
         auto* node = createGraphicShape(ortCubeMeshName);
-        node->setPosition( Ogre::Vector3( 2.0f, 0.0f, -5.0f ) );
+        node->setPosition( Ogre::Vector3( 1.0f, 0.0f, -5.0f ) );
         // node->setOrientation( Ogre::Quaternion::IDENTITY );
         // node->setScale(Ogre::Vector3::UNIT_SCALE);
-        mPhysicsManager.createPhysBox( node, Ogre::Vector3( 0.5f, 0.5f, 0.5f ), 1000.0f );
+        Types::Pose pose
+        {
+            .position = JPH::RVec3( 1.0f, 0.0f, -5.0f ),
+            .orientation = Types::cIdentity
+        };
+        mPhysicsManager.createPhysBox( node, pose, Types::cUnitScaleVector / 2.0f, 1000.0f );
     }
 
     void MaxDoFGameState::createLight()
@@ -79,10 +86,13 @@ namespace MaxDoF
     void MaxDoFGameState::createSphere()
     {
         auto* node = createGraphicShape(ortSphereMeshName);
-        node->setPosition( Ogre::Vector3( -2.0f, 0.0f, -5.0f ) );
-        // node->setOrientation( Ogre::Quaternion::IDENTITY );
-        // node->setScale(Ogre::Vector3::UNIT_SCALE);
-        mPhysicsManager.createPhysSphere( node, 1.0f, 1000.0f );
+        node->setPosition( Ogre::Vector3( -1.0f, 0.0f, -5.0f ) );
+        Types::Pose pose
+        {
+            .position = JPH::RVec3( -1.0f, 0.0f, -5.0f ),
+            .orientation = Types::cIdentity
+        };
+        mPhysicsManager.createPhysSphere( node, pose, 0.5f, 1000.0f );
     }
 
     void MaxDoFGameState::createShip()
@@ -97,7 +107,7 @@ namespace MaxDoF
         // camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
-        mShip = mPhysicsManager.createPhysSphere( shipNode, 1.0f, 2000.0f );
+        mShip = mPhysicsManager.createPhysSphere( shipNode, Types::cDefaultPose, 1.0f, 2000.0f );
         mSpacecraftController = std::make_unique<SpacecraftController>(
             mGraphicsSystem,
             shipNode,

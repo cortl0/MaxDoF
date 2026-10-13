@@ -16,11 +16,13 @@
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 
+#ifdef MAXDOF_CLIENT_BUILD
 #include <OgreSceneNode.h>
+#endif
 
 #include "Utils/Converters.h"
 
-namespace MaxDoF
+namespace MaxDoF::World
 {
     PhysicsSystemManager::PhysicsSystemManager()
     {
@@ -87,14 +89,17 @@ namespace MaxDoF
 
         for (const auto& entity : mEntities)
         {
+#ifdef MAXDOF_CLIENT_BUILD
             if (!entity.graphNode) continue;
+#endif
 
             JPH::RVec3 position;
             JPH::Quat rotation;
             mBodyInterface->GetPositionAndRotation(entity.physId, position, rotation);
-
+#ifdef MAXDOF_CLIENT_BUILD
             entity.graphNode->setPosition(position.GetX(), position.GetY(), position.GetZ());
             entity.graphNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
+#endif
         }
     }
 
@@ -128,14 +133,14 @@ namespace MaxDoF
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    World::Entity PhysicsSystemManager::createPhysBox(Ogre::SceneNode* ogreNode, const Ogre::Vector3& halfSize, float massInKg)
+    World::Entity PhysicsSystemManager::createPhysBox(Ogre::SceneNode* ogreNode, const Types::Pose& pose, const JPH::RVec3& halfSize, float massInKg)
     {
-        JPH::BoxShapeSettings shapeSettings(Utils::OgreVector3ToJphRVec3( halfSize ));
+        JPH::BoxShapeSettings shapeSettings( halfSize );
         auto bodyId = setBodySettings(shapeSettings.Create(), ogreNode, massInKg);
         return createEntity(ogreNode, bodyId);
     }
 
-    World::Entity PhysicsSystemManager::createPhysSphere(Ogre::SceneNode* ogreNode, float radius, float massInKg)
+    World::Entity PhysicsSystemManager::createPhysSphere(Ogre::SceneNode* ogreNode, const Types::Pose& pose, float radius, float massInKg)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
         auto bodyId = setBodySettings(shapeSettings.Create(), ogreNode, massInKg);
@@ -147,7 +152,9 @@ namespace MaxDoF
         World::Entity entity
         {
             .physId = bodyId,
+#ifdef MAXDOF_CLIENT_BUILD
             .graphNode = ogreNode
+#endif
         };
 
         mEntities.push_back(entity);
@@ -155,4 +162,4 @@ namespace MaxDoF
 
         return entity;
     }
-}  // namespace MaxDoF
+}  // namespace MaxDoF::World

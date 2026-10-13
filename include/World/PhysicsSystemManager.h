@@ -11,6 +11,7 @@
 #include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h>
 #include <Jolt/Physics/Collision/ObjectLayer.h>
 
+#include "Utils/Types.h"
 #include "World/Entity.h"
 
 namespace JPH
@@ -21,7 +22,7 @@ namespace JPH
 }
 namespace Ogre { class SceneNode; }
 
-namespace MaxDoF
+namespace MaxDoF::World
 {
     // 1. Заглушка для слоев широкой фазы (BroadPhase)
     class MyBroadPhaseLayerInterface final : public JPH::BroadPhaseLayerInterface
@@ -72,14 +73,14 @@ namespace MaxDoF
 
         void initialize(unsigned int maxBodies = 1024);
         JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Ogre::SceneNode* ogreNode, float massInKg);
-        World::Entity createPhysBox(Ogre::SceneNode* ogreNode, const Ogre::Vector3& halfSize, float massInKg);
-        World::Entity createPhysSphere(Ogre::SceneNode* ogreNode, float radius, float massInKg);
+        World::Entity createPhysBox(Ogre::SceneNode* ogreNode, const Types::Pose& pose, const JPH::RVec3& halfSize, float massInKg);
+        World::Entity createPhysSphere(Ogre::SceneNode* ogreNode, const Types::Pose& pose, float radius, float massInKg);
         World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);
         void update(float timeSinceLast);
         void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
 
         JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
     };
-}  // namespace MaxDoF
+}  // namespace MaxDoF::World
 
 #endif

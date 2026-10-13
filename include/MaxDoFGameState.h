@@ -32,7 +32,7 @@ namespace MaxDoF
         TextOverleyManager mTextOverleyManager;
         const unsigned int    mMaxBodiesLimit{ 2048 };
         World::Entity         mShip;
-        PhysicsSystemManager  mPhysicsManager;
+        World::PhysicsSystemManager  mPhysicsManager;
         std::unique_ptr<SpacecraftController> mSpacecraftController;
         Input::SpacecraftInputTranslator mInputTranslator;
         Input::MouseController mMouseController;
