@@ -4,18 +4,16 @@
 #ifndef MaxDoF_TutorialGameState_H_
 #define MaxDoF_TutorialGameState_H_
 
-#include "GraphicsSystem.h"
-#include "OgrePrerequisites.h"
+#include <GraphicsSystem.h>
+#include <OgrePrerequisites.h>
 
-#include "TextOverleyManager.h"
-
-#include "World/Entity.h"
-#include "Utils/PhysicsSystemManager.h"
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/SpacecraftInputTranslator.h"
 #include "SpacecraftController.h"
-#include "Utils/PhysicsSystemManager.h"
+#include "TextOverleyManager.h"
+#include "World/Entity.h"
+#include "World/PhysicsSystemManager.h"
 
 namespace Ogre
 {

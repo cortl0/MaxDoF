@@ -1,6 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
-#include "Utils/PhysicsSystemManager.h"
+#include "World/PhysicsSystemManager.h"
 
 #include <algorithm>
 #include <thread>
@@ -78,30 +78,6 @@ namespace MaxDoF
         mEntitiesIndex.max_load_factor(static_cast<float>(maxBodies));
     }
 
-    JPH::BodyID PhysicsSystemManager::createShipBody(float radius, float massInKg)
-    {
-        JPH::SphereShapeSettings sphereSettings(radius);
-        JPH::ShapeSettings::ShapeResult shapeResult = sphereSettings.Create();
-        JPH::ShapeRefC shipShape = shapeResult.Get();
-
-        JPH::BodyCreationSettings bodySettings(
-            shipShape,
-            JPH::RVec3::sZero(),
-            JPH::Quat::sIdentity(),
-            JPH::EMotionType::Dynamic,
-            JPH::ObjectLayer(0)
-        );
-
-        bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-        bodySettings.mMassPropertiesOverride.mMass = massInKg;
-
-        // Чистая инерция — убираем любое сопротивление сред
-        bodySettings.mLinearDamping = 0.0f;
-        bodySettings.mAngularDamping = 0.0f;
-
-        return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
-    }
-
     void PhysicsSystemManager::update(float timeSinceLast)
     {
         if (!mPhysicsSystem) return;
@@ -109,7 +85,6 @@ namespace MaxDoF
         float physicsTimeStep = std::min(timeSinceLast, 0.1f);
         mPhysicsSystem->Update(physicsTimeStep, 1, mPhysicsAllocator, mJobSystem);
 
-        // АВТОМАТИЧЕСКАЯ СИНХРОНИЗАЦИЯ ВСЕХ ОБЪЕКТОВ СЦЕНЫ ИЗ ВЕКТОРА
         for (const auto& entity : mEntities)
         {
             if (!entity.graphNode) continue;
