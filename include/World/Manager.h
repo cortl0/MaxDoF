@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
-#ifndef MaxDoF_World_PhysicsSystemManager_H_
-#define MaxDoF_World_PhysicsSystemManager_H_
+#ifndef MaxDoF_World_Manager_H_
+#define MaxDoF_World_Manager_H_
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
@@ -54,7 +54,7 @@ namespace MaxDoF::World
         virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override { return true; }
     };
 
-    class PhysicsSystemManager
+    class Manager
     {
     private:
         JPH::TempAllocatorImpl*     mPhysicsAllocator{ nullptr };
@@ -74,8 +74,8 @@ namespace MaxDoF::World
 
     public:
         Graphics mGraphics;
-        PhysicsSystemManager();
-        ~PhysicsSystemManager();
+        Manager();
+        ~Manager();
 
         void initialize(unsigned int maxBodies = 1024);
         World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);

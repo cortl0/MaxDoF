@@ -1,6 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
-#include "World/PhysicsSystemManager.h"
+#include "World/Manager.h"
 
 #include <algorithm>
 #include <thread>
@@ -25,12 +25,12 @@
 
 namespace MaxDoF::World
 {
-    PhysicsSystemManager::PhysicsSystemManager() :
+    Manager::Manager() :
         mGraphics("")
     {
     }
 
-    PhysicsSystemManager::~PhysicsSystemManager()
+    Manager::~Manager()
     {
         if (mPhysicsSystem)
         {
@@ -43,7 +43,7 @@ namespace MaxDoF::World
         }
     }
 
-    void PhysicsSystemManager::initialize(unsigned int maxBodies)
+    void Manager::initialize(unsigned int maxBodies)
     {
         JPH::RegisterDefaultAllocator();
         JPH::Factory::sInstance = new JPH::Factory();
@@ -82,7 +82,7 @@ namespace MaxDoF::World
         mEntitiesIndex.max_load_factor(static_cast<float>(maxBodies));
     }
 
-    void PhysicsSystemManager::update(float timeSinceLast)
+    void Manager::update(float timeSinceLast)
     {
         if (!mPhysicsSystem) return;
 
@@ -119,7 +119,7 @@ namespace MaxDoF::World
     }
 */
 
-    World::Entity PhysicsSystemManager::createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId)
+    World::Entity Manager::createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId)
     {
         World::Entity entity
         {
@@ -135,19 +135,19 @@ namespace MaxDoF::World
         return entity;
     }
 
-    World::Entity PhysicsSystemManager::createCube(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
+    World::Entity Manager::createCube(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
     {
         auto* node = mGraphics.createCube( Utils::PhysPoseToGraphPose( pose ), Utils::JphRVec3ToOgreVector3( halfSize ) );
         auto bodyId = mPhysics.createBox(pose, halfSize, mass);
         return createEntity(node, bodyId);
     }
 
-    Ogre::SceneNode* PhysicsSystemManager::createLight()
+    Ogre::SceneNode* Manager::createLight()
     {
         return mGraphics.createLight();
     }
 
-    World::Entity PhysicsSystemManager::createSphere(const Types::PhysPose& pose, float radius, float mass)
+    World::Entity Manager::createSphere(const Types::PhysPose& pose, float radius, float mass)
     {
         auto* node = mGraphics.createSphere( Utils::PhysPoseToGraphPose( pose ), radius );
         auto bodyId = mPhysics.createSphere( pose, radius, mass );

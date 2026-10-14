@@ -43,7 +43,7 @@ namespace MaxDoF
     void MaxDoFGameState::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
     {
         mGraphicsSystem = graphicsSystem;
-        mPhysicsManager.mGraphics.mGraphicsSystem = mGraphicsSystem;
+        mWorldManager.mGraphics.mGraphicsSystem = mGraphicsSystem;
         mTextOverleyManager._notifyGraphicsSystem(graphicsSystem);
     }
 
@@ -54,12 +54,12 @@ namespace MaxDoF
             .position = JPH::RVec3( 1.0f, 0.0f, -5.0f ),
             .orientation = Types::cIdentity
         };
-        mPhysicsManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
+        mWorldManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
     }
 
     void MaxDoFGameState::createLight()
     {
-        mPhysicsManager.createLight();
+        mWorldManager.createLight();
     }
 
     void MaxDoFGameState::createSphere()
@@ -69,12 +69,12 @@ namespace MaxDoF
             .position = JPH::RVec3( -1.0f, 0.0f, -5.0f ),
             .orientation = Types::cIdentity
         };
-        mPhysicsManager.createSphere(pose, 0.5f, 1000.0f);
+        mWorldManager.createSphere(pose, 0.5f, 1000.0f);
     }
 
     void MaxDoFGameState::createShip()
     {
-        mShip = mPhysicsManager.createSphere(Types::cDefaultPhysPose, 0.5f, 5000.0f);
+        mShip = mWorldManager.createSphere(Types::cDefaultPhysPose, 0.5f, 5000.0f);
 
         Ogre::Camera *camera = mGraphicsSystem->getCamera();
         if( camera->getParentSceneNode() )
@@ -87,7 +87,7 @@ namespace MaxDoF
         mSpacecraftController = std::make_unique<SpacecraftController>(
             mGraphicsSystem,
             mShip.graphNode,
-            mPhysicsManager.getBodyInterface(),
+            mWorldManager.getBodyInterface(),
             &mShip.physId
         );
     }
@@ -95,9 +95,9 @@ namespace MaxDoF
     void MaxDoFGameState::createScene01()
     {
         Ogre::SceneManager *sceneManager = mGraphicsSystem->getSceneManager();
-        mPhysicsManager.initialize( mMaxBodiesLimit );
-        Utils::createProceduralSphereV2(sceneManager, mPhysicsManager.mGraphics.ortSphereMeshName, 0.5f, 16, 16);
-        Utils::createProceduralCubeV2( sceneManager, mPhysicsManager.mGraphics.ortCubeMeshName, 0.5f, 0.5f, 0.5f );
+        mWorldManager.initialize( mMaxBodiesLimit );
+        Utils::createProceduralSphereV2(sceneManager, mWorldManager.mGraphics.ortSphereMeshName, 0.5f, 16, 16);
+        Utils::createProceduralCubeV2( sceneManager, mWorldManager.mGraphics.ortCubeMeshName, 0.5f, 0.5f, 0.5f );
 
         createLight();
         createShip();
@@ -111,7 +111,7 @@ namespace MaxDoF
     void MaxDoFGameState::update( float timeSinceLast )
     {
         // 1. Шагаем физику (Jolt считает мир и автоматически двигает Ogre-узлы из mEntities)
-        mPhysicsManager.update( timeSinceLast );
+        mWorldManager.update( timeSinceLast );
 
         // 2. Опрашиваем устройства ввода через правильные методы транслятора
         auto data = mInputTranslator.translate(&mKeyboardController, &mMouseController);

@@ -13,7 +13,7 @@
 #include "SpacecraftController.h"
 #include "TextOverleyManager.h"
 #include "World/Entity.h"
-#include "World/PhysicsSystemManager.h"
+#include "World/Manager.h"
 
 namespace Ogre
 {
@@ -32,7 +32,7 @@ namespace MaxDoF
         TextOverleyManager mTextOverleyManager;
         const unsigned int    mMaxBodiesLimit{ 2048 };
         World::Entity         mShip;
-        World::PhysicsSystemManager mPhysicsManager;
+        World::Manager mWorldManager;
         std::unique_ptr<SpacecraftController> mSpacecraftController;
         Input::SpacecraftInputTranslator mInputTranslator;
         Input::MouseController mMouseController;
