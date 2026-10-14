@@ -49,13 +49,13 @@ namespace MaxDoF::World
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createPhysBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
+    JPH::BodyID Physics::createBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
         return setBodySettings(shapeSettings.Create(), pose, mass);
     }
 
-    JPH::BodyID Physics::createPhysSphere(const Types::PhysPose& pose, float radius, float mass)
+    JPH::BodyID Physics::createSphere(const Types::PhysPose& pose, float radius, float mass)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
         return setBodySettings(shapeSettings.Create(), pose, mass);

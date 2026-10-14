@@ -119,16 +119,6 @@ namespace MaxDoF::World
     }
 */
 
-    JPH::BodyID PhysicsSystemManager::createPhysBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
-    {
-        return mPhysics.createPhysBox(pose, halfSize, mass);
-    }
-
-    JPH::BodyID PhysicsSystemManager::createPhysSphere(const Types::PhysPose& pose, float radius, float mass)
-    {
-        return mPhysics.createPhysSphere(pose, radius, mass);
-    }
-
     World::Entity PhysicsSystemManager::createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId)
     {
         World::Entity entity
@@ -145,12 +135,11 @@ namespace MaxDoF::World
         return entity;
     }
 
-    Ogre::SceneNode* PhysicsSystemManager::createCube(const Types::PhysPose& pose)
+    World::Entity PhysicsSystemManager::createCube(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
     {
-        auto* node = mGraphics.createCube( Utils::PhysPoseToGraphPose( pose ) );
-        auto bodyId = createPhysBox( pose, Types::cUnitScaleVector / 2.0f, 1000.0f );
-        createEntity(node, bodyId);
-        return node;
+        auto* node = mGraphics.createCube( Utils::PhysPoseToGraphPose( pose ), Utils::JphRVec3ToOgreVector3( halfSize ) );
+        auto bodyId = mPhysics.createBox(pose, halfSize, mass);
+        return createEntity(node, bodyId);
     }
 
     Ogre::SceneNode* PhysicsSystemManager::createLight()
@@ -160,8 +149,8 @@ namespace MaxDoF::World
 
     World::Entity PhysicsSystemManager::createSphere(const Types::PhysPose& pose, float radius, float mass)
     {
-        auto* node = mGraphics.createSphere( Utils::PhysPoseToGraphPose( pose ) );
-        auto bodyId = createPhysSphere( pose, radius, mass );
+        auto* node = mGraphics.createSphere( Utils::PhysPoseToGraphPose( pose ), radius );
+        auto bodyId = mPhysics.createSphere( pose, radius, mass );
         return createEntity(node, bodyId);
     }
 }  // namespace MaxDoF::World

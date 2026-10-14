@@ -54,7 +54,7 @@ namespace MaxDoF
             .position = JPH::RVec3( 1.0f, 0.0f, -5.0f ),
             .orientation = Types::cIdentity
         };
-        mPhysicsManager.createCube(pose);
+        mPhysicsManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
     }
 
     void MaxDoFGameState::createLight()

@@ -78,14 +78,12 @@ namespace MaxDoF::World
         ~PhysicsSystemManager();
 
         void initialize(unsigned int maxBodies = 1024);
-        JPH::BodyID createPhysBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass);
-        JPH::BodyID createPhysSphere(const Types::PhysPose& pose, float radius, float mass);
         World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);
         void update(float timeSinceLast);
         //void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
 
-        Ogre::SceneNode* createCube(const Types::PhysPose&);
+        World::Entity createCube(const Types::PhysPose&, const JPH::RVec3& halfSize, float mass);
         Ogre::SceneNode* createLight();
         World::Entity createSphere(const Types::PhysPose&, float radius, float mass);
     };

@@ -40,14 +40,16 @@ namespace MaxDoF::World
     {
     }
 
-    Ogre::SceneNode* Graphics::createCube(const Types::GraphPose& pose)
+    Ogre::SceneNode* Graphics::createCube(const Types::GraphPose& pose, const Ogre::Vector3& halfSize)
     {
         auto graphPose = Types::GraphPose
         {
             .position = { 1.0f, 0.0f, -5.0f },
             .orientation = Ogre::Quaternion::IDENTITY
         };
-        return createGraphShape(ortCubeMeshName, graphPose);
+        auto* node = createShape(ortCubeMeshName, graphPose);
+        node->setScale( halfSize * 2.0f );
+        return node;
     }
 
     Ogre::SceneNode* Graphics::createLight()
@@ -61,7 +63,7 @@ namespace MaxDoF::World
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createGraphShape(const Ogre::String& meshName, const Types::GraphPose& pose)
+    Ogre::SceneNode* Graphics::createShape(const Ogre::String& meshName, const Types::GraphPose& pose)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         auto* node = sceneManager->getRootSceneNode()->createChildSceneNode( Ogre::SCENE_DYNAMIC );
@@ -76,8 +78,10 @@ namespace MaxDoF::World
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createSphere(const Types::GraphPose& pose)
+    Ogre::SceneNode* Graphics::createSphere(const Types::GraphPose& pose, float radius)
     {
-        return createGraphShape(ortSphereMeshName, pose);
+        auto* node = createShape( ortSphereMeshName, pose );
+        node->setScale( Ogre::Vector3::UNIT_SCALE * radius * 2.0f );
+        return node;
     }
 }  // namespace MaxDoF::World

@@ -28,8 +28,8 @@ namespace MaxDoF::World
         JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
         void initialize(unsigned int maxBodies = 1024);
         JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass);
-        JPH::BodyID createPhysBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass);
-        JPH::BodyID createPhysSphere(const Types::PhysPose& pose, float radius, float mass);
+        JPH::BodyID createBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass);
+        JPH::BodyID createSphere(const Types::PhysPose& pose, float radius, float mass);
     };
 }  // namespace MaxDoF::World
 
