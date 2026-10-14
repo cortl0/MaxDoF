@@ -57,7 +57,8 @@ namespace MaxDoF
             .position = JPH::RVec3( 1.0f, 0.0f, -5.0f ),
             .orientation = Types::cIdentity
         };
-        mPhysicsManager.createPhysBox( node, pose, Types::cUnitScaleVector / 2.0f, 1000.0f );
+        auto bodyId = mPhysicsManager.createPhysBox( pose, Types::cUnitScaleVector / 2.0f, 1000.0f );
+        mPhysicsManager.createBoxEntity( node, bodyId, pose, Types::cUnitScaleVector / 2.0f, 1000.0f );
     }
 
     void MaxDoFGameState::createLight()
@@ -92,7 +93,8 @@ namespace MaxDoF
             .position = JPH::RVec3( -1.0f, 0.0f, -5.0f ),
             .orientation = Types::cIdentity
         };
-        mPhysicsManager.createPhysSphere( node, pose, 0.5f, 1000.0f );
+        auto bodyId = mPhysicsManager.createPhysSphere( pose, 0.5f, 1000.0f );
+        mPhysicsManager.createSphereEntity( node, bodyId, pose, 0.5f, 1000.0f );
     }
 
     void MaxDoFGameState::createShip()
@@ -107,7 +109,8 @@ namespace MaxDoF
         // camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
-        mShip = mPhysicsManager.createPhysSphere( shipNode, Types::cDefaultPose, 1.0f, 2000.0f );
+        auto bodyId = mPhysicsManager.createPhysSphere( Types::cDefaultPose, 1.0f, 5000.0f );
+        mShip = mPhysicsManager.createSphereEntity(shipNode, bodyId, Types::cDefaultPose, 1.0f, 5000.0f);
         mSpacecraftController = std::make_unique<SpacecraftController>(
             mGraphicsSystem,
             shipNode,

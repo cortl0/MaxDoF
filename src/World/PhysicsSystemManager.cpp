@@ -116,34 +116,48 @@ namespace MaxDoF::World
         ogreNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
     }
 
-    JPH::BodyID PhysicsSystemManager::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Ogre::SceneNode* ogreNode, float massInKg)
+    JPH::BodyID PhysicsSystemManager::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::Pose& pose, float mass)
     {
         JPH::BodyCreationSettings bodySettings(
             shapeResult.Get(),
-            Utils::OgreVector3ToJphRVec3( ogreNode->getPosition() ),
-            Utils::OgreQuaternionToJphQuat( ogreNode->getOrientation() ), 
+            pose.position,
+            pose.orientation,
             JPH::EMotionType::Dynamic, JPH::ObjectLayer(0)
         );
 
         bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-        bodySettings.mMassPropertiesOverride.mMass = massInKg;
+        bodySettings.mMassPropertiesOverride.mMass = mass;
         bodySettings.mLinearDamping = 0.0f;
         bodySettings.mAngularDamping = 0.0f;
 
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    World::Entity PhysicsSystemManager::createPhysBox(Ogre::SceneNode* ogreNode, const Types::Pose& pose, const JPH::RVec3& halfSize, float massInKg)
+    JPH::BodyID PhysicsSystemManager::createPhysBox(const Types::Pose& pose, const JPH::RVec3& halfSize, float mass)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
-        auto bodyId = setBodySettings(shapeSettings.Create(), ogreNode, massInKg);
+        return setBodySettings(shapeSettings.Create(), pose, mass);
+        //auto bodyId = createEntity(ogreNode, bodyId);
+    }
+
+    World::Entity PhysicsSystemManager::createBoxEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId, const Types::Pose& pose, const JPH::RVec3& halfSize, float mass)
+    {
+        JPH::BoxShapeSettings shapeSettings( halfSize );
         return createEntity(ogreNode, bodyId);
     }
 
-    World::Entity PhysicsSystemManager::createPhysSphere(Ogre::SceneNode* ogreNode, const Types::Pose& pose, float radius, float massInKg)
+
+
+    JPH::BodyID PhysicsSystemManager::createPhysSphere(const Types::Pose& pose, float radius, float mass)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
-        auto bodyId = setBodySettings(shapeSettings.Create(), ogreNode, massInKg);
+        return setBodySettings(shapeSettings.Create(), pose, mass);
+        //auto bodyId = createEntity(ogreNode, bodyId);
+    }
+
+    World::Entity PhysicsSystemManager::createSphereEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId, const Types::Pose& pose, float radius, float mass)
+    {
+        JPH::SphereShapeSettings shapeSettings(radius);
         return createEntity(ogreNode, bodyId);
     }
 

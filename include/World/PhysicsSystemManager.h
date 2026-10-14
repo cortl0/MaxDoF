@@ -72,9 +72,11 @@ namespace MaxDoF::World
         ~PhysicsSystemManager();
 
         void initialize(unsigned int maxBodies = 1024);
-        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Ogre::SceneNode* ogreNode, float massInKg);
-        World::Entity createPhysBox(Ogre::SceneNode* ogreNode, const Types::Pose& pose, const JPH::RVec3& halfSize, float massInKg);
-        World::Entity createPhysSphere(Ogre::SceneNode* ogreNode, const Types::Pose& pose, float radius, float massInKg);
+        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::Pose& pose, float mass);
+        JPH::BodyID createPhysBox(const Types::Pose& pose, const JPH::RVec3& halfSize, float mass);
+        World::Entity createBoxEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId, const Types::Pose& pose, const JPH::RVec3& halfSize, float mass);
+        JPH::BodyID createPhysSphere(const Types::Pose& pose, float radius, float mass);
+        World::Entity createSphereEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId, const Types::Pose& pose, float radius, float mass);
         World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);
         void update(float timeSinceLast);
         void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
