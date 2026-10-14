@@ -72,7 +72,7 @@ namespace MaxDoF::World
             *mObjectLayerPairFilter
         );
 
-        mBodyInterface = &mPhysicsSystem->GetBodyInterface();
+        mPhysics.setBodyInterface(&mPhysicsSystem->GetBodyInterface());
         mPhysicsSystem->SetGravity(JPH::Vec3::sZero());
 
         mEntities.reserve(maxBodies);
@@ -95,7 +95,7 @@ namespace MaxDoF::World
 
             JPH::RVec3 position;
             JPH::Quat rotation;
-            mBodyInterface->GetPositionAndRotation(entity.physId, position, rotation);
+            mPhysics.getBodyInterface()->GetPositionAndRotation(entity.physId, position, rotation);
 #ifdef MAXDOF_CLIENT_BUILD
             entity.graphNode->setPosition(position.GetX(), position.GetY(), position.GetZ());
             entity.graphNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
@@ -116,33 +116,15 @@ namespace MaxDoF::World
         ogreNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
     }
 */
-    JPH::BodyID PhysicsSystemManager::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::PhysPose& pose, float mass)
-    {
-        JPH::BodyCreationSettings bodySettings(
-            shapeResult.Get(),
-            pose.position,
-            pose.orientation,
-            JPH::EMotionType::Dynamic, JPH::ObjectLayer(0)
-        );
-
-        bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-        bodySettings.mMassPropertiesOverride.mMass = mass;
-        bodySettings.mLinearDamping = 0.0f;
-        bodySettings.mAngularDamping = 0.0f;
-
-        return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
-    }
 
     JPH::BodyID PhysicsSystemManager::createPhysBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
     {
-        JPH::BoxShapeSettings shapeSettings( halfSize );
-        return setBodySettings(shapeSettings.Create(), pose, mass);
+        return mPhysics.createPhysBox(pose, halfSize, mass);
     }
 
     JPH::BodyID PhysicsSystemManager::createPhysSphere(const Types::PhysPose& pose, float radius, float mass)
     {
-        JPH::SphereShapeSettings shapeSettings(radius);
-        return setBodySettings(shapeSettings.Create(), pose, mass);
+        return mPhysics.createPhysSphere(pose, radius, mass);
     }
 
     World::Entity PhysicsSystemManager::createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId)

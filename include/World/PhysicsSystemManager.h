@@ -15,6 +15,7 @@
 
 #include "Utils/Types.h"
 #include "World/Entity.h"
+#include "World/Physics.h"
 
 namespace JPH
 {
@@ -57,7 +58,7 @@ namespace MaxDoF::World
         JPH::TempAllocatorImpl*     mPhysicsAllocator{ nullptr };
         JPH::JobSystemThreadPool*   mJobSystem{ nullptr };
         JPH::PhysicsSystem*         mPhysicsSystem{ nullptr };
-        JPH::BodyInterface*         mBodyInterface{ nullptr };
+        Physics mPhysics;
 
         std::unique_ptr<MyBroadPhaseLayerInterface>      mBroadPhaseLayerInterface;
         std::unique_ptr<MyObjectVsBroadPhaseLayerFilter> mObjectVsBroadPhaseLayerFilter;
@@ -74,13 +75,12 @@ namespace MaxDoF::World
         ~PhysicsSystemManager();
 
         void initialize(unsigned int maxBodies = 1024);
-        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass);
         JPH::BodyID createPhysBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass);
         JPH::BodyID createPhysSphere(const Types::PhysPose& pose, float radius, float mass);
         World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);
         void update(float timeSinceLast);
         //void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
-        JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
+        JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
     };
 }  // namespace MaxDoF::World
 
