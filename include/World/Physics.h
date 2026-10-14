@@ -4,16 +4,15 @@
 #ifndef MaxDoF_World_Physics_H_
 #define MaxDoF_World_Physics_H_
 
-#include <Jolt/Jolt.h>
-#include <Jolt/Physics/PhysicsSystem.h>
-#include <Jolt/Physics/Body/BodyID.h>
+#ifndef MAXDOF_CLIENT_BUILD
+#define MAXDOF_CLIENT_BUILD
+#endif
 
-// Обязательные интерфейсы фильтрации для Jolt 5.x+
-#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h>
-#include <Jolt/Physics/Collision/ObjectLayer.h>
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Body/BodyInterface.h>
+#include <Jolt/Physics/PhysicsSystem.h>
 
 #include "Utils/Types.h"
-#include "World/Entity.h"
 
 namespace MaxDoF::World
 {

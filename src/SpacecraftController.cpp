@@ -3,19 +3,13 @@
 
 #include "SpacecraftController.h"
 
-#include "GraphicsSystem.h"
-#include "OgreCamera.h"
-#include "OgreSceneNode.h"
-
-// Подключаем необходимые заголовки Jolt для работы с силами
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
 
 namespace MaxDoF
 {
-    SpacecraftController::SpacecraftController( Demo::GraphicsSystem *graphicsSystem, Ogre::SceneNode *shipNode,
+    SpacecraftController::SpacecraftController( Ogre::SceneNode *shipNode,
                                                  JPH::BodyInterface* bodyInterface, JPH::BodyID* shipBodyId ) :
-        mGraphicsSystem( graphicsSystem ),
         mShipNode( shipNode ),
         mBodyInterface( bodyInterface ),
         mShipBodyId( shipBodyId ),

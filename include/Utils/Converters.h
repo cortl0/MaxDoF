@@ -6,6 +6,7 @@
 
 #include <Jolt/Jolt.h>
 #include <OgrePrerequisites.h>
+
 #include "Utils/Types.h"
 
 namespace MaxDoF::Utils

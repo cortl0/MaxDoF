@@ -4,11 +4,11 @@
 #ifndef MaxDoF_TextOverleyManager_H_
 #define MaxDoF_TextOverleyManager_H_
 
+#include "GraphicsSystem.h"
 #include "OgreTextAreaOverlayElement.h"
 
 namespace MaxDoF
 {
-    /// Base game state for the tutorials. All it does is show a little text on screen :)
     class TextOverleyManager
     {
     protected:

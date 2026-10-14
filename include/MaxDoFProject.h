@@ -4,8 +4,6 @@
 #ifndef MaxDoF_MaxDoFProject_H_
 #define MaxDoF_MaxDoFProject_H_
 
-#define MAXDOF_CLIENT_BUILD
-
 namespace MaxDoF
 {
 

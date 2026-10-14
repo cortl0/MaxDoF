@@ -1,15 +1,11 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "MaxDoFGameState.h"
-#include "GraphicsSystem.h"
+#include "MaxDoFProject.h"
 
-#include "Compositor/OgreCompositorManager2.h"
-#include "OgreCamera.h"
-#include "OgreConfigFile.h"
-#include "OgreRoot.h"
-#include "OgreSceneManager.h"
-#include "OgreWindow.h"
+#include <OgreConfigFile.h>
+
+#include "MaxDoFGameState.h"
 
 // Declares WinMain / main
 #include "MainEntryPointHelper.h"

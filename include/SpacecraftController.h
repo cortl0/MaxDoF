@@ -4,9 +4,8 @@
 #ifndef MaxDoF_SpacecraftController_H_
 #define MaxDoF_SpacecraftController_H_
 
-#include "GraphicsSystem.h"
-#include "OgrePrerequisites.h"
-#include "OgreVector3.h"
+#include <OgreVector3.h>
+#include <OgreSceneNode.h>
 
 // Добавляем опережающие объявления Jolt, чтобы не перегружать заголовок
 namespace JPH {
@@ -19,7 +18,6 @@ namespace MaxDoF
     class SpacecraftController
     {
     private:
-        Demo::GraphicsSystem* mGraphicsSystem{ nullptr };
         Ogre::SceneNode*      mShipNode{ nullptr };
 
         // ИСПРАВЛЕНИЕ: Добавляем хранение физических интерфейсов корабля
@@ -49,7 +47,7 @@ namespace MaxDoF
         };
 
         // Обновленный конструктор принимает узел графики, интерфейс физики и ID тела корабля
-        SpacecraftController( Demo::GraphicsSystem *graphicsSystem, Ogre::SceneNode *shipNode,
+        SpacecraftController( Ogre::SceneNode *shipNode,
                              JPH::BodyInterface* bodyInterface, JPH::BodyID* shipBodyId );
 
         bool update( float timeSinceLast, const ControllerData& mControllerData );

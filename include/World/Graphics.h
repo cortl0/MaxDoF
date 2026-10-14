@@ -4,6 +4,10 @@
 #ifndef MaxDoF_World_Graphics_H_
 #define MaxDoF_World_Graphics_H_
 
+#ifndef MAXDOF_CLIENT_BUILD
+#define MAXDOF_CLIENT_BUILD
+#endif
+
 #include <GraphicsSystem.h>
 #include <TextOverleyManager.h>
 

@@ -3,17 +3,14 @@
 
 #include "MaxDoFGameState.h"
 
-#include "GraphicsSystem.h"
-#include "OgreFrameStats.h"
-#include "OgreHlmsPbs.h"
-#include "OgreOverlay.h"
-#include "OgreOverlayContainer.h"
-#include "OgreOverlayManager.h"
+#include <OgreFrameStats.h>
+#include <OgreOverlay.h>
+#include <OgreOverlayContainer.h>
+#include <OgreOverlayManager.h>
 
 #include <OgreHlmsManager.h>
 #include <OgreHlmsUnlit.h>
 #include <OgreHlmsUnlitDatablock.h>
-#include <OgreRoot.h>
 
 namespace MaxDoF
 {

@@ -27,7 +27,7 @@ namespace MaxDoF::Utils
         unsigned int numIndices = 36;
         manual->estimateVertexCount(numVertices);
         manual->estimateIndexCount(numIndices);
-        manual->begin("BaseWhite", Ogre::OT_TRIANGLE_LIST); 
+        manual->begin("BaseWhite", Ogre::OT_TRIANGLE_LIST);
 
         // --- 1. ПЕРЕДНЯЯ ГРАНЬ (Нормаль смотрит строго на вас: 0, 0, 1) ---
         manual->position(-hX, -hY,  hZ); manual->normal(0, 0, 1);

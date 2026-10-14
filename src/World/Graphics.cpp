@@ -3,28 +3,10 @@
 
 #include "World/Graphics.h"
 
-#include "OgreItem.h"
-#include "OgreSceneManager.h"
+#include <OgreItem.h>
+#include <OgreSceneManager.h>
 
-#include "OgreManualObject2.h"
-
-#include "OgreMesh2.h"
-#include "OgreMeshManager.h"
-#include "OgreMeshManager2.h"
-
-#include "OgreHlmsPbsDatablock.h"
-#include "OgreHlmsSamplerblock.h"
-
-#include "OgreRoot.h"
-
-#include "OgreGpuProgramManager.h"
-#include "OgreHlms.h"
-#include "OgreHlmsCompute.h"
-#include "OgreHlmsManager.h"
-
-#include "Utils/Converters.h"
 #include "Utils/MeshProcedures.h"
-#include "Utils/Types.h"
 
 namespace MaxDoF::World
 {

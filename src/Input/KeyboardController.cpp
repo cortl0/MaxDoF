@@ -2,7 +2,6 @@
 // GPL-3.0 license
 
 #include "Input/KeyboardController.h"
-#include <cstring>
 
 namespace MaxDoF::Input
 {

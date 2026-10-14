@@ -4,9 +4,9 @@
 #ifndef MaxDoF_TutorialGameState_H_
 #define MaxDoF_TutorialGameState_H_
 
-#include <GraphicsSystem.h>
 #include <OgrePrerequisites.h>
 #include <GameState.h>
+#include <TextOverleyManager.h>
 
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"

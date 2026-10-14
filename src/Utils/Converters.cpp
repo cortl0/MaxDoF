@@ -3,9 +3,6 @@
 
 #include "Utils/Converters.h"
 
-#include <OgreQuaternion.h>
-#include <OgreVector3.h>
-
 namespace MaxDoF::Utils
 {
     JPH::Quat OgreQuaternionToJphQuat( const Ogre::Quaternion& q )

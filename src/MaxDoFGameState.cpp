@@ -3,31 +3,11 @@
 
 #include "MaxDoFGameState.h"
 
-#include "OgreItem.h"
-#include "OgreSceneManager.h"
-
-#include "OgreManualObject2.h"
-
-#include "OgreMesh2.h"
-#include "OgreMeshManager.h"
-#include "OgreMeshManager2.h"
-
-#include "OgreCamera.h"
-#include "OgreWindow.h"
-
-#include "OgreHlmsPbsDatablock.h"
-#include "OgreHlmsSamplerblock.h"
-
-#include "OgreRoot.h"
-
-#include "OgreGpuProgramManager.h"
-#include "OgreHlms.h"
-#include "OgreHlmsCompute.h"
-#include "OgreHlmsManager.h"
-
-#include "Utils/Converters.h"
-#include "Utils/MeshProcedures.h"
-#include "Utils/Types.h"
+#include <OgreCamera.h>
+#include <OgreGpuProgramManager.h>
+#include <OgreHlmsCompute.h>
+#include <OgreHlmsManager.h>
+#include <OgreRoot.h>
 
 namespace MaxDoF
 {
@@ -85,7 +65,6 @@ namespace MaxDoF
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
         mSpacecraftController = std::make_unique<SpacecraftController>(
-            mGraphicsSystem,
             mShip.graphNode,
             mWorldManager.getBodyInterface(),
             &mShip.physId
@@ -185,7 +164,7 @@ namespace MaxDoF
         else
         {
             bool handledEvent = false;
-            handledEvent = mKeyboardController.keyReleased( arg ); // <-- Опрашиваем наш контроллер
+            handledEvent = mKeyboardController.keyReleased( arg );
             if( !handledEvent )
                 GameState::keyReleased( arg );
         }

@@ -22,6 +22,7 @@ namespace MaxDoF::Input
         mRelativeX = 0.0f;
         mRelativeY = 0.0f;
     }
+
     bool MouseController::isRightButtonPressed() const
     {
         int mouseX, mouseY;

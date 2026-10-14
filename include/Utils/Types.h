@@ -4,15 +4,17 @@
 #ifndef MaxDoF_Types_Converters_H_
 #define MaxDoF_Types_Converters_H_
 
-#include "MaxDoFProject.h"
+#ifndef MAXDOF_CLIENT_BUILD
+#define MAXDOF_CLIENT_BUILD
+#endif
 
 #include <Jolt/Jolt.h>
 
-#ifdef MAXDOF_CLIENT_BUILD
 #include <OgreVector3.h>
 #include <OgreQuaternion.h>
 #include <OgreSceneNode.h>
 
+#ifdef MAXDOF_CLIENT_BUILD
 #include <OgrePrerequisites.h>
 #endif
 

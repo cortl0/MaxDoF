@@ -6,20 +6,16 @@
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
-#include <Jolt/Physics/Body/BodyID.h>
 
-// Обязательные интерфейсы фильтрации для Jolt 5.x+
-#include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h>
-#include <Jolt/Physics/Collision/ObjectLayer.h>
 
-#include <Utils/Types.h>
 
-#include "Utils/Types.h"
 #include "World/Entity.h"
-#include "World/Physics.h"
-#include "World/Graphics.h"
-#include "Graphics.h"
 
+#ifdef MAXDOF_CLIENT_BUILD
+#include "World/Graphics.h"
+#endif
+
+#include "World/Physics.h"
 namespace JPH
 {
     class TempAllocatorImpl;
