@@ -24,7 +24,8 @@
 
 namespace MaxDoF::World
 {
-    PhysicsSystemManager::PhysicsSystemManager()
+    PhysicsSystemManager::PhysicsSystemManager() :
+        mGraphics("")
     {
     }
 
@@ -141,5 +142,36 @@ namespace MaxDoF::World
         mEntitiesIndex[bodyId.GetIndex()] = mEntities.size() - 1;
 
         return entity;
+    }
+
+    Ogre::SceneNode* PhysicsSystemManager::createCube()
+    {
+        auto* node = mGraphics.createCube();
+        Types::PhysPose physPose
+        {
+            .position = JPH::RVec3( 1.0f, 0.0f, -5.0f ),
+            .orientation = Types::cIdentity
+        };
+        auto bodyId = createPhysBox( physPose, Types::cUnitScaleVector / 2.0f, 1000.0f );
+        createEntity(node, bodyId);
+        return node;
+    }
+
+    Ogre::SceneNode* PhysicsSystemManager::createLight()
+    {
+        return mGraphics.createLight();
+    }
+
+    Ogre::SceneNode* PhysicsSystemManager::createSphere()
+    {
+        auto* node = mGraphics.createSphere();
+        Types::PhysPose pose
+        {
+            .position = JPH::RVec3( -1.0f, 0.0f, -5.0f ),
+            .orientation = Types::cIdentity
+        };
+        auto bodyId = createPhysSphere( pose, 0.5f, 1000.0f );
+        createEntity(node, bodyId);
+        return node;
     }
 }  // namespace MaxDoF::World

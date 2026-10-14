@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
-#ifndef MaxDoF_PhysicsSystemManager_H_
-#define MaxDoF_PhysicsSystemManager_H_
+#ifndef MaxDoF_World_PhysicsSystemManager_H_
+#define MaxDoF_World_PhysicsSystemManager_H_
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
@@ -16,6 +16,8 @@
 #include "Utils/Types.h"
 #include "World/Entity.h"
 #include "World/Physics.h"
+#include "World/Graphics.h"
+#include "Graphics.h"
 
 namespace JPH
 {
@@ -71,6 +73,7 @@ namespace MaxDoF::World
         EntitiesIndex mEntitiesIndex;
 
     public:
+        Graphics mGraphics;
         PhysicsSystemManager();
         ~PhysicsSystemManager();
 
@@ -81,6 +84,10 @@ namespace MaxDoF::World
         void update(float timeSinceLast);
         //void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
+
+        Ogre::SceneNode* createCube();
+        Ogre::SceneNode* createLight();
+        Ogre::SceneNode* createSphere();
     };
 }  // namespace MaxDoF::World
 
