@@ -21,6 +21,7 @@
 #endif
 
 #include "Utils/Converters.h"
+#include "Utils/Converters.h"
 
 namespace MaxDoF::World
 {
@@ -144,15 +145,10 @@ namespace MaxDoF::World
         return entity;
     }
 
-    Ogre::SceneNode* PhysicsSystemManager::createCube()
+    Ogre::SceneNode* PhysicsSystemManager::createCube(const Types::PhysPose& pose)
     {
-        auto* node = mGraphics.createCube();
-        Types::PhysPose physPose
-        {
-            .position = JPH::RVec3( 1.0f, 0.0f, -5.0f ),
-            .orientation = Types::cIdentity
-        };
-        auto bodyId = createPhysBox( physPose, Types::cUnitScaleVector / 2.0f, 1000.0f );
+        auto* node = mGraphics.createCube( Utils::PhysPoseToGraphPose( pose ) );
+        auto bodyId = createPhysBox( pose, Types::cUnitScaleVector / 2.0f, 1000.0f );
         createEntity(node, bodyId);
         return node;
     }
@@ -162,16 +158,10 @@ namespace MaxDoF::World
         return mGraphics.createLight();
     }
 
-    Ogre::SceneNode* PhysicsSystemManager::createSphere()
+    World::Entity PhysicsSystemManager::createSphere(const Types::PhysPose& pose, float radius, float mass)
     {
-        auto* node = mGraphics.createSphere();
-        Types::PhysPose pose
-        {
-            .position = JPH::RVec3( -1.0f, 0.0f, -5.0f ),
-            .orientation = Types::cIdentity
-        };
-        auto bodyId = createPhysSphere( pose, 0.5f, 1000.0f );
-        createEntity(node, bodyId);
-        return node;
+        auto* node = mGraphics.createSphere( Utils::PhysPoseToGraphPose( pose ) );
+        auto bodyId = createPhysSphere( pose, radius, mass );
+        return createEntity(node, bodyId);
     }
 }  // namespace MaxDoF::World

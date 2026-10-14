@@ -7,13 +7,42 @@
 
 namespace MaxDoF::Utils
 {
-    JPH::Quat OgreQuaternionToJphQuat( const Ogre::Quaternion& ogreQuat )
+    JPH::Quat OgreQuaternionToJphQuat( const Ogre::Quaternion& q )
     {
-        return JPH::Quat( ogreQuat.x, ogreQuat.y, ogreQuat.z, ogreQuat.w );
+        return JPH::Quat( q.x, q.y, q.z, q.w );
     }
 
-    JPH::RVec3 OgreVector3ToJphRVec3( const Ogre::Vector3& ogreVector )
+    JPH::RVec3 OgreVector3ToJphRVec3( const Ogre::Vector3& v )
     {
-        return JPH::RVec3( ogreVector.x, ogreVector.y, ogreVector.z );
+        return JPH::RVec3( v.x, v.y, v.z );
     }
+
+    Ogre::Quaternion JphQuatToOgreQuaternion( const JPH::Quat& q )
+    {
+        return Ogre::Quaternion( q.GetX(), q.GetY(), q.GetZ(), q.GetW() );
+    }
+
+    Ogre::Vector3 JphRVec3ToOgreVector3( const JPH::RVec3& v )
+    {
+        return Ogre::Vector3( v.GetX(), v.GetY(), v.GetZ() );
+    }
+
+    Types::GraphPose PhysPoseToGraphPose(const Types::PhysPose& p)
+    {
+        return Types::GraphPose
+        {
+            .position = JphRVec3ToOgreVector3( p.position ),
+            .orientation = JphQuatToOgreQuaternion( p.orientation )
+        };
+    }
+
+    Types::PhysPose GraphPoseToPhysPose(const Types::GraphPose& p)
+    {
+        return Types::PhysPose
+        {
+            .position = OgreVector3ToJphRVec3( p.position ),
+            .orientation = OgreQuaternionToJphQuat( p.orientation )
+        };
+    }
+
 }  // namespace MaxDoF::Utils

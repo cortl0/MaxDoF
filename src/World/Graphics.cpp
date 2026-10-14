@@ -40,7 +40,7 @@ namespace MaxDoF::World
     {
     }
 
-    Ogre::SceneNode* Graphics::createCube()
+    Ogre::SceneNode* Graphics::createCube(const Types::GraphPose& pose)
     {
         auto graphPose = Types::GraphPose
         {
@@ -76,13 +76,8 @@ namespace MaxDoF::World
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createSphere()
+    Ogre::SceneNode* Graphics::createSphere(const Types::GraphPose& pose)
     {
-        auto graphPose = Types::GraphPose
-        {
-            .position = { -1.0f, 0.0f, -5.0f },
-            .orientation = Ogre::Quaternion::IDENTITY
-        };
-        return createGraphShape(ortSphereMeshName, graphPose);
+        return createGraphShape(ortSphereMeshName, pose);
     }
 }  // namespace MaxDoF::World

@@ -41,10 +41,10 @@ namespace MaxDoF::World
 
         Graphics( const Ogre::String &helpDescription );
         ~Graphics();
-        Ogre::SceneNode* createCube();
+        Ogre::SceneNode* createCube(const Types::GraphPose&);
         Ogre::SceneNode* createLight();
-        Ogre::SceneNode* createGraphShape( const Ogre::String& meshName, const Types::GraphPose& pose = Types::cDefaultGraphPose);
-        Ogre::SceneNode* createSphere();
+        Ogre::SceneNode* createGraphShape( const Ogre::String& meshName, const Types::GraphPose&);
+        Ogre::SceneNode* createSphere(const Types::GraphPose&);
     };
 }  // namespace MaxDoF::World
 

@@ -27,7 +27,7 @@ namespace MaxDoF::Types
         JPH::Quat orientation;
     };
 
-    inline const PhysPose cDefaultPose
+    inline const PhysPose cDefaultPhysPose
     {
         .position = cZeroVector,
         .orientation = cIdentity

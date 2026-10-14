@@ -85,9 +85,9 @@ namespace MaxDoF::World
         //void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
 
-        Ogre::SceneNode* createCube();
+        Ogre::SceneNode* createCube(const Types::PhysPose&);
         Ogre::SceneNode* createLight();
-        Ogre::SceneNode* createSphere();
+        World::Entity createSphere(const Types::PhysPose&, float radius, float mass);
     };
 }  // namespace MaxDoF::World
 
