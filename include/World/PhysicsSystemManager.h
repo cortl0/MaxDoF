@@ -11,6 +11,8 @@
 #include <Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h>
 #include <Jolt/Physics/Collision/ObjectLayer.h>
 
+#include <Utils/Types.h>
+
 #include "Utils/Types.h"
 #include "World/Entity.h"
 
@@ -72,15 +74,12 @@ namespace MaxDoF::World
         ~PhysicsSystemManager();
 
         void initialize(unsigned int maxBodies = 1024);
-        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::Pose& pose, float mass);
-        JPH::BodyID createPhysBox(const Types::Pose& pose, const JPH::RVec3& halfSize, float mass);
-        World::Entity createBoxEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId, const Types::Pose& pose, const JPH::RVec3& halfSize, float mass);
-        JPH::BodyID createPhysSphere(const Types::Pose& pose, float radius, float mass);
-        World::Entity createSphereEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId, const Types::Pose& pose, float radius, float mass);
+        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass);
+        JPH::BodyID createPhysBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass);
+        JPH::BodyID createPhysSphere(const Types::PhysPose& pose, float radius, float mass);
         World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);
         void update(float timeSinceLast);
-        void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
-
+        //void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
         JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
     };
 }  // namespace MaxDoF::World

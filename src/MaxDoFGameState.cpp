@@ -48,17 +48,19 @@ namespace MaxDoF
 
     void MaxDoFGameState::createCube()
     {
-        auto* node = createGraphicShape(ortCubeMeshName);
-        node->setPosition( Ogre::Vector3( 1.0f, 0.0f, -5.0f ) );
-        // node->setOrientation( Ogre::Quaternion::IDENTITY );
-        // node->setScale(Ogre::Vector3::UNIT_SCALE);
-        Types::Pose pose
+        auto graphPose = Types::GraphPose
+        {
+            .position = { 1.0f, 0.0f, -5.0f },
+            .orientation = Ogre::Quaternion::IDENTITY
+        };
+        auto* node = createGraphShape(ortCubeMeshName, graphPose);
+        Types::PhysPose physPose
         {
             .position = JPH::RVec3( 1.0f, 0.0f, -5.0f ),
             .orientation = Types::cIdentity
         };
-        auto bodyId = mPhysicsManager.createPhysBox( pose, Types::cUnitScaleVector / 2.0f, 1000.0f );
-        mPhysicsManager.createBoxEntity( node, bodyId, pose, Types::cUnitScaleVector / 2.0f, 1000.0f );
+        auto bodyId = mPhysicsManager.createPhysBox( physPose, Types::cUnitScaleVector / 2.0f, 1000.0f );
+        mPhysicsManager.createEntity(node, bodyId);
     }
 
     void MaxDoFGameState::createLight()
@@ -71,7 +73,7 @@ namespace MaxDoF
         light->setDirection( Ogre::Vector3( -1.0f, -1.0f, -1.0f ).normalisedCopy() );
     }
 
-    Ogre::SceneNode* MaxDoFGameState::createGraphicShape(const Ogre::String& meshName)
+    Ogre::SceneNode* MaxDoFGameState::createGraphShape(const Ogre::String& meshName, const Types::GraphPose& pose)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         auto* node = sceneManager->getRootSceneNode()->createChildSceneNode( Ogre::SCENE_DYNAMIC );
@@ -80,26 +82,32 @@ namespace MaxDoF
             Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
             Ogre::SCENE_DYNAMIC
         );
+        node->setPosition( pose.position );
+        node->setOrientation( pose.orientation );
         node->attachObject( item );
         return node;
     }
 
     void MaxDoFGameState::createSphere()
     {
-        auto* node = createGraphicShape(ortSphereMeshName);
-        node->setPosition( Ogre::Vector3( -1.0f, 0.0f, -5.0f ) );
-        Types::Pose pose
+        auto graphPose = Types::GraphPose
+        {
+            .position = { -1.0f, 0.0f, -5.0f },
+            .orientation = Ogre::Quaternion::IDENTITY
+        };
+        auto* node = createGraphShape(ortSphereMeshName, graphPose);
+        Types::PhysPose pose
         {
             .position = JPH::RVec3( -1.0f, 0.0f, -5.0f ),
             .orientation = Types::cIdentity
         };
         auto bodyId = mPhysicsManager.createPhysSphere( pose, 0.5f, 1000.0f );
-        mPhysicsManager.createSphereEntity( node, bodyId, pose, 0.5f, 1000.0f );
+        mPhysicsManager.createEntity(node, bodyId);
     }
 
     void MaxDoFGameState::createShip()
     {
-        auto* shipNode = createGraphicShape(ortSphereMeshName);
+        auto* shipNode = createGraphShape(ortSphereMeshName);
 
         Ogre::Camera *camera = mGraphicsSystem->getCamera();
         if( camera->getParentSceneNode() )
@@ -110,7 +118,7 @@ namespace MaxDoF
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
         auto bodyId = mPhysicsManager.createPhysSphere( Types::cDefaultPose, 1.0f, 5000.0f );
-        mShip = mPhysicsManager.createSphereEntity(shipNode, bodyId, Types::cDefaultPose, 1.0f, 5000.0f);
+        mShip = mPhysicsManager.createEntity(shipNode, bodyId);
         mSpacecraftController = std::make_unique<SpacecraftController>(
             mGraphicsSystem,
             shipNode,

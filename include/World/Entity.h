@@ -3,7 +3,7 @@
 #ifndef MaxDoF_Entity_H_
 #define MaxDoF_Entity_H_
 
-#define MAXDOF_CLIENT_BUILD
+#include "MaxDoFProject.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>

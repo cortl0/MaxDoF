@@ -3,7 +3,17 @@
 #ifndef MaxDoF_Types_Converters_H_
 #define MaxDoF_Types_Converters_H_
 
+#include "MaxDoFProject.h"
+
 #include <Jolt/Jolt.h>
+
+#ifdef MAXDOF_CLIENT_BUILD
+#include <OgreVector3.h>
+#include <OgreQuaternion.h>
+#include <OgreSceneNode.h>
+
+#include <OgrePrerequisites.h>
+#endif
 
 namespace MaxDoF::Types
 {
@@ -11,17 +21,31 @@ namespace MaxDoF::Types
     inline const JPH::RVec3 cZeroVector = JPH::RVec3::sZero();
     inline const JPH::Quat cIdentity = JPH::Quat::sIdentity();
 
-    struct Pose
+    struct PhysPose
     {
         JPH::RVec3 position;
         JPH::Quat orientation;
     };
 
-    inline const Pose cDefaultPose
+    inline const PhysPose cDefaultPose
     {
         .position = cZeroVector,
         .orientation = cIdentity
     };
+
+#ifdef MAXDOF_CLIENT_BUILD
+    struct GraphPose
+    {
+        Ogre::Vector3 position;
+        Ogre::Quaternion orientation;
+    };
+
+    inline const GraphPose cDefaultGraphPose
+    {
+        .position = Ogre::Vector3::ZERO,
+        .orientation = Ogre::Quaternion::IDENTITY
+    };
+#endif
 }  // namespace MaxDoF::Types
 
 #endif

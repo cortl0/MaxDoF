@@ -50,7 +50,7 @@ namespace MaxDoF
         void createCube();
         void createLight();
         void createShip();
-        Ogre::SceneNode* createGraphicShape( const Ogre::String& meshName );
+        Ogre::SceneNode* createGraphShape( const Ogre::String& meshName, const Types::GraphPose& pose = Types::cDefaultGraphPose);
         void createSphere();
         void createScene01() override;
         void update( float timeSinceLast ) override;
