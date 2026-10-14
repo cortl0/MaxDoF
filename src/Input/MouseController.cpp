@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #include "Input/MouseController.h"
 
 namespace MaxDoF::Input

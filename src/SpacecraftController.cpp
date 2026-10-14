@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #include "SpacecraftController.h"
 
 #include "GraphicsSystem.h"

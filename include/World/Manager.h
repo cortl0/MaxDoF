@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #ifndef MaxDoF_World_Manager_H_
 #define MaxDoF_World_Manager_H_
 
@@ -60,7 +61,9 @@ namespace MaxDoF::World
         JPH::TempAllocatorImpl*     mPhysicsAllocator{ nullptr };
         JPH::JobSystemThreadPool*   mJobSystem{ nullptr };
         JPH::PhysicsSystem*         mPhysicsSystem{ nullptr };
+
         Physics mPhysics;
+        Graphics mGraphics;
 
         std::unique_ptr<MyBroadPhaseLayerInterface>      mBroadPhaseLayerInterface;
         std::unique_ptr<MyObjectVsBroadPhaseLayerFilter> mObjectVsBroadPhaseLayerFilter;
@@ -73,10 +76,10 @@ namespace MaxDoF::World
         EntitiesIndex mEntitiesIndex;
 
     public:
-        Graphics mGraphics;
         Manager();
         ~Manager();
 
+        Graphics& getGraphics();
         void initialize(unsigned int maxBodies = 1024);
         World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);
         void update(float timeSinceLast);

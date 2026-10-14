@@ -1,25 +1,16 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #ifndef MaxDoF_TextOverleyManager_H_
 #define MaxDoF_TextOverleyManager_H_
 
-#include "GameState.h"
 #include "OgreTextAreaOverlayElement.h"
-
-namespace Ogre
-{
-    namespace v1
-    {
-        class TextAreaOverlayElement;
-    }
-}  // namespace Ogre
 
 namespace MaxDoF
 {
     /// Base game state for the tutorials. All it does is show a little text on screen :)
     class TextOverleyManager
     {
-
     protected:
         Demo::GraphicsSystem *mGraphicsSystem;
         Ogre::String mHelpDescription;

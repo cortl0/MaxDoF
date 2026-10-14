@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #ifndef MaxDoF_SpacecraftInputTranslator_H_
 #define MaxDoF_SpacecraftInputTranslator_H_
 

@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #ifndef MaxDoF_SpacecraftController_H_
 #define MaxDoF_SpacecraftController_H_
 

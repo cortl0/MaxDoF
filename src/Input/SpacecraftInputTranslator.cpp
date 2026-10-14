@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #include "Input/SpacecraftInputTranslator.h"
 #include "Input/KeyboardController.h"
 #include "Input/MouseController.h"

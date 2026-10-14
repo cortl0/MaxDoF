@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #include "World/Manager.h"
 
 #include <algorithm>
@@ -43,6 +44,11 @@ namespace MaxDoF::World
         }
     }
 
+    World::Graphics& Manager::getGraphics()
+    {
+        return mGraphics;
+    }
+
     void Manager::initialize(unsigned int maxBodies)
     {
         JPH::RegisterDefaultAllocator();
@@ -80,6 +86,8 @@ namespace MaxDoF::World
         mEntities.reserve(maxBodies);
         mEntitiesIndex.reserve(maxBodies * 2);
         mEntitiesIndex.max_load_factor(static_cast<float>(maxBodies));
+
+        mGraphics.initialize();
     }
 
     void Manager::update(float timeSinceLast)

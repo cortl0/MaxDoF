@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #include "MaxDoFGameState.h"
 
 #include "GraphicsSystem.h"
@@ -25,16 +26,16 @@ namespace MaxDoF
         mNumDisplayHelpModes( 2 )
     {
     }
-    //-----------------------------------------------------------------------------------
+
     TextOverleyManager::~TextOverleyManager()
     {
     }
-    //-----------------------------------------------------------------------------------
+
     void TextOverleyManager::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
     {
         mGraphicsSystem = graphicsSystem;
     }
-    //-----------------------------------------------------------------------------------
+
     void TextOverleyManager::createDebugTextOverlay()
     {
         Ogre::v1::OverlayManager &overlayManager = Ogre::v1::OverlayManager::getSingleton();
@@ -59,7 +60,7 @@ namespace MaxDoF
         overlay->add2D( panel );
         overlay->show();
     }
-    //-----------------------------------------------------------------------------------
+
     void TextOverleyManager::generateDebugText( float timeSinceLast )
     {
         Ogre::String finalText;

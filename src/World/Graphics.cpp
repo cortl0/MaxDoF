@@ -1,5 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
+
 #include "World/Graphics.h"
 
 #include "OgreItem.h"
@@ -10,9 +11,6 @@
 #include "OgreMesh2.h"
 #include "OgreMeshManager.h"
 #include "OgreMeshManager2.h"
-
-#include "OgreCamera.h"
-#include "OgreWindow.h"
 
 #include "OgreHlmsPbsDatablock.h"
 #include "OgreHlmsSamplerblock.h"
@@ -38,6 +36,18 @@ namespace MaxDoF::World
 
     Graphics::~Graphics()
     {
+    }
+
+    void Graphics::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
+    {
+        mGraphicsSystem = graphicsSystem;
+    }
+
+    void Graphics::initialize()
+    {
+        auto* sceneManager = mGraphicsSystem->getSceneManager();
+        Utils::createProceduralSphereV2( sceneManager, ortSphereMeshName, 0.5f, 16, 16 );
+        Utils::createProceduralCubeV2( sceneManager, ortCubeMeshName, 0.5f, 0.5f, 0.5f );
     }
 
     Ogre::SceneNode* Graphics::createCube(const Types::GraphPose& pose, const Ogre::Vector3& halfSize)
