@@ -91,7 +91,8 @@ namespace MaxDoF::World
         for (const auto& entity : mEntities)
         {
 #ifdef MAXDOF_CLIENT_BUILD
-            if (!entity.graphNode) continue;
+            if (!entity.graphNode)
+                continue;
 
             JPH::RVec3 position;
             JPH::Quat rotation;

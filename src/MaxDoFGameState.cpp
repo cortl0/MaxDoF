@@ -12,9 +12,7 @@
 namespace MaxDoF
 {
     MaxDoFGameState::MaxDoFGameState( const Ogre::String &helpDescription )
-#ifdef MAXDOF_CLIENT_BUILD
         : mTextOverleyManager( helpDescription )
-#endif
     {
     }
 
@@ -31,41 +29,14 @@ namespace MaxDoF
     }
 #endif
 
-    void MaxDoFGameState::createCube()
+    void MaxDoFGameState::connectCameraAndControllerToShip()
     {
-        Types::PhysPose pose
-        {
-            .position = JPH::RVec3( 1.0f, 0.0f, -5.0f ),
-            .orientation = Types::cIdentity
-        };
-        mWorldManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
-    }
-
-    void MaxDoFGameState::createLight()
-    {
-        mWorldManager.createLight();
-    }
-
-    void MaxDoFGameState::createSphere()
-    {
-        Types::PhysPose pose
-        {
-            .position = JPH::RVec3( -1.0f, 0.0f, -5.0f ),
-            .orientation = Types::cIdentity
-        };
-        mWorldManager.createSphere(pose, 0.5f, 1000.0f);
-    }
-
-    void MaxDoFGameState::createShip()
-    {
-        mShip = mWorldManager.createSphere(Types::cDefaultPhysPose, 0.5f, 5000.0f);
-
         Ogre::Camera *camera = mGraphicsSystem->getCamera();
         if( camera->getParentSceneNode() )
             camera->getParentSceneNode()->detachObject( camera );
         mShip.graphNode->attachObject( camera );
         camera->setPosition( Ogre::Vector3::ZERO );
-        // camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
+        //camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
         mSpacecraftController = std::make_unique<SpacecraftController>(
@@ -77,12 +48,11 @@ namespace MaxDoF
 
     void MaxDoFGameState::createScene01()
     {
+        mScene = std::make_unique<Scenes::Scene01>(mWorldManager);
         mWorldManager.initialize( mMaxBodiesLimit );
-
-        createLight();
-        createShip();
-        createCube();
-        createSphere();
+        mScene->createScene();
+        mShip = mScene->createShip();
+        connectCameraAndControllerToShip();
 
 #ifdef MAXDOF_CLIENT_BUILD
         mTextOverleyManager.createCrosshair();

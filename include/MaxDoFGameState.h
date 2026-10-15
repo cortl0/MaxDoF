@@ -11,6 +11,7 @@
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/SpacecraftInputTranslator.h"
+#include "Scenes/Scene01.h"
 #include "SpacecraftController.h"
 #include "World/Entity.h"
 #include "World/Manager.h"
@@ -31,15 +32,13 @@ namespace MaxDoF
         Input::SpacecraftInputTranslator mInputTranslator;
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;
+        std::unique_ptr<Scenes::Scene> mScene;
 
     public:
         MaxDoFGameState( const Ogre::String &helpDescription );
         ~MaxDoFGameState() override;
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
-        void createCube();
-        void createLight();
-        void createShip();
-        void createSphere();
+        void connectCameraAndControllerToShip();
         void createScene01() override;
         void update( float timeSinceLast ) override;
         void keyPressed( const SDL_KeyboardEvent &arg ) override;
