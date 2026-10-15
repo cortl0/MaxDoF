@@ -14,7 +14,9 @@ namespace MaxDoF::Scenes
         Scene01(World::Manager&);
         ~Scene01() override;
         void createCube();
+#ifdef MAXDOF_CLIENT_BUILD
         void createLight();
+#endif
         void createScene() override;
         World::Entity createShip() override;
         void createSphere();

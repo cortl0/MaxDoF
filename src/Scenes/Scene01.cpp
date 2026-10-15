@@ -24,14 +24,18 @@ namespace MaxDoF::Scenes
         mWorldManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
     }
 
+#ifdef MAXDOF_CLIENT_BUILD
     void Scene01::createLight()
     {
         mWorldManager.createLight();
     }
+#endif
 
     void Scene01::createScene()
     {
+#ifdef MAXDOF_CLIENT_BUILD
         createLight();
+#endif
         createCube();
         createSphere();
     }

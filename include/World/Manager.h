@@ -85,9 +85,7 @@ namespace MaxDoF::World
 #endif
             JPH::BodyID bodyId);
         void update(float timeSinceLast);
-        //void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
-
         World::Entity createCube(const Types::PhysPose&, const JPH::RVec3& halfSize, float mass);
 #ifdef MAXDOF_CLIENT_BUILD
         Ogre::SceneNode* createLight();

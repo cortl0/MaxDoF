@@ -6,12 +6,10 @@
 
 #include <Jolt/Jolt.h>
 
+#ifdef MAXDOF_CLIENT_BUILD
 #include <OgreVector3.h>
 #include <OgreQuaternion.h>
 #include <OgreSceneNode.h>
-
-#ifdef MAXDOF_CLIENT_BUILD
-#include <OgrePrerequisites.h>
 #endif
 
 namespace MaxDoF::Types

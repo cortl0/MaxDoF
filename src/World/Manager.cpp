@@ -7,7 +7,9 @@
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
 
+#ifdef MAXDOF_CLIENT_BUILD
 #include "Utils/Converters.h"
+#endif
 
 namespace MaxDoF::World
 {
@@ -88,9 +90,9 @@ namespace MaxDoF::World
         float physicsTimeStep = std::min(timeSinceLast, 0.1f);
         mPhysicsSystem->Update(physicsTimeStep, 1, mPhysicsAllocator, mJobSystem);
 
+#ifdef MAXDOF_CLIENT_BUILD
         for (const auto& entity : mEntities)
         {
-#ifdef MAXDOF_CLIENT_BUILD
             if (!entity.graphNode)
                 continue;
 
@@ -99,23 +101,9 @@ namespace MaxDoF::World
             mPhysics.getBodyInterface()->GetPositionAndRotation(entity.physId, position, rotation);
             entity.graphNode->setPosition(position.GetX(), position.GetY(), position.GetZ());
             entity.graphNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
-#endif
         }
+#endif
     }
-/*
-    void PhysicsSystemManager::syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode)
-    {
-        if (!mBodyInterface || !ogreNode) return;
-
-        JPH::RVec3 position;
-        JPH::Quat rotation;
-
-        mBodyInterface->GetPositionAndRotation(bodyId, position, rotation);
-
-        ogreNode->setPosition(position.GetX(), position.GetY(), position.GetZ());
-        ogreNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
-    }
-*/
 
     World::Entity Manager::createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
