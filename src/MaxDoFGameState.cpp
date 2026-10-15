@@ -11,8 +11,10 @@
 
 namespace MaxDoF
 {
-    MaxDoFGameState::MaxDoFGameState( const Ogre::String &helpDescription ) :
-        mTextOverleyManager( helpDescription )
+    MaxDoFGameState::MaxDoFGameState( const Ogre::String &helpDescription )
+#ifdef MAXDOF_CLIENT_BUILD
+        : mTextOverleyManager( helpDescription )
+#endif
     {
     }
 
@@ -20,12 +22,14 @@ namespace MaxDoF
     {
     }
 
+#ifdef MAXDOF_CLIENT_BUILD
     void MaxDoFGameState::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
     {
         mGraphicsSystem = graphicsSystem;
         mWorldManager.getGraphics()._notifyGraphicsSystem( mGraphicsSystem );
         mTextOverleyManager._notifyGraphicsSystem(graphicsSystem);
     }
+#endif
 
     void MaxDoFGameState::createCube()
     {
@@ -80,8 +84,10 @@ namespace MaxDoF
         createCube();
         createSphere();
 
+#ifdef MAXDOF_CLIENT_BUILD
         mTextOverleyManager.createCrosshair();
         mTextOverleyManager.createDebugTextOverlay();
+#endif
     }
 
     void MaxDoFGameState::update( float timeSinceLast )
@@ -97,10 +103,12 @@ namespace MaxDoF
             mSpacecraftController->update( timeSinceLast, data );
                 mMouseController.reset();
 
+#ifdef MAXDOF_CLIENT_BUILD
         if( mTextOverleyManager.mDisplayHelpMode != 0 )
         {
             mTextOverleyManager.generateDebugText( timeSinceLast );
         }
+#endif
     }
 
     void MaxDoFGameState::keyPressed( const SDL_KeyboardEvent &arg )
@@ -116,9 +124,11 @@ namespace MaxDoF
         if( arg.keysym.scancode == SDL_SCANCODE_F1 &&
             ( arg.keysym.mod & ~( KMOD_NUM | KMOD_CAPS ) ) == 0 )
         {
+#ifdef MAXDOF_CLIENT_BUILD
             mTextOverleyManager.mDisplayHelpMode = ( mTextOverleyManager.mDisplayHelpMode + 1 ) % mTextOverleyManager.mNumDisplayHelpModes;
 
             mTextOverleyManager.generateDebugText( 0 );
+#endif
         }
         else if( arg.keysym.scancode == SDL_SCANCODE_F1 &&
                  ( arg.keysym.mod & ( KMOD_LCTRL | KMOD_RCTRL ) ) )

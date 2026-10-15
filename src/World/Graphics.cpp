@@ -44,6 +44,7 @@ namespace MaxDoF::World
         return node;
     }
 
+#ifdef MAXDOF_CLIENT_BUILD
     Ogre::SceneNode* Graphics::createLight()
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
@@ -54,6 +55,7 @@ namespace MaxDoF::World
         light->setDirection( Ogre::Vector3( -1.0f, -1.0f, -1.0f ).normalisedCopy() );
         return node;
     }
+#endif
 
     Ogre::SceneNode* Graphics::createShape(const Ogre::String& meshName, const Types::GraphPose& pose)
     {

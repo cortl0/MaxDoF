@@ -13,7 +13,7 @@ namespace MaxDoF
         mShipNode( shipNode ),
         mBodyInterface( bodyInterface ),
         mShipBodyId( shipBodyId ),
-        mThrustPower( 75000.0f ), // Мощная тяга в Ньютонах для плавного разгона 1500-кг корабля
+        mThrustPower( 75000.0f ),
         mCameraBaseSpeed( 10 ),
         mCameraSpeedBoost( 5 ),
         mUseSceneNode( true )

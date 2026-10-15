@@ -28,7 +28,7 @@ echo "MAXDOF_PATH_JOLT_PHYSICS: ${MAXDOF_PATH_JOLT_PHYSICS}"
 
 sudo apt update || exit $?
 sudo apt-get install -y git || exit $?
-echo "Installing dependencies of OGRE Next"
+echo "Installing dependencies of OGRE Next" 
 sudo apt-get install -y libfreetype6-dev libfreeimage-dev libzzip-dev libxrandr-dev libxaw7-dev freeglut3-dev libgl1-mesa-dev libglu1-mesa-dev libxcb-randr0-dev libx11-xcb-dev libxcb-keysyms1-dev doxygen graphviz python3-clang libsdl2-dev cmake ninja-build || exit $?
 
 mkdir ${MAXDOF_PATH_DEPENDENCIES}

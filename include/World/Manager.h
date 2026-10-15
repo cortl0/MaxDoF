@@ -7,8 +7,6 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
-
-
 #include "World/Entity.h"
 
 #ifdef MAXDOF_CLIENT_BUILD
@@ -59,7 +57,9 @@ namespace MaxDoF::World
         JPH::PhysicsSystem*         mPhysicsSystem{ nullptr };
 
         Physics mPhysics;
+#ifdef MAXDOF_CLIENT_BUILD
         Graphics mGraphics;
+#endif
 
         std::unique_ptr<MyBroadPhaseLayerInterface>      mBroadPhaseLayerInterface;
         std::unique_ptr<MyObjectVsBroadPhaseLayerFilter> mObjectVsBroadPhaseLayerFilter;
@@ -75,15 +75,23 @@ namespace MaxDoF::World
         Manager();
         ~Manager();
 
+#ifdef MAXDOF_CLIENT_BUILD
         Graphics& getGraphics();
+#endif
         void initialize(unsigned int maxBodies = 1024);
-        World::Entity createEntity(Ogre::SceneNode* ogreNode, JPH::BodyID bodyId);
+        World::Entity createEntity(
+#ifdef MAXDOF_CLIENT_BUILD
+            Ogre::SceneNode* ogreNode,
+#endif
+            JPH::BodyID bodyId);
         void update(float timeSinceLast);
         //void syncPhysicsToGraphics(JPH::BodyID bodyId, Ogre::SceneNode* ogreNode);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
 
         World::Entity createCube(const Types::PhysPose&, const JPH::RVec3& halfSize, float mass);
+#ifdef MAXDOF_CLIENT_BUILD
         Ogre::SceneNode* createLight();
+#endif
         World::Entity createSphere(const Types::PhysPose&, float radius, float mass);
     };
 }  // namespace MaxDoF::World

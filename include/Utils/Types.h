@@ -4,10 +4,6 @@
 #ifndef MaxDoF_Types_Converters_H_
 #define MaxDoF_Types_Converters_H_
 
-#ifndef MAXDOF_CLIENT_BUILD
-#define MAXDOF_CLIENT_BUILD
-#endif
-
 #include <Jolt/Jolt.h>
 
 #include <OgreVector3.h>
