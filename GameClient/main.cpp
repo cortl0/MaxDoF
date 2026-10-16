@@ -1,8 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "GameClient/MaxDoFProject.h"
-
 #include <OgreConfigFile.h>
 
 #include "GameClient/MdfGame.h"
