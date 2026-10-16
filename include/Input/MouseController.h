@@ -4,7 +4,7 @@
 #ifndef MaxDoF_MouseController_H_
 #define MaxDoF_MouseController_H_
 
-#include "SDL_events.h"
+#include <SDL_events.h>
 
 namespace MaxDoF::Input
 {

@@ -5,8 +5,8 @@
 #define MaxDoF_World_Graphics_H_
 
 #include <GraphicsSystem.h>
-#include <TextOverleyManager.h>
 
+#include "Client/TextOverleyManager.h"
 #include "Utils/Types.h"
 
 namespace MaxDoF::World

@@ -4,8 +4,8 @@
 #ifndef MaxDoF_KeyboardController_H_
 #define MaxDoF_KeyboardController_H_
 
-#include "SDL_events.h"
-#include "OgreVector3.h"
+#include <SDL_events.h>
+#include <OgreVector3.h>
 
 namespace MaxDoF::Input
 {

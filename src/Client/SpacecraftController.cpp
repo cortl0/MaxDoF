@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "SpacecraftController.h"
+#include "Client/SpacecraftController.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyInterface.h>

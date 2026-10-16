@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "MaxDoFGameState.h"
+#include "Client/MaxDoFGameState.h"
 
 #include <OgreFrameStats.h>
 #include <OgreOverlay.h>

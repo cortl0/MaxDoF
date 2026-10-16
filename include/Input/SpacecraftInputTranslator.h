@@ -4,7 +4,7 @@
 #ifndef MaxDoF_SpacecraftInputTranslator_H_
 #define MaxDoF_SpacecraftInputTranslator_H_
 
-#include "SpacecraftController.h"
+#include "Client/SpacecraftController.h"
 
 namespace MaxDoF::Input
 {

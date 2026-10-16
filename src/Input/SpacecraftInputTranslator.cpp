@@ -2,9 +2,11 @@
 // GPL-3.0 license
 
 #include "Input/SpacecraftInputTranslator.h"
+
+#include <OgreVector3.h>
+
 #include "Input/KeyboardController.h"
 #include "Input/MouseController.h"
-#include "OgreVector3.h"
 
 namespace MaxDoF::Input
 {

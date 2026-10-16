@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "MaxDoFGameState.h"
+#include "Client/MaxDoFGameState.h"
 
 #include <OgreCamera.h>
 #include <OgreGpuProgramManager.h>
@@ -11,17 +11,17 @@
 
 namespace MaxDoF
 {
-    MaxDoFGameState::MaxDoFGameState( const Ogre::String &helpDescription )
+    Client::Client( const Ogre::String &helpDescription )
         : mTextOverleyManager( helpDescription )
     {
     }
 
-    MaxDoFGameState::~MaxDoFGameState()
+    Client::~Client()
     {
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
-    void MaxDoFGameState::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
+    void Client::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
     {
         mGraphicsSystem = graphicsSystem;
         mWorldManager.getGraphics()._notifyGraphicsSystem( mGraphicsSystem );
@@ -29,7 +29,7 @@ namespace MaxDoF
     }
 #endif
 
-    void MaxDoFGameState::connectCameraAndControllerToShip()
+    void Client::connectCameraAndControllerToShip()
     {
         Ogre::Camera *camera = mGraphicsSystem->getCamera();
         if( camera->getParentSceneNode() )
@@ -46,7 +46,7 @@ namespace MaxDoF
         );
     }
 
-    void MaxDoFGameState::createScene01()
+    void Client::createScene01()
     {
         mScene = std::make_unique<Scenes::Scene01>(mWorldManager);
         mWorldManager.initialize( mMaxBodiesLimit );
@@ -60,7 +60,7 @@ namespace MaxDoF
 #endif
     }
 
-    void MaxDoFGameState::update( float timeSinceLast )
+    void Client::update( float timeSinceLast )
     {
         // 1. Шагаем физику (Jolt считает мир и автоматически двигает Ogre-узлы из mEntities)
         mWorldManager.update( timeSinceLast );
@@ -81,7 +81,7 @@ namespace MaxDoF
 #endif
     }
 
-    void MaxDoFGameState::keyPressed( const SDL_KeyboardEvent &arg )
+    void Client::keyPressed( const SDL_KeyboardEvent &arg )
     {
         bool handledEvent = false;
         handledEvent = mKeyboardController.keyPressed( arg );
@@ -89,7 +89,7 @@ namespace MaxDoF
             GameState::keyPressed( arg );
     }
 
-    void MaxDoFGameState::keyReleased( const SDL_KeyboardEvent &arg )
+    void Client::keyReleased( const SDL_KeyboardEvent &arg )
     {
         if( arg.keysym.scancode == SDL_SCANCODE_F1 &&
             ( arg.keysym.mod & ~( KMOD_NUM | KMOD_CAPS ) ) == 0 )
@@ -150,7 +150,7 @@ namespace MaxDoF
         }
     }
 
-    void MaxDoFGameState::mouseMoved( const SDL_Event &arg )
+    void Client::mouseMoved( const SDL_Event &arg )
     {
         mMouseController.mouseMoved( arg );
         GameState::mouseMoved( arg );

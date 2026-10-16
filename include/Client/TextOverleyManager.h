@@ -4,8 +4,8 @@
 #ifndef MaxDoF_TextOverleyManager_H_
 #define MaxDoF_TextOverleyManager_H_
 
-#include "GraphicsSystem.h"
-#include "OgreTextAreaOverlayElement.h"
+#include <GraphicsSystem.h>
+#include <OgreTextAreaOverlayElement.h>
 
 namespace MaxDoF
 {

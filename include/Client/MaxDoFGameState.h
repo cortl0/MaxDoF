@@ -6,8 +6,8 @@
 
 #include <OgrePrerequisites.h>
 #include <GameState.h>
-#include <TextOverleyManager.h>
 
+#include "Client/TextOverleyManager.h"
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/SpacecraftInputTranslator.h"
@@ -16,11 +16,10 @@
 #include "World/Entity.h"
 #include "World/Manager.h"
 
-
 // Maximum Degrees of Freedom
 namespace MaxDoF
 {
-    class MaxDoFGameState : public Demo::GameState
+    class Client : public Demo::GameState
     {
     protected:
         Demo::GraphicsSystem *mGraphicsSystem{ nullptr };
@@ -35,8 +34,8 @@ namespace MaxDoF
         std::unique_ptr<Scenes::Scene> mScene;
 
     public:
-        MaxDoFGameState( const Ogre::String &helpDescription );
-        ~MaxDoFGameState() override;
+        Client( const Ogre::String &helpDescription );
+        ~Client() override;
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
         void connectCameraAndControllerToShip();
         void createScene01() override;

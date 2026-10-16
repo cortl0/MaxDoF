@@ -1,11 +1,11 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "MaxDoFProject.h"
+#include "Client/MaxDoFProject.h"
 
 #include <OgreConfigFile.h>
 
-#include "MaxDoFGameState.h"
+#include "Client/MaxDoFGameState.h"
 
 // Declares WinMain / main
 #include "MainEntryPointHelper.h"
@@ -182,7 +182,7 @@ namespace Demo
                                          GraphicsSystem **outGraphicsSystem,
                                          GameState **outLogicGameState, LogicSystem **outLogicSystem )
     {
-        MaxDoF::MaxDoFGameState *gfxGameState = new MaxDoF::MaxDoFGameState( "Empty Project Example" );
+        MaxDoF::Client *gfxGameState = new MaxDoF::Client( "MaxDoF Client" );
 
         GraphicsSystem *graphicsSystem = new MaxDoF::MaxDoFGraphicsSystem( gfxGameState );
 
