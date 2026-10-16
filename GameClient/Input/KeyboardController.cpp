@@ -87,4 +87,4 @@ namespace MaxDoF::GameClient::Input
 
         return state;
     }
-}  // namespace MaxDoF::Client::Input
+}  // namespace MaxDoF::GameClient::Input

@@ -3,7 +3,7 @@
 
 #include "GameCommon/Scenes/Scene.h"
 
-namespace MaxDoF::Scenes
+namespace MaxDoF::GameCommon::Scenes
 {
     Scene::Scene(World::Manager& worldManager) :
         mWorldManager(worldManager)
@@ -13,4 +13,4 @@ namespace MaxDoF::Scenes
     Scene::~Scene()
     {
     }
-}  // namespace MaxDoF::Scenes
+}  // namespace MaxDoF::GameCommon::Scenes

@@ -15,8 +15,8 @@ namespace MaxDoF::GameClient::Utils
     JPH::RVec3 OgreVector3ToJphRVec3( const Ogre::Vector3& );
     Ogre::Quaternion JphQuatToOgreQuaternion( const JPH::Quat& );
     Ogre::Vector3 JphRVec3ToOgreVector3( const JPH::RVec3& );
-    Types::GraphPose PhysPoseToGraphPose(const Types::PhysPose& );
-    Types::PhysPose GraphPoseToPhysPose(const Types::GraphPose& );
-}  // namespace MaxDoF::Client::Utils
+    GameCommon::Types::GraphPose PhysPoseToGraphPose(const GameCommon::Types::PhysPose& );
+    GameCommon::Types::PhysPose GraphPoseToPhysPose(const GameCommon::Types::GraphPose& );
+}  // namespace MaxDoF::GameClient::Utils
 
 #endif

@@ -11,8 +11,6 @@ set(SRC_FILES_GAMECOMMON_WORLD
     ${CMAKE_SOURCE_DIR}/GameCommon/World/Physics.cpp
 )
 
-set(MAXDOF_PATH_DEPENDENCIES "${CMAKE_SOURCE_DIR}/../MaxDoF-Dependencies")
-
 add_executable(${PROJECT_NAME} ${SRC_FILES_GAMESERVER} ${SRC_FILES_GAMECOMMON_SCENES} ${SRC_FILES_GAMECOMMON_WORLD})
 target_link_directories(${PROJECT_NAME} PRIVATE ${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/Build)
 target_link_libraries(${PROJECT_NAME} PRIVATE Jolt)

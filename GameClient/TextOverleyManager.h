@@ -28,6 +28,6 @@ namespace MaxDoF::GameClient
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
         void createCrosshair();
     };
-}  // namespace MaxDoF::Client
+}  // namespace MaxDoF::GameClient
 
 #endif

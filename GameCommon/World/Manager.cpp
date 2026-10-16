@@ -11,7 +11,7 @@
 #include "GameClient/Utils/Converters.h"
 #endif
 
-namespace MaxDoF::World
+namespace MaxDoF::GameCommon::World
 {
     Manager::Manager()
 #ifdef MAXDOF_CLIENT_BUILD
@@ -149,4 +149,4 @@ namespace MaxDoF::World
 #endif
             mPhysics.createSphere( pose, radius, mass ));
     }
-}  // namespace MaxDoF::World
+}  // namespace MaxDoF::GameCommon::World

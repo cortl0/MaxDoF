@@ -43,6 +43,6 @@ namespace MaxDoF::GameClient::Input
         /// Сброс состояний (опционально, например при потере фокуса окна)
         void reset();
     };
-}  // namespace MaxDoF::Client::Input
+}  // namespace MaxDoF::GameClient::Input
 
 #endif

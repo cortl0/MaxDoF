@@ -29,4 +29,4 @@ namespace MaxDoF::GameClient::Input
         uint32_t mouseState = SDL_GetMouseState(&mouseX, &mouseY);
         return (mouseState & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
     }
-}  // namespace MaxDoF::Client::Input
+}  // namespace MaxDoF::GameClient::Input

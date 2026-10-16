@@ -7,7 +7,7 @@
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 
-namespace MaxDoF::World
+namespace MaxDoF::GameCommon::World
 {
     Physics::Physics()
     {
@@ -46,4 +46,4 @@ namespace MaxDoF::World
         return setBodySettings(shapeSettings.Create(), pose, mass);
     }
 
-}  // namespace MaxDoF::World
+}  // namespace MaxDoF::GameCommon::World

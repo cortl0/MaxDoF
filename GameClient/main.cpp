@@ -172,7 +172,7 @@ namespace MaxDoF::GameClient
 #endif
         }
     };
-}  // namespace MaxDoF::Client
+}  // namespace MaxDoF::GameClient
 
 namespace Demo
 {
@@ -198,4 +198,4 @@ namespace Demo
     }
 
     const char *MainEntryPoints::getWindowTitle() { return "Empty Project Sample"; }
-}  // namespace MaxDoF
+}  // namespace Demo

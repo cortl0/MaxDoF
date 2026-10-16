@@ -1,8 +1,8 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_GameClient_Game_H_
-#define MaxDoF_GameClient_Game_H_
+#ifndef MaxDoF_GameClient_MdfGame_H_
+#define MaxDoF_GameClient_MdfGame_H_
 
 #include <OgrePrerequisites.h>
 #include <GameState.h>
@@ -16,7 +16,6 @@
 #include "GameCommon/Types/Entity.h"
 #include "GameCommon/World/Manager.h"
 
-// Maximum Degrees of Freedom
 namespace MaxDoF::GameClient
 {
     class MdfGame : public Demo::GameState
@@ -25,13 +24,13 @@ namespace MaxDoF::GameClient
         Demo::GraphicsSystem *mGraphicsSystem{ nullptr };
         TextOverleyManager mTextOverleyManager;
         const unsigned int mMaxBodiesLimit{ 2048 };
-        Types::Entity mShip;
-        MaxDoF::World::Manager mWorldManager;
+        GameCommon::Types::Entity mShip;
+        GameCommon::World::Manager mWorldManager;
         std::unique_ptr<ShipController> mSpacecraftController;
         Input::ControllerTranslator mInputTranslator;
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;
-        std::unique_ptr<Scenes::Scene> mScene;
+        std::unique_ptr<GameCommon::Scenes::Scene> mScene;
 
     public:
         MdfGame( const Ogre::String &helpDescription );
@@ -44,6 +43,6 @@ namespace MaxDoF::GameClient
         void keyReleased( const SDL_KeyboardEvent &arg ) override;
         void mouseMoved( const SDL_Event &arg ) override;
     };
-}  // namespace MaxDoF::Client
+}  // namespace MaxDoF::GameClient
 
 #endif

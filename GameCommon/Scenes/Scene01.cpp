@@ -3,7 +3,7 @@
 
 #include "GameCommon/Scenes/Scene01.h"
 
-namespace MaxDoF::Scenes
+namespace MaxDoF::GameCommon::Scenes
 {
     Scene01::Scene01(World::Manager& worldManager) : 
         Scene(worldManager)
@@ -54,4 +54,4 @@ namespace MaxDoF::Scenes
         };
         mWorldManager.createSphere(pose, 0.5f, 1000.0f);
     }
-}  // namespace MaxDoF::Scenes
+}  // namespace MaxDoF::GameCommon::Scenes

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "MdfServer.h"
+#include "GameServer/MdfServer.h"
 
 int main()
 {

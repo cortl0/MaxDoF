@@ -5,6 +5,7 @@ cmake_minimum_required( VERSION 3.5.1 )
 
 project(MaxDoFsss)
 
+set(MAXDOF_PATH_DEPENDENCIES "${CMAKE_SOURCE_DIR}/../MaxDoF-Dependencies")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
 
 add_subdirectory(GameClient)

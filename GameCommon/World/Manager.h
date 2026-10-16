@@ -1,8 +1,8 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_World_Manager_H_
-#define MaxDoF_World_Manager_H_
+#ifndef MaxDoF_GameCommon_World_Manager_H_
+#define MaxDoF_GameCommon_World_Manager_H_
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
@@ -22,7 +22,7 @@ namespace JPH
 }
 namespace Ogre { class SceneNode; }
 
-namespace MaxDoF::World
+namespace MaxDoF::GameCommon::World
 {
     // 1. Заглушка для слоев широкой фазы (BroadPhase)
     class MyBroadPhaseLayerInterface final : public JPH::BroadPhaseLayerInterface
@@ -92,6 +92,6 @@ namespace MaxDoF::World
 #endif
         Types::Entity createSphere(const Types::PhysPose&, float radius, float mass);
     };
-}  // namespace MaxDoF::World
+}  // namespace MaxDoF::GameCommon::World
 
 #endif

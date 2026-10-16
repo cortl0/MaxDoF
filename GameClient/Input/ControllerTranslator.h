@@ -19,6 +19,6 @@ namespace MaxDoF::GameClient::Input
             const MouseController* mouse
         );
     };
-}  // namespace MaxDoF::Client::Input
+}  // namespace MaxDoF::GameClient::Input
 
 #endif

@@ -37,4 +37,4 @@ namespace MaxDoF::GameClient::Input
 
         return outData;
     }
-}  // namespace MaxDoF::Client::Input
+}  // namespace MaxDoF::GameClient::Input

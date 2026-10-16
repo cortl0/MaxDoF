@@ -1,8 +1,8 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_Types_Poses_H_
-#define MaxDoF_Types_Poses_H_
+#ifndef MaxDoF_GameCommon_Types_Poses_H_
+#define MaxDoF_GameCommon_Types_Poses_H_
 
 #include <Jolt/Jolt.h>
 
@@ -12,7 +12,7 @@
 #include <OgreSceneNode.h>
 #endif
 
-namespace MaxDoF::Types
+namespace MaxDoF::GameCommon::Types
 {
     inline const JPH::RVec3 cUnitScaleVector{ 1.0f, 1.0f, 1.0f };
     inline const JPH::RVec3 cZeroVector = JPH::RVec3::sZero();
@@ -43,6 +43,6 @@ namespace MaxDoF::Types
         .orientation = Ogre::Quaternion::IDENTITY
     };
 #endif
-}  // namespace MaxDoF::Types
+}  // namespace MaxDoF::GameCommon::Types
 
 #endif

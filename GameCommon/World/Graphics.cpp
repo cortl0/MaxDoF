@@ -32,9 +32,9 @@ namespace MaxDoF::GameClient::World
         Utils::createProceduralCubeV2( sceneManager, ortCubeMeshName, 0.5f, 0.5f, 0.5f );
     }
 
-    Ogre::SceneNode* Graphics::createCube(const Types::GraphPose& pose, const Ogre::Vector3& halfSize)
+    Ogre::SceneNode* Graphics::createCube(const GameCommon::Types::GraphPose& pose, const Ogre::Vector3& halfSize)
     {
-        auto graphPose = Types::GraphPose
+        auto graphPose = GameCommon::Types::GraphPose
         {
             .position = { 1.0f, 0.0f, -5.0f },
             .orientation = Ogre::Quaternion::IDENTITY
@@ -57,7 +57,7 @@ namespace MaxDoF::GameClient::World
     }
 #endif
 
-    Ogre::SceneNode* Graphics::createShape(const Ogre::String& meshName, const Types::GraphPose& pose)
+    Ogre::SceneNode* Graphics::createShape(const Ogre::String& meshName, const GameCommon::Types::GraphPose& pose)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         auto* node = sceneManager->getRootSceneNode()->createChildSceneNode( Ogre::SCENE_DYNAMIC );
@@ -72,7 +72,7 @@ namespace MaxDoF::GameClient::World
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createSphere(const Types::GraphPose& pose, float radius)
+    Ogre::SceneNode* Graphics::createSphere(const GameCommon::Types::GraphPose& pose, float radius)
     {
         auto* node = createShape( ortSphereMeshName, pose );
         node->setScale( Ogre::Vector3::UNIT_SCALE * radius * 2.0f );

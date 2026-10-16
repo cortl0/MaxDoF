@@ -52,6 +52,6 @@ namespace MaxDoF::GameClient
 
         bool update( float timeSinceLast, const ControllerData& mControllerData );
     };
-}  // namespace MaxDoF::Client
+}  // namespace MaxDoF::GameClient
 
 #endif

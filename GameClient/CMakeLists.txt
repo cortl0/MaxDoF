@@ -10,7 +10,6 @@ find_package(SDL2 REQUIRED)
 include(CMake/Bootstrap.cmake)
 include(CMake/Dependencies/OGRE.cmake)
 
-set(MAXDOF_PATH_DEPENDENCIES "${CMAKE_SOURCE_DIR}/../MaxDoF-Dependencies")
 set(OGRE_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/ogre-next" CACHE STRING "Path to OGRE-Next source code")
 set(OGRE_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/build/Debug" CACHE STRING "Path to OGRE-Next build folder")
 

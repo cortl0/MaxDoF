@@ -25,22 +25,22 @@ namespace MaxDoF::GameClient::Utils
         return Ogre::Vector3( v.GetX(), v.GetY(), v.GetZ() );
     }
 
-    Types::GraphPose PhysPoseToGraphPose(const Types::PhysPose& p)
+    GameCommon::Types::GraphPose PhysPoseToGraphPose(const GameCommon::Types::PhysPose& p)
     {
-        return Types::GraphPose
+        return GameCommon::Types::GraphPose
         {
             .position = JphRVec3ToOgreVector3( p.position ),
             .orientation = JphQuatToOgreQuaternion( p.orientation )
         };
     }
 
-    Types::PhysPose GraphPoseToPhysPose(const Types::GraphPose& p)
+    GameCommon::Types::PhysPose GraphPoseToPhysPose(const GameCommon::Types::GraphPose& p)
     {
-        return Types::PhysPose
+        return GameCommon::Types::PhysPose
         {
             .position = OgreVector3ToJphRVec3( p.position ),
             .orientation = OgreQuaternionToJphQuat( p.orientation )
         };
     }
 
-}  // namespace MaxDoF::Client::Utils
+}  // namespace MaxDoF::GameClient::Utils

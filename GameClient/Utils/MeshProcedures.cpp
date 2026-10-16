@@ -143,4 +143,4 @@ namespace MaxDoF::GameClient::Utils
         mesh->load();
         sceneManager->destroyManualObject(manual);
     }
-}  // namespace MaxDoF::Client::Utils
+}  // namespace MaxDoF::GameClient::Utils

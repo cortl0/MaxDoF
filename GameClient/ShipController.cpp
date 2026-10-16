@@ -92,4 +92,4 @@ namespace MaxDoF::GameClient
 
         return result;
     }
-}  // namespace MaxDoF::Client
+}  // namespace MaxDoF::GameClient

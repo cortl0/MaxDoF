@@ -48,7 +48,7 @@ namespace MaxDoF::GameClient
 
     void MdfGame::createScene01()
     {
-        mScene = std::make_unique<Scenes::Scene01>(mWorldManager);
+        mScene = std::make_unique<GameCommon::Scenes::Scene01>(mWorldManager);
         mWorldManager.initialize( mMaxBodiesLimit );
         mScene->createScene();
         mShip = mScene->createShip();
@@ -155,4 +155,4 @@ namespace MaxDoF::GameClient
         mMouseController.mouseMoved( arg );
         GameState::mouseMoved( arg );
     }
-}  // namespace MaxDoF::Client
+}  // namespace MaxDoF::GameClient

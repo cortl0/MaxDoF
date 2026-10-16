@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "MdfServer.h"
+#include "GameServer/MdfServer.h"
 
 namespace MaxDoF::GameServer
 {
@@ -15,7 +15,7 @@ namespace MaxDoF::GameServer
 
     void MdfServer::createScene01()
     {
-        mScene = std::make_unique<Scenes::Scene01>(mWorldManager);
+        mScene = std::make_unique<GameCommon::Scenes::Scene01>(mWorldManager);
         // mWorldManager.initialize( mMaxBodiesLimit );
         mScene->createScene();
         // mShip = mScene->createShip();

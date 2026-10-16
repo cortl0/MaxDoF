@@ -164,4 +164,4 @@ namespace MaxDoF::GameClient
         crosshairOverlay->show();
     }
 
-}  // namespace MaxDoF::Client
+}  // namespace MaxDoF::GameClient
