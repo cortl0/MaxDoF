@@ -11,7 +11,7 @@ bin/Data/DebugPack.zip
 bin/Data/resources2.cfg
 Ogre.log
 
-include/OgreCommon/
-src/OgreCommon/
+GameClient/OgreCommon/include/
+GameClient/OgreCommon/src/
 
 Dependencies/Ogre

@@ -228,11 +228,11 @@ endfunction()
 
 function( setupOgreSamplesCommon )
 	message( STATUS "Copying OgreSamplesCommon cpp and header files to
-		${CMAKE_SOURCE_DIR}/include/OgreCommon
-		${CMAKE_SOURCE_DIR}/src/OgreCommon/" )
-	include_directories( "${CMAKE_SOURCE_DIR}/include/OgreCommon/" )
-	file( COPY "${OGRE_SOURCE}/Samples/2.0/Common/include/"	DESTINATION "${CMAKE_SOURCE_DIR}/include/OgreCommon/" )
-	file( COPY "${OGRE_SOURCE}/Samples/2.0/Common/src/"		DESTINATION "${CMAKE_SOURCE_DIR}/src/OgreCommon/" )
+		${CMAKE_CURRENT_SOURCE_DIR}/OgreCommon/include
+		${CMAKE_CURRENT_SOURCE_DIR}/OgreCommon/src" )
+	include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/OgreCommon/include" )
+	file( COPY "${OGRE_SOURCE}/Samples/2.0/Common/include/"	DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/OgreCommon/include" )
+	file( COPY "${OGRE_SOURCE}/Samples/2.0/Common/src/"		DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/OgreCommon/src" )
 endfunction()
 
 #----------------------------------------------------------------------------------------
