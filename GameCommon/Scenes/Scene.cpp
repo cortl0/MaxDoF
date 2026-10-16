@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Scenes/Scene.h"
+#include "GameCommon/Scenes/Scene.h"
 
 namespace MaxDoF::Scenes
 {

@@ -4,9 +4,9 @@
 #ifndef MaxDoF_Server_H_
 #define MaxDoF_Server_H_
 
-#include "Scenes/Scene01.h"
-#include "Types/Entity.h"
-#include "World/Manager.h"
+#include "GameCommon/Scenes/Scene01.h"
+#include "GameCommon/Types/Entity.h"
+#include "GameCommon/World/Manager.h"
 
 // Maximum Degrees of Freedom
 namespace MaxDoF::GameServer

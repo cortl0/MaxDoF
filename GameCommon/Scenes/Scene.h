@@ -4,8 +4,8 @@
 #ifndef MaxDoF_Scenes_Scene_H_
 #define MaxDoF_Scenes_Scene_H_
 
-#include "Types/Entity.h"
-#include "World/Manager.h"
+#include "GameCommon/Types/Entity.h"
+#include "GameCommon/World/Manager.h"
 
 namespace MaxDoF::Scenes
 {

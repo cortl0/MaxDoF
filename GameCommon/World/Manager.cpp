@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "World/Manager.h"
+#include "GameCommon/World/Manager.h"
 
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>

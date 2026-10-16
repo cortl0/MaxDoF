@@ -7,7 +7,7 @@
 #include <Jolt/Jolt.h>
 #include <OgrePrerequisites.h>
 
-#include "Types/Poses.h"
+#include "GameCommon/Types/Poses.h"
 
 namespace MaxDoF::GameClient::Utils
 {

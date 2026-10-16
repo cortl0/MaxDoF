@@ -11,10 +11,10 @@
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/ControllerTranslator.h"
-#include "Scenes/Scene01.h"
+#include "GameCommon/Scenes/Scene01.h"
 #include "ShipController.h"
-#include "Types/Entity.h"
-#include "World/Manager.h"
+#include "GameCommon/Types/Entity.h"
+#include "GameCommon/World/Manager.h"
 
 // Maximum Degrees of Freedom
 namespace MaxDoF::GameClient

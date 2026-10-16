@@ -7,13 +7,13 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
-#include "Types/Entity.h"
+#include "GameCommon/Types/Entity.h"
 
 #ifdef MAXDOF_CLIENT_BUILD
-#include "World/Graphics.h"
+#include "GameCommon/World/Graphics.h"
 #endif
 
-#include "World/Physics.h"
+#include "GameCommon/World/Physics.h"
 namespace JPH
 {
     class TempAllocatorImpl;

@@ -7,7 +7,7 @@
 #include <GraphicsSystem.h>
 
 #include "GameClient/TextOverleyManager.h"
-#include "Types/Poses.h"
+#include "GameCommon/Types/Poses.h"
 
 namespace MaxDoF::GameClient::World
 {

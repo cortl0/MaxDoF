@@ -4,7 +4,7 @@
 #ifndef MaxDoF_Scenes_Scene01_H_
 #define MaxDoF_Scenes_Scene01_H_
 
-#include "Scenes/Scene.h"
+#include "GameCommon/Scenes/Scene.h"
 
 namespace MaxDoF::Scenes
 {

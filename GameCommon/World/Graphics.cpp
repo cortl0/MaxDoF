@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "World/Graphics.h"
+#include "GameCommon/World/Graphics.h"
 
 #include <OgreItem.h>
 #include <OgreSceneManager.h>
