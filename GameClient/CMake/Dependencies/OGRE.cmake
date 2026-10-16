@@ -133,10 +133,10 @@ macro( setupPluginFileFromTemplate BUILD_TYPE
 		findPluginAndSetPath( ${BUILD_TYPE} OGRE_PLUGIN_RS_VULKAN	RenderSystem_Vulkan )
 
 		if( ${BUILD_TYPE} STREQUAL "Debug" )
-			configure_file( ${CMAKE_SOURCE_DIR}/CMake/Templates/Plugins.cfg.in
+			configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/Plugins.cfg.in
 							${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}/plugins_d.cfg )
 		else()
-			configure_file( ${CMAKE_SOURCE_DIR}/CMake/Templates/Plugins.cfg.in
+			configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/Plugins.cfg.in
 							${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}/plugins.cfg )
 		endif()
 
@@ -213,7 +213,7 @@ endmacro()
 # Creates Resources.cfg out of user-editable CMake/Templates/Resources.cfg.in
 function( setupResourceFileFromTemplate )
 	message( STATUS "Generating ${CMAKE_SOURCE_DIR}/bin/Data/resources2.cfg from template
-		${CMAKE_SOURCE_DIR}/CMake/Templates/Resources.cfg.in" )
+		${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/Resources.cfg.in" )
 	if( APPLE )
 		set( OGRE_MEDIA_DIR "Contents/Resources/" )
 	elseif( ANDROID )
@@ -221,7 +221,7 @@ function( setupResourceFileFromTemplate )
 	else()
 		set( OGRE_MEDIA_DIR "../" )
 	endif()
-	configure_file( ${CMAKE_SOURCE_DIR}/CMake/Templates/Resources.cfg.in ${CMAKE_SOURCE_DIR}/bin/Data/resources2.cfg )
+	configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/Resources.cfg.in ${CMAKE_SOURCE_DIR}/bin/Data/resources2.cfg )
 endfunction()
 
 #----------------------------------------------------------------------------------------
