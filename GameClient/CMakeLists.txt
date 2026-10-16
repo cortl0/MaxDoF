@@ -3,7 +3,7 @@
 
 cmake_minimum_required( VERSION 3.5.1 )
 
-project(MaxDoF)
+project(MaxDoFGame)
 
 find_package(SDL2 REQUIRED)
 

@@ -1,6 +1,8 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
+#include "version.h"
+
 #include <OgreConfigFile.h>
 
 #include "GameClient/MdfGame.h"
@@ -38,6 +40,7 @@ INT WINAPI WinMainApp( HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR strCmdLin
 int mainApp( int argc, const char *argv[] )
 #endif
 {
+    std::cout << "MaxDoF Game Version: " << MaxDoF_VERSION_STRING << std::endl;
     return Demo::MainEntryPoints::mainAppSingleThreaded( DEMO_MAIN_ENTRY_PARAMS );
 }
 
