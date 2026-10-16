@@ -98,4 +98,4 @@ make -j12 || exit $?
 
 echo "Run MaxDoF"
 cd ${MAXDOF_PATH}/bin/Debug
-./MaxDoF
+./MaxDoFGame
