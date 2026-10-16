@@ -1,6 +1,6 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
-#include "Utils/MeshProcedures.h"
+#include "GameClient/Utils/MeshProcedures.h"
 
 #include <OgreSceneManager.h>
 #include <OgreManualObject2.h>
@@ -8,7 +8,7 @@
 #include <OgreMeshManager.h>
 #include <OgreMeshManager2.h>
 
-namespace MaxDoF::Utils
+namespace MaxDoF::GameClient::Utils
 {
     bool testName(const Ogre::String &meshName)
     {
@@ -143,4 +143,4 @@ namespace MaxDoF::Utils
         mesh->load();
         sceneManager->destroyManualObject(manual);
     }
-}  // namespace MaxDoF::Utils
+}  // namespace MaxDoF::Client::Utils

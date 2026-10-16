@@ -1,8 +1,8 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_SpacecraftController_H_
-#define MaxDoF_SpacecraftController_H_
+#ifndef MaxDoF_GameClient_ShipController_H_
+#define MaxDoF_GameClient_ShipController_H_
 
 #include <OgreVector3.h>
 #include <OgreSceneNode.h>
@@ -13,9 +13,9 @@ namespace JPH {
     class BodyID;
 }
 
-namespace MaxDoF
+namespace MaxDoF::GameClient
 {
-    class SpacecraftController
+    class ShipController
     {
     private:
         Ogre::SceneNode*      mShipNode{ nullptr };
@@ -47,11 +47,11 @@ namespace MaxDoF
         };
 
         // Обновленный конструктор принимает узел графики, интерфейс физики и ID тела корабля
-        SpacecraftController( Ogre::SceneNode *shipNode,
+        ShipController( Ogre::SceneNode *shipNode,
                              JPH::BodyInterface* bodyInterface, JPH::BodyID* shipBodyId );
 
         bool update( float timeSinceLast, const ControllerData& mControllerData );
     };
-}  // namespace MaxDoF
+}  // namespace MaxDoF::Client
 
 #endif

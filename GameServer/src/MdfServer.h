@@ -5,22 +5,22 @@
 #define MaxDoF_Server_H_
 
 #include "Scenes/Scene01.h"
-#include "World/Entity.h"
+#include "Types/Entity.h"
 #include "World/Manager.h"
 
 // Maximum Degrees of Freedom
-namespace MaxDoF::Server
+namespace MaxDoF::GameServer
 {
-    class Server
+    class MdfServer
     {
         World::Manager mWorldManager;
         std::unique_ptr<Scenes::Scene> mScene;
 
     public:
-        Server();
-        ~Server();
+        MdfServer();
+        ~MdfServer();
         void createScene01();
     };
-}  // namespace MaxDoF::Server
+}  // namespace MaxDoF::GameServer
 
 #endif

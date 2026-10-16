@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Client/MaxDoFGameState.h"
+#include "GameClient/MdfGame.h"
 
 #include <OgreCamera.h>
 #include <OgreGpuProgramManager.h>
@@ -9,19 +9,19 @@
 #include <OgreHlmsManager.h>
 #include <OgreRoot.h>
 
-namespace MaxDoF
+namespace MaxDoF::GameClient
 {
-    Client::Client( const Ogre::String &helpDescription )
+    MdfGame::MdfGame( const Ogre::String &helpDescription )
         : mTextOverleyManager( helpDescription )
     {
     }
 
-    Client::~Client()
+    MdfGame::~MdfGame()
     {
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
-    void Client::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
+    void MdfGame::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
     {
         mGraphicsSystem = graphicsSystem;
         mWorldManager.getGraphics()._notifyGraphicsSystem( mGraphicsSystem );
@@ -29,7 +29,7 @@ namespace MaxDoF
     }
 #endif
 
-    void Client::connectCameraAndControllerToShip()
+    void MdfGame::connectCameraAndControllerToShip()
     {
         Ogre::Camera *camera = mGraphicsSystem->getCamera();
         if( camera->getParentSceneNode() )
@@ -39,14 +39,14 @@ namespace MaxDoF
         //camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
-        mSpacecraftController = std::make_unique<SpacecraftController>(
+        mSpacecraftController = std::make_unique<ShipController>(
             mShip.graphNode,
             mWorldManager.getBodyInterface(),
             &mShip.physId
         );
     }
 
-    void Client::createScene01()
+    void MdfGame::createScene01()
     {
         mScene = std::make_unique<Scenes::Scene01>(mWorldManager);
         mWorldManager.initialize( mMaxBodiesLimit );
@@ -60,7 +60,7 @@ namespace MaxDoF
 #endif
     }
 
-    void Client::update( float timeSinceLast )
+    void MdfGame::update( float timeSinceLast )
     {
         // 1. Шагаем физику (Jolt считает мир и автоматически двигает Ogre-узлы из mEntities)
         mWorldManager.update( timeSinceLast );
@@ -81,7 +81,7 @@ namespace MaxDoF
 #endif
     }
 
-    void Client::keyPressed( const SDL_KeyboardEvent &arg )
+    void MdfGame::keyPressed( const SDL_KeyboardEvent &arg )
     {
         bool handledEvent = false;
         handledEvent = mKeyboardController.keyPressed( arg );
@@ -89,7 +89,7 @@ namespace MaxDoF
             GameState::keyPressed( arg );
     }
 
-    void Client::keyReleased( const SDL_KeyboardEvent &arg )
+    void MdfGame::keyReleased( const SDL_KeyboardEvent &arg )
     {
         if( arg.keysym.scancode == SDL_SCANCODE_F1 &&
             ( arg.keysym.mod & ~( KMOD_NUM | KMOD_CAPS ) ) == 0 )
@@ -150,9 +150,9 @@ namespace MaxDoF
         }
     }
 
-    void Client::mouseMoved( const SDL_Event &arg )
+    void MdfGame::mouseMoved( const SDL_Event &arg )
     {
         mMouseController.mouseMoved( arg );
         GameState::mouseMoved( arg );
     }
-}  // namespace MaxDoF
+}  // namespace MaxDoF::Client

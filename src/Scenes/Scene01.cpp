@@ -40,7 +40,7 @@ namespace MaxDoF::Scenes
         createSphere();
     }
 
-    World::Entity Scene01::createShip()
+    Types::Entity Scene01::createShip()
     {
         return mWorldManager.createSphere(Types::cDefaultPhysPose, 0.5f, 5000.0f);
     }

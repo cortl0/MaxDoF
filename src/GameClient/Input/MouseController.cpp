@@ -1,9 +1,9 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Input/MouseController.h"
+#include "GameClient/Input/MouseController.h"
 
-namespace MaxDoF::Input
+namespace MaxDoF::GameClient::Input
 {
     MouseController::MouseController() :
         mRelativeX( 0.0f ),
@@ -29,4 +29,4 @@ namespace MaxDoF::Input
         uint32_t mouseState = SDL_GetMouseState(&mouseX, &mouseY);
         return (mouseState & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
     }
-}  // namespace MaxDoF::Input
+}  // namespace MaxDoF::Client::Input

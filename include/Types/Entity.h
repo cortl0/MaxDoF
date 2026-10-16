@@ -1,8 +1,8 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_Entity_H_
-#define MaxDoF_Entity_H_
+#ifndef MaxDoF_Types_Entity_H_
+#define MaxDoF_Types_Entity_H_
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>
@@ -11,7 +11,7 @@
 #include <OgreSceneNode.h>
 #endif
 
-namespace MaxDoF::World
+namespace MaxDoF::Types
 {
     struct Entity
     {
@@ -20,6 +20,6 @@ namespace MaxDoF::World
         Ogre::SceneNode* graphNode{ nullptr };
 #endif
     };
-}  // namespace MaxDoF::World
+}  // namespace MaxDoF::Types
 
 #endif

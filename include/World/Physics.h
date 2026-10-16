@@ -8,7 +8,7 @@
 #include <Jolt/Physics/Body/BodyInterface.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
-#include "Utils/Types.h"
+#include "Types/Poses.h"
 
 namespace MaxDoF::World
 {

@@ -1,7 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Client/MaxDoFGameState.h"
+#include "GameClient/TextOverleyManager.h"
 
 #include <OgreFrameStats.h>
 #include <OgreOverlay.h>
@@ -12,7 +12,7 @@
 #include <OgreHlmsUnlit.h>
 #include <OgreHlmsUnlitDatablock.h>
 
-namespace MaxDoF
+namespace MaxDoF::GameClient
 {
     TextOverleyManager::TextOverleyManager( const Ogre::String &helpDescription ) :
         mGraphicsSystem( 0 ),
@@ -164,4 +164,4 @@ namespace MaxDoF
         crosshairOverlay->show();
     }
 
-}  // namespace MaxDoF
+}  // namespace MaxDoF::Client

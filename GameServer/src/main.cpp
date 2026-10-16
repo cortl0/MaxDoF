@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "server.h"
+#include "MdfServer.h"
 
 int main()
 {
-    MaxDoF::Server::Server server;
+    MaxDoF::GameServer::MdfServer mMdfServer;
 #ifdef MAXDOF_CLIENT_BUILD
     std::cout << "Hello, World!" << std::endl;
 #endif

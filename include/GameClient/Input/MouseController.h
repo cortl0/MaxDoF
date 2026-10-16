@@ -1,12 +1,12 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_MouseController_H_
-#define MaxDoF_MouseController_H_
+#ifndef MaxDoF_GameClient_Input_MouseController_H_
+#define MaxDoF_GameClient_Input_MouseController_H_
 
 #include <SDL_events.h>
 
-namespace MaxDoF::Input
+namespace MaxDoF::GameClient::Input
 {
     class MouseController
     {
@@ -23,6 +23,6 @@ namespace MaxDoF::Input
         float getRelativeY() const { return mRelativeY; }
         bool isRightButtonPressed() const;
     };
-}  // namespace MaxDoF::Input
+}  // namespace MaxDoF::Client::Input
 
 #endif

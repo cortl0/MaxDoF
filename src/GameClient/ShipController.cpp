@@ -1,14 +1,14 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Client/SpacecraftController.h"
+#include "GameClient/ShipController.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
 
-namespace MaxDoF
+namespace MaxDoF::GameClient
 {
-    SpacecraftController::SpacecraftController( Ogre::SceneNode *shipNode,
+    ShipController::ShipController( Ogre::SceneNode *shipNode,
                                                  JPH::BodyInterface* bodyInterface, JPH::BodyID* shipBodyId ) :
         mShipNode( shipNode ),
         mBodyInterface( bodyInterface ),
@@ -20,7 +20,7 @@ namespace MaxDoF
     {
     }
 
-    bool SpacecraftController::update( float timeSinceLast, const ControllerData& mControllerData )
+    bool ShipController::update( float timeSinceLast, const ControllerData& mControllerData )
     {
         if( !mShipNode || !mBodyInterface || !mShipBodyId )
             return false;
@@ -92,4 +92,4 @@ namespace MaxDoF
 
         return result;
     }
-}  // namespace MaxDoF
+}  // namespace MaxDoF::Client

@@ -1,24 +1,24 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_SpacecraftInputTranslator_H_
-#define MaxDoF_SpacecraftInputTranslator_H_
+#ifndef MaxDoF_GameClient_Input_ControllerTranslator_H_
+#define MaxDoF_GameClient_Input_ControllerTranslator_H_
 
-#include "Client/SpacecraftController.h"
+#include "GameClient/ShipController.h"
 
-namespace MaxDoF::Input
+namespace MaxDoF::GameClient::Input
 {
     class KeyboardController;
     class MouseController;
 
-    class SpacecraftInputTranslator
+    class ControllerTranslator
     {
     public:
-        SpacecraftController::ControllerData translate(
+        ShipController::ControllerData translate(
             const KeyboardController* keyboard,
             const MouseController* mouse
         );
     };
-}  // namespace MaxDoF::Input
+}  // namespace MaxDoF::Client::Input
 
 #endif

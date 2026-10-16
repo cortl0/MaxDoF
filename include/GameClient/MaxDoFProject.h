@@ -1,12 +1,12 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_MaxDoFProject_H_
-#define MaxDoF_MaxDoFProject_H_
+#ifndef MaxDoF_GameClient_MaxDoFProject_H_
+#define MaxDoF_GameClient_MaxDoFProject_H_
 
-namespace MaxDoF
+namespace MaxDoF::GameClient
 {
 
-}  // namespace MaxDoF
+}  // namespace MaxDoF::Client
 
 #endif

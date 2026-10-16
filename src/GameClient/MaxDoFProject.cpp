@@ -1,11 +1,11 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Client/MaxDoFProject.h"
+#include "GameClient/MaxDoFProject.h"
 
 #include <OgreConfigFile.h>
 
-#include "Client/MaxDoFGameState.h"
+#include "GameClient/MdfGame.h"
 
 // Declares WinMain / main
 #include "MainEntryPointHelper.h"
@@ -43,7 +43,7 @@ int mainApp( int argc, const char *argv[] )
     return Demo::MainEntryPoints::mainAppSingleThreaded( DEMO_MAIN_ENTRY_PARAMS );
 }
 
-namespace MaxDoF
+namespace MaxDoF::GameClient
 {
     class MaxDoFGraphicsSystem final : public Demo::GraphicsSystem
     {
@@ -174,7 +174,7 @@ namespace MaxDoF
 #endif
         }
     };
-}  // namespace MaxDoF
+}  // namespace MaxDoF::Client
 
 namespace Demo
 {
@@ -182,9 +182,9 @@ namespace Demo
                                          GraphicsSystem **outGraphicsSystem,
                                          GameState **outLogicGameState, LogicSystem **outLogicSystem )
     {
-        MaxDoF::Client *gfxGameState = new MaxDoF::Client( "MaxDoF Client" );
+        MaxDoF::GameClient::MdfGame *gfxGameState = new MaxDoF::GameClient::MdfGame( "MaxDoF Client" );
 
-        GraphicsSystem *graphicsSystem = new MaxDoF::MaxDoFGraphicsSystem( gfxGameState );
+        GraphicsSystem *graphicsSystem = new MaxDoF::GameClient::MaxDoFGraphicsSystem( gfxGameState );
 
         gfxGameState->_notifyGraphicsSystem( graphicsSystem );
 

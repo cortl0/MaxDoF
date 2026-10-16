@@ -1,13 +1,13 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_TextOverleyManager_H_
-#define MaxDoF_TextOverleyManager_H_
+#ifndef MaxDoF_GameClient_TextOverleyManager_H_
+#define MaxDoF_GameClient_TextOverleyManager_H_
 
 #include <GraphicsSystem.h>
 #include <OgreTextAreaOverlayElement.h>
 
-namespace MaxDoF
+namespace MaxDoF::GameClient
 {
     class TextOverleyManager
     {
@@ -28,6 +28,6 @@ namespace MaxDoF
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
         void createCrosshair();
     };
-}  // namespace MaxDoF
+}  // namespace MaxDoF::Client
 
 #endif

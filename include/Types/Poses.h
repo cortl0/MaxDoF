@@ -1,8 +1,8 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_Types_Converters_H_
-#define MaxDoF_Types_Converters_H_
+#ifndef MaxDoF_Types_Poses_H_
+#define MaxDoF_Types_Poses_H_
 
 #include <Jolt/Jolt.h>
 

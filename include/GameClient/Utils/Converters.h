@@ -1,15 +1,15 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_Utils_Converters_H_
-#define MaxDoF_Utils_Converters_H_
+#ifndef MaxDoF_GameClient_Utils_Converters_H_
+#define MaxDoF_GameClient_Utils_Converters_H_
 
 #include <Jolt/Jolt.h>
 #include <OgrePrerequisites.h>
 
-#include "Utils/Types.h"
+#include "Types/Poses.h"
 
-namespace MaxDoF::Utils
+namespace MaxDoF::GameClient::Utils
 {
     JPH::Quat OgreQuaternionToJphQuat( const Ogre::Quaternion& );
     JPH::RVec3 OgreVector3ToJphRVec3( const Ogre::Vector3& );
@@ -17,6 +17,6 @@ namespace MaxDoF::Utils
     Ogre::Vector3 JphRVec3ToOgreVector3( const JPH::RVec3& );
     Types::GraphPose PhysPoseToGraphPose(const Types::PhysPose& );
     Types::PhysPose GraphPoseToPhysPose(const Types::GraphPose& );
-}  // namespace MaxDoF::Utils
+}  // namespace MaxDoF::Client::Utils
 
 #endif

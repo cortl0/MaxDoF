@@ -1,9 +1,9 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Utils/Converters.h"
+#include "GameClient/Utils/Converters.h"
 
-namespace MaxDoF::Utils
+namespace MaxDoF::GameClient::Utils
 {
     JPH::Quat OgreQuaternionToJphQuat( const Ogre::Quaternion& q )
     {
@@ -43,4 +43,4 @@ namespace MaxDoF::Utils
         };
     }
 
-}  // namespace MaxDoF::Utils
+}  // namespace MaxDoF::Client::Utils

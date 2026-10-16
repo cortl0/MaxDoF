@@ -6,9 +6,9 @@
 #include <OgreItem.h>
 #include <OgreSceneManager.h>
 
-#include "Utils/MeshProcedures.h"
+#include "GameClient/Utils/MeshProcedures.h"
 
-namespace MaxDoF::World
+namespace MaxDoF::GameClient::World
 {
     Graphics::Graphics( const Ogre::String &helpDescription ) :
         mTextOverleyManager(helpDescription),
@@ -78,4 +78,4 @@ namespace MaxDoF::World
         node->setScale( Ogre::Vector3::UNIT_SCALE * radius * 2.0f );
         return node;
     }
-}  // namespace MaxDoF::World
+}  // namespace MaxDoF::Client::World

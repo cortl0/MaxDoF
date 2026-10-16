@@ -1,13 +1,13 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_KeyboardController_H_
-#define MaxDoF_KeyboardController_H_
+#ifndef MaxDoF_GameClient_Input_KeyboardController_H_
+#define MaxDoF_GameClient_Input_KeyboardController_H_
 
 #include <SDL_events.h>
 #include <OgreVector3.h>
 
-namespace MaxDoF::Input
+namespace MaxDoF::GameClient::Input
 {
     class KeyboardController
     {
@@ -43,6 +43,6 @@ namespace MaxDoF::Input
         /// Сброс состояний (опционально, например при потере фокуса окна)
         void reset();
     };
-}  // namespace MaxDoF::Input
+}  // namespace MaxDoF::Client::Input
 
 #endif

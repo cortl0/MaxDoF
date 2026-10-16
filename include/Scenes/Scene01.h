@@ -1,8 +1,8 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_Scenes_Scenes01_H_
-#define MaxDoF_Scenes_Scenes01_H_
+#ifndef MaxDoF_Scenes_Scene01_H_
+#define MaxDoF_Scenes_Scene01_H_
 
 #include "Scenes/Scene.h"
 
@@ -18,7 +18,7 @@ namespace MaxDoF::Scenes
         void createLight();
 #endif
         void createScene() override;
-        World::Entity createShip() override;
+        Types::Entity createShip() override;
         void createSphere();
     };
 }  // namespace MaxDoF::Scenes

@@ -1,20 +1,20 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Input/SpacecraftInputTranslator.h"
+#include "GameClient/Input/ControllerTranslator.h"
 
 #include <OgreVector3.h>
 
-#include "Input/KeyboardController.h"
-#include "Input/MouseController.h"
+#include "GameClient/Input/KeyboardController.h"
+#include "GameClient/Input/MouseController.h"
 
-namespace MaxDoF::Input
+namespace MaxDoF::GameClient::Input
 {
-    SpacecraftController::ControllerData SpacecraftInputTranslator::translate(
+    ShipController::ControllerData ControllerTranslator::translate(
         const KeyboardController* keyboard,
         const MouseController* mouse)
     {
-        SpacecraftController::ControllerData outData;
+        ShipController::ControllerData outData;
 
         KeyboardController::KeyboardRawState keys = keyboard->getRawState();
 
@@ -37,4 +37,4 @@ namespace MaxDoF::Input
 
         return outData;
     }
-}  // namespace MaxDoF::Input
+}  // namespace MaxDoF::Client::Input

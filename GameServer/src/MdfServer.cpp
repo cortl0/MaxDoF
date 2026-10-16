@@ -1,19 +1,19 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "server.h"
+#include "MdfServer.h"
 
-namespace MaxDoF::Server
+namespace MaxDoF::GameServer
 {
-    Server::Server()
+    MdfServer::MdfServer()
     {
     }
 
-    Server::~Server()
+    MdfServer::~MdfServer()
     {
     }
 
-    void Server::createScene01()
+    void MdfServer::createScene01()
     {
         mScene = std::make_unique<Scenes::Scene01>(mWorldManager);
         // mWorldManager.initialize( mMaxBodiesLimit );
@@ -21,4 +21,4 @@ namespace MaxDoF::Server
         // mShip = mScene->createShip();
     }
 
-}  // namespace MaxDoF::Server
+}  // namespace MaxDoF::GameServer

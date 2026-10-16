@@ -8,7 +8,7 @@
 #include <Jolt/Core/JobSystemThreadPool.h>
 
 #ifdef MAXDOF_CLIENT_BUILD
-#include "Utils/Converters.h"
+#include "GameClient/Utils/Converters.h"
 #endif
 
 namespace MaxDoF::World
@@ -34,7 +34,7 @@ namespace MaxDoF::World
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
-    World::Graphics& Manager::getGraphics()
+    MaxDoF::GameClient::World::Graphics& Manager::getGraphics()
     {
         return mGraphics;
     }
@@ -105,13 +105,13 @@ namespace MaxDoF::World
 #endif
     }
 
-    World::Entity Manager::createEntity(
+    Types::Entity Manager::createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
         Ogre::SceneNode* ogreNode,
 #endif
         JPH::BodyID bodyId)
     {
-        World::Entity entity
+        Types::Entity entity
         {
             .physId = bodyId,
 #ifdef MAXDOF_CLIENT_BUILD
@@ -125,11 +125,11 @@ namespace MaxDoF::World
         return entity;
     }
 
-    World::Entity Manager::createCube(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
+    Types::Entity Manager::createCube(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
-            mGraphics.createCube( Utils::PhysPoseToGraphPose( pose ), Utils::JphRVec3ToOgreVector3( halfSize ) ),
+            mGraphics.createCube( MaxDoF::GameClient::Utils::PhysPoseToGraphPose( pose ), MaxDoF::GameClient::Utils::JphRVec3ToOgreVector3( halfSize ) ),
 #endif
             mPhysics.createBox(pose, halfSize, mass));
     }
@@ -141,11 +141,11 @@ namespace MaxDoF::World
     }
 #endif
 
-    World::Entity Manager::createSphere(const Types::PhysPose& pose, float radius, float mass)
+    Types::Entity Manager::createSphere(const Types::PhysPose& pose, float radius, float mass)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
-            mGraphics.createSphere( Utils::PhysPoseToGraphPose( pose ), radius ),
+            mGraphics.createSphere( MaxDoF::GameClient::Utils::PhysPoseToGraphPose( pose ), radius ),
 #endif
             mPhysics.createSphere( pose, radius, mass ));
     }

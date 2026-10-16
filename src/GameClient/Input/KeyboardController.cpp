@@ -1,9 +1,9 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "Input/KeyboardController.h"
+#include "GameClient/Input/KeyboardController.h"
 
-namespace MaxDoF::Input
+namespace MaxDoF::GameClient::Input
 {
     KeyboardController::KeyboardController() :
         mSpeedModifier( false )
@@ -87,4 +87,4 @@ namespace MaxDoF::Input
 
         return state;
     }
-}  // namespace MaxDoF::Input
+}  // namespace MaxDoF::Client::Input

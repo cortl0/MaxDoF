@@ -30,4 +30,4 @@ target_include_directories(${PROJECT_NAME} PRIVATE ./include ${MAXDOF_PATH_DEPEN
 target_link_directories(${PROJECT_NAME} PRIVATE ${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/Build)
 target_link_libraries(${PROJECT_NAME} PRIVATE Jolt ${OGRE_LIBRARIES} ${SDL2_LIBRARIES})
 
-add_subdirectory(Server)
+add_subdirectory(GameServer)

@@ -6,10 +6,10 @@
 
 #include <GraphicsSystem.h>
 
-#include "Client/TextOverleyManager.h"
-#include "Utils/Types.h"
+#include "GameClient/TextOverleyManager.h"
+#include "Types/Poses.h"
 
-namespace MaxDoF::World
+namespace MaxDoF::GameClient::World
 {
     class Graphics
     {
@@ -31,6 +31,6 @@ namespace MaxDoF::World
         Ogre::SceneNode* createShape( const Ogre::String& meshName, const Types::GraphPose&);
         Ogre::SceneNode* createSphere(const Types::GraphPose&, float radius);
     };
-}  // namespace MaxDoF::World
+}  // namespace MaxDoF::Client::World
 
 #endif
