@@ -30,6 +30,7 @@ namespace MaxDoF::GameClient::World
         Ogre::SceneNode* createLight();
         Ogre::SceneNode* createShape( const Ogre::String& meshName, const GameCommon::Types::GraphPose&);
         Ogre::SceneNode* createSphere(const GameCommon::Types::GraphPose&, float radius);
+        void printAllMaterials();
     };
 }  // namespace MaxDoF::Client::World
 
