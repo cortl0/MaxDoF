@@ -39,7 +39,7 @@ namespace MaxDoF::GameClient
         //camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
-        mSpacecraftController = std::make_unique<ShipController>(
+        mShipController = std::make_unique<ShipController>(
             mShip.graphNode,
             mWorldManager.getBodyInterface(),
             &mShip.physId
@@ -69,8 +69,8 @@ namespace MaxDoF::GameClient
         auto data = mInputTranslator.translate(&mKeyboardController, &mMouseController);
 
         // 3. Передаем полностью собранные данные в контроллер корабля
-        if( mSpacecraftController.operator bool() )
-            mSpacecraftController->update( timeSinceLast, data );
+        if( mShipController.operator bool() )
+            mShipController->update( timeSinceLast, data );
                 mMouseController.reset();
 
 #ifdef MAXDOF_CLIENT_BUILD

@@ -26,6 +26,7 @@ namespace MaxDoF::GameCommon::World
             JPH::EMotionType::Dynamic, JPH::ObjectLayer(0)
         );
 
+        bodySettings.mAllowSleeping = false; 
         bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
         bodySettings.mMassPropertiesOverride.mMass = mass;
         bodySettings.mLinearDamping = 0.0f;

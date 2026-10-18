@@ -26,7 +26,7 @@ namespace MaxDoF::GameClient
         const unsigned int mMaxBodiesLimit{ 2048 };
         GameCommon::Types::Entity mShip;
         GameCommon::World::Manager mWorldManager;
-        std::unique_ptr<ShipController> mSpacecraftController;
+        std::unique_ptr<ShipController> mShipController;
         Input::ControllerTranslator mInputTranslator;
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;

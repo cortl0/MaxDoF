@@ -13,7 +13,7 @@ namespace MaxDoF::GameCommon::Scenes
     public:
         Scene01(World::Manager&);
         ~Scene01() override;
-        void createCube();
+        void createCube(Types::PhysPose pose);
 #ifdef MAXDOF_CLIENT_BUILD
         void createLight();
 #endif
