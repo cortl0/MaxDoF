@@ -13,7 +13,7 @@ namespace MaxDoF::GameClient
         mShipNode( shipNode ),
         mBodyInterface( bodyInterface ),
         mShipBodyId( shipBodyId ),
-        mThrustPower( 75000.0f ),
+        mThrustPower( 10000.0f ),
         mCameraBaseSpeed( 10 ),
         mCameraSpeedBoost( 5 ),
         mUseSceneNode( true )
@@ -40,17 +40,32 @@ namespace MaxDoF::GameClient
             {
                 // Переводим горизонтальное движение мыши в угол крена (Roll)
                 float mCameraRoll = mCameraYaw * mSensitivityRoll;
+                const JPH::Vec3 local_torque(0.0f, 0.0f, mCameraRoll * ControlPower); // Момент вокруг оси Y
 
-                // Вращаем графику Ogre вокруг локальной оси Z (Roll) и локальной оси X (Pitch)
-                mShipNode->roll( Ogre::Radian( mCameraRoll ), Ogre::Node::TS_LOCAL );
-                mShipNode->pitch( Ogre::Radian( mCameraPitch ), Ogre::Node::TS_LOCAL );
+                // 2. Получаем текущую ориентацию (вращение) тела в мировом пространстве
+                JPH::Quat body_rotation = mBodyInterface->GetRotation(*mShipBodyId);
+
+                // 3. Переводим локальный вектор в глобальный (умножаем кватернион на вектор)
+                JPH::Vec3 global_torque = body_rotation * local_torque;
+
+                // Передаем момент по BodyID. Третий параметр автоматически будит тело, если оно спало.
+                mBodyInterface->AddTorque(*mShipBodyId, global_torque, JPH::EActivation::Activate);
             }
             else
             {
                 // Стандартное поведение (кнопка отпущена): вращаем Yaw (влево-вправо) и Pitch
                 mCameraYaw *= mSensitivityYaw;
-                mShipNode->yaw( Ogre::Radian( mCameraYaw ), Ogre::Node::TS_LOCAL );
-                mShipNode->pitch( Ogre::Radian( mCameraPitch ), Ogre::Node::TS_LOCAL );
+
+                const JPH::Vec3 local_torque(mCameraPitch * ControlPower, mCameraYaw * ControlPower, 0.0f); // Момент вокруг оси Y
+
+                // 2. Получаем текущую ориентацию (вращение) тела в мировом пространстве
+                JPH::Quat body_rotation = mBodyInterface->GetRotation(*mShipBodyId);
+
+                // 3. Переводим локальный вектор в глобальный (умножаем кватернион на вектор)
+                JPH::Vec3 global_torque = body_rotation * local_torque;
+
+                // Передаем момент по BodyID. Третий параметр автоматически будит тело, если оно спало.
+                mBodyInterface->AddTorque(*mShipBodyId, global_torque, JPH::EActivation::Activate);
             }
 
             // МГНОВЕННАЯ СИНХРОНИЗАЦИЯ НОВОГО ВРАЩЕНИЯ В JOLT:

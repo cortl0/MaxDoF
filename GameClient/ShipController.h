@@ -24,13 +24,13 @@ namespace MaxDoF::GameClient
         JPH::BodyInterface*   mBodyInterface{ nullptr };
         JPH::BodyID*          mShipBodyId{ nullptr };
 
-        const float           mSensitivityPitch{ -0.0010f };
-        const float           mSensitivityYaw{ -0.0005f };
-        const float           mSensitivityRoll{ -0.0012f };
-
+        const float           mSensitivityPitch{ -1.1f };
+        const float           mSensitivityYaw{ -0.5f };
+        const float           mSensitivityRoll{ -1.2f };
         const float           mThrustMultiplier{ 0.5f };
 
         float                 mThrustPower; // Сила тяги маршевых двигателей в Ньютонах
+        float                 ControlPower{10.0f}; // Сила тяги маневровых двигателей в Ньютонах
 
         float                 mCameraBaseSpeed;
         float                 mCameraSpeedBoost;
