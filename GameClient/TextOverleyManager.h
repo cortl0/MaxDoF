@@ -7,6 +7,8 @@
 #include <GraphicsSystem.h>
 #include <OgreTextAreaOverlayElement.h>
 
+#include "GameCommon/Types/Telemetry.h"
+
 namespace MaxDoF::GameClient
 {
     class TextOverleyManager
@@ -21,7 +23,7 @@ namespace MaxDoF::GameClient
         Ogre::uint16 mNumDisplayHelpModes;
 
         virtual void createDebugTextOverlay();
-        virtual void generateDebugText( float timeSinceLast );
+        virtual void generateDebugText( float timeSinceLast, const GameCommon::Types::Telemetry& );
 
         TextOverleyManager( const Ogre::String &helpDescription );
         ~TextOverleyManager();

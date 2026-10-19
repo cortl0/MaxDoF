@@ -26,8 +26,6 @@ namespace MaxDoF::GameClient::Input
                                         static_cast<float>(moveY),
                                         static_cast<float>(moveZ) );
 
-        outData.speedBoost = keys.shift;
-
         if( mouse )
         {
             outData.mouse_dx = mouse->getRelativeX();

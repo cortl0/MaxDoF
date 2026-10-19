@@ -6,6 +6,9 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
 
+#include "GameCommon/Utils/Converters.h"
+#include "GameCommon/Types/Telemetry.h"
+
 namespace MaxDoF::GameClient
 {
     ShipController::ShipController( Ogre::SceneNode *shipNode,
@@ -15,9 +18,46 @@ namespace MaxDoF::GameClient
         mShipBodyId( shipBodyId ),
         mThrustPower( 10000.0f ),
         mCameraBaseSpeed( 10 ),
-        mCameraSpeedBoost( 5 ),
         mUseSceneNode( true )
     {
+    }
+
+    GameCommon::Types::Telemetry ShipController::ShipController::getTelemetry(float timeDelta)
+    {
+        JPH::RVec3 position = mBodyInterface->GetPosition(*mShipBodyId);
+        JPH::Quat orientation = mBodyInterface->GetRotation(*mShipBodyId);
+        JPH::RVec3 direction = orientation * -JPH::Vec3::sAxisZ();
+        JPH::Vec3 angularVelocity = GameCommon::Utils::getLocalAngularVelocities(mShipPreviousOrientation, orientation, timeDelta);
+        JPH::Vec3 linearVelocity = GameCommon::Utils::getLocalLinearVelocities(mShipPreviousPosition, position, orientation, timeDelta);
+        mShipPreviousPosition = position;
+        mShipPreviousOrientation = orientation;
+        return GameCommon::Types::Telemetry
+        {
+            .position = GameCommon::Types::Telemetry::Vector
+            {
+                .x = position.GetX(),
+                .y = position.GetY(),
+                .z = position.GetZ()
+            },
+            .direction = GameCommon::Types::Telemetry::Vector
+            {
+                .x = direction.GetX(),
+                .y = direction.GetY(),
+                .z = direction.GetZ()
+            },
+            .localVelocity = GameCommon::Types::Telemetry::Vector
+            {
+                .x = linearVelocity.GetX(),
+                .y = linearVelocity.GetY(),
+                .z = linearVelocity.GetZ()
+            },
+            .localAngularVelocity = GameCommon::Types::Telemetry::Vector
+            {
+                .x = angularVelocity.GetX(),
+                .y = angularVelocity.GetY(),
+                .z = angularVelocity.GetZ()
+            }
+        };
     }
 
     bool ShipController::update( float timeSinceLast, const ControllerData& mControllerData )
@@ -88,8 +128,6 @@ namespace MaxDoF::GameClient
 
             // Считаем итоговую силу с учетом зажатого Shift (Boost)
             float currentThrustForce = mThrustPower * mThrustMultiplier;
-            if( mControllerData.speedBoost )
-                currentThrustForce *= mCameraSpeedBoost;
 
             // Формируем вектор силы для Jolt Physics
             JPH::Vec3 joltForce(

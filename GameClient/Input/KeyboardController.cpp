@@ -5,8 +5,7 @@
 
 namespace MaxDoF::GameClient::Input
 {
-    KeyboardController::KeyboardController() :
-        mSpeedModifier( false )
+    KeyboardController::KeyboardController()
     {
         memset( mWASD, 0, sizeof( mWASD ) );
         memset( mSlideUpDown, 0, sizeof( mSlideUpDown ) );
@@ -14,7 +13,6 @@ namespace MaxDoF::GameClient::Input
 
     void KeyboardController::reset()
     {
-        mSpeedModifier = false;
         memset( mWASD, 0, sizeof( mWASD ) );
         memset( mSlideUpDown, 0, sizeof( mSlideUpDown ) );
     }
@@ -83,7 +81,6 @@ namespace MaxDoF::GameClient::Input
         state.d        = mWASD[3];
         state.pageUp   = mSlideUpDown[0];
         state.pageDown = mSlideUpDown[1];
-        state.shift    = mSpeedModifier;
 
         return state;
     }

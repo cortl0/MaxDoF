@@ -4,8 +4,13 @@
 #ifndef MaxDoF_GameClient_ShipController_H_
 #define MaxDoF_GameClient_ShipController_H_
 
+#include <Jolt/Jolt.h>
+#include <Jolt/Math/Quat.h>
+#include <Jolt/Math/Vec3.h>
 #include <OgreVector3.h>
 #include <OgreSceneNode.h>
+
+#include "GameCommon/Types/Telemetry.h"
 
 // Добавляем опережающие объявления Jolt, чтобы не перегружать заголовок
 namespace JPH {
@@ -33,8 +38,10 @@ namespace MaxDoF::GameClient
         float                 ControlPower{10.0f}; // Сила тяги маневровых двигателей в Ньютонах
 
         float                 mCameraBaseSpeed;
-        float                 mCameraSpeedBoost;
         bool                  mUseSceneNode;
+
+        JPH::Vec3 mShipPreviousPosition{-JPH::Vec3::sAxisZ()};
+        JPH::Quat mShipPreviousOrientation{JPH::Quat::sIdentity()};
 
     public:
         struct ControllerData
@@ -43,13 +50,12 @@ namespace MaxDoF::GameClient
             float mouse_dy{0.0f};
             bool rightMouseButtonPressed{false};
             Ogre::Vector3 moveDir{Ogre::Vector3::ZERO};
-            bool speedBoost{false};
         };
 
         // Обновленный конструктор принимает узел графики, интерфейс физики и ID тела корабля
         ShipController( Ogre::SceneNode *shipNode,
                              JPH::BodyInterface* bodyInterface, JPH::BodyID* shipBodyId );
-
+        GameCommon::Types::Telemetry getTelemetry(float timeDelta);
         bool update( float timeSinceLast, const ControllerData& mControllerData );
     };
 }  // namespace MaxDoF::GameClient

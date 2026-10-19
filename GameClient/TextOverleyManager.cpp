@@ -3,6 +3,8 @@
 
 #include "GameClient/TextOverleyManager.h"
 
+#include <string>
+
 #include <OgreFrameStats.h>
 #include <OgreOverlay.h>
 #include <OgreOverlayContainer.h>
@@ -58,7 +60,7 @@ namespace MaxDoF::GameClient
         overlay->show();
     }
 
-    void TextOverleyManager::generateDebugText( float timeSinceLast )
+    void TextOverleyManager::generateDebugText( float timeSinceLast, const GameCommon::Types::Telemetry& telemetry )
     {
         Ogre::String finalText;
         if( mDisplayHelpMode == 0 )
@@ -88,7 +90,22 @@ namespace MaxDoF::GameClient
             finalText += Ogre::StringConverter::toString( frameStats->getRollingAverageFps() );
             //finalText += "\n\nPress F1 to toggle help";
         }
-
+        finalText += std::string("\nShip Position")
+            + ": x[" + std::to_string(telemetry.position.x)
+            + "] y[" + std::to_string(telemetry.position.y)
+            + "] z[" + std::to_string(telemetry.position.z) + "]\n";
+        finalText += std::string("Ship Direction")
+            + "] x[" + std::to_string(telemetry.direction.x)
+            + "] y[" + std::to_string(telemetry.direction.y)
+            + "] z[" + std::to_string(telemetry.direction.z) + "]\n";
+        finalText += std::string("Ship Velocity")
+            + "] x[" + std::to_string(telemetry.localVelocity.x)
+            + "] y[" + std::to_string(telemetry.localVelocity.y)
+            + "] z[" + std::to_string(telemetry.localVelocity.z) + "]\n";
+        finalText += std::string("Ship Angular Velocity")
+            + "] x[" + std::to_string(telemetry.localAngularVelocity.x)
+            + "] y[" + std::to_string(telemetry.localAngularVelocity.y)
+            + "] z[" + std::to_string(telemetry.localAngularVelocity.z) + "]\n";
         mDebugText->setCaption( finalText );
         mDebugTextShadow->setCaption( finalText );
     }

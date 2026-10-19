@@ -13,7 +13,6 @@ namespace MaxDoF::GameClient::Input
     {
         bool mWASD[4];
         bool mSlideUpDown[2];
-        bool mSpeedModifier;
 
     public:
         struct KeyboardRawState
@@ -24,7 +23,6 @@ namespace MaxDoF::GameClient::Input
             bool d{ false };
             bool pageUp{ false };
             bool pageDown{ false };
-            bool shift{ false };
         };
 
         KeyboardController();
@@ -36,9 +34,6 @@ namespace MaxDoF::GameClient::Input
 
         /// Возвращает чистое направление движения на основе зажатых клавиш
         Ogre::Vector3 getMovementDirection() const;
-
-        /// Возвращает true, если зажат Shift (активен буст скорости)
-        bool isSpeedBoostActive() const { return mSpeedModifier; }
 
         /// Сброс состояний (опционально, например при потере фокуса окна)
         void reset();

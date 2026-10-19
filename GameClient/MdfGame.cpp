@@ -76,7 +76,8 @@ namespace MaxDoF::GameClient
 #ifdef MAXDOF_CLIENT_BUILD
         if( mTextOverleyManager.mDisplayHelpMode != 0 )
         {
-            mTextOverleyManager.generateDebugText( timeSinceLast );
+            auto telemetry = mShipController->getTelemetry(timeSinceLast);
+            mTextOverleyManager.generateDebugText( timeSinceLast, telemetry);
         }
 #endif
     }
@@ -96,8 +97,9 @@ namespace MaxDoF::GameClient
         {
 #ifdef MAXDOF_CLIENT_BUILD
             mTextOverleyManager.mDisplayHelpMode = ( mTextOverleyManager.mDisplayHelpMode + 1 ) % mTextOverleyManager.mNumDisplayHelpModes;
-
-            mTextOverleyManager.generateDebugText( 0 );
+            const float timeSinceLast = 0.0f;
+            auto telemetry = mShipController->getTelemetry(timeSinceLast);
+            mTextOverleyManager.generateDebugText( timeSinceLast, telemetry);
 #endif
         }
         else if( arg.keysym.scancode == SDL_SCANCODE_F1 &&
