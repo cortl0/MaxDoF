@@ -12,7 +12,7 @@
 namespace MaxDoF::GameClient
 {
     ShipController::ShipController( Ogre::SceneNode *shipNode,
-                                                 JPH::BodyInterface* bodyInterface, JPH::BodyID* shipBodyId ) :
+                                                 JPH::BodyInterface* bodyInterface, const JPH::BodyID* shipBodyId ) :
         mShipNode( shipNode ),
         mBodyInterface( bodyInterface ),
         mShipBodyId( shipBodyId ),
@@ -24,9 +24,10 @@ namespace MaxDoF::GameClient
 
     GameCommon::Types::Telemetry ShipController::ShipController::getTelemetry(float timeDelta)
     {
-        JPH::RVec3 position = mBodyInterface->GetPosition(*mShipBodyId);
+        JPH::Vec3 position = JPH::Vec3(mBodyInterface->GetPosition(*mShipBodyId));
         JPH::Quat orientation = mBodyInterface->GetRotation(*mShipBodyId);
-        JPH::RVec3 direction = orientation * -JPH::Vec3::sAxisZ();
+        JPH::Vec3 floatDirection = orientation * -JPH::Vec3::sAxisZ();
+        JPH::RVec3 direction(floatDirection);
         JPH::Vec3 angularVelocity = GameCommon::Utils::getLocalAngularVelocities(mShipPreviousOrientation, orientation, timeDelta);
         JPH::Vec3 linearVelocity = GameCommon::Utils::getLocalLinearVelocities(mShipPreviousPosition, position, orientation, timeDelta);
         mShipPreviousPosition = position;
@@ -41,9 +42,9 @@ namespace MaxDoF::GameClient
             },
             .direction = GameCommon::Types::Telemetry::Vector
             {
-                .x = direction.GetX(),
-                .y = direction.GetY(),
-                .z = direction.GetZ()
+                .x = static_cast<float>(direction.GetX()),
+                .y = static_cast<float>(direction.GetY()),
+                .z = static_cast<float>(direction.GetZ())
             },
             .localVelocity = GameCommon::Types::Telemetry::Vector
             {
@@ -68,8 +69,8 @@ namespace MaxDoF::GameClient
         bool result{false};
 
         // ================= 1. ФИЗИЧЕСКОЕ ВРАЩЕНИЕ (МЫШЬ) =================
-        float mCameraYaw = mControllerData.mouse_dx;
-        float mCameraPitch = mControllerData.mouse_dy;
+        float mCameraYaw = -mControllerData.mouse_dx;
+        float mCameraPitch = -mControllerData.mouse_dy;
 
         if( mCameraYaw != 0.0f || mCameraPitch != 0.0f )
         {
@@ -126,23 +127,16 @@ namespace MaxDoF::GameClient
             // в мировые координаты на основе текущего вращения корабля в Ogre
             Ogre::Vector3 globalThrustDirection = mShipNode->getOrientation() * localThrust;
 
-            // Считаем итоговую силу с учетом зажатого Shift (Boost)
-            float currentThrustForce = mThrustPower * mThrustMultiplier;
-
-            // Формируем вектор силы для Jolt Physics
             JPH::Vec3 joltForce(
-                globalThrustDirection.x * currentThrustForce,
-                globalThrustDirection.y * currentThrustForce,
-                globalThrustDirection.z * currentThrustForce
+                globalThrustDirection.x * mThrustPower,
+                globalThrustDirection.y * mThrustPower,
+                globalThrustDirection.z * mThrustPower
             );
 
-            // Прикладываем силу к центру масс физического тела корабля!
-            // Движок Jolt сам рассчитает ускорение a = F / m и изменит скорость на этом кадре
             mBodyInterface->AddForce( *mShipBodyId, joltForce );
-
             result = true;
         }
 
         return result;
     }
-}  // namespace MaxDoF::GameClient
+}

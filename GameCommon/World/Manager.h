@@ -1,8 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_GameCommon_World_Manager_H_
-#define MaxDoF_GameCommon_World_Manager_H_
+#pragma once
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
@@ -12,6 +11,8 @@
 #ifdef MAXDOF_CLIENT_BUILD
 #include "GameCommon/World/Graphics.h"
 #endif
+
+#include "GameClient/Ship/Ship.h"
 
 #include "GameCommon/World/Physics.h"
 namespace JPH
@@ -51,7 +52,6 @@ namespace MaxDoF::GameCommon::World
 
     class Manager
     {
-    private:
         JPH::TempAllocatorImpl*     mPhysicsAllocator{ nullptr };
         JPH::JobSystemThreadPool*   mJobSystem{ nullptr };
         JPH::PhysicsSystem*         mPhysicsSystem{ nullptr };
@@ -79,19 +79,17 @@ namespace MaxDoF::GameCommon::World
         MaxDoF::GameClient::World::Graphics& getGraphics();
 #endif
         void initialize(unsigned int maxBodies = 1024);
-        Types::Entity createEntity(
+        Types::Entity& createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
             Ogre::SceneNode* ogreNode,
 #endif
             JPH::BodyID bodyId);
-        void update(float timeSinceLast);
+        void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
-        Types::Entity createCube(const Types::PhysPose&, const JPH::RVec3& halfSize, float mass);
+        Types::Entity& createCube(const Types::PhysPose&, const JPH::Vec3& halfSize, float mass);
 #ifdef MAXDOF_CLIENT_BUILD
         Ogre::SceneNode* createLight();
 #endif
-        Types::Entity createSphere(const Types::PhysPose&, float radius, float mass);
+        Types::Entity& createSphere(const Types::PhysPose&, float radius, float mass);
     };
-}  // namespace MaxDoF::GameCommon::World
-
-#endif
+}

@@ -5,6 +5,11 @@ cmake_minimum_required( VERSION 3.5.1 )
 
 project(MaxDoF VERSION 0.1.0)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_compile_definitions(JPH_DOUBLE_PRECISION)
+
 configure_file("${CMAKE_SOURCE_DIR}/CMake/version.h.in" "${CMAKE_BINARY_DIR}/version.h")
 include_directories(${CMAKE_BINARY_DIR})
 

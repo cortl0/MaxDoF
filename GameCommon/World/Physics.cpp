@@ -35,7 +35,7 @@ namespace MaxDoF::GameCommon::World
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createBox(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
+    JPH::BodyID Physics::createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
         return setBodySettings(shapeSettings.Create(), pose, mass);
@@ -47,4 +47,4 @@ namespace MaxDoF::GameCommon::World
         return setBodySettings(shapeSettings.Create(), pose, mass);
     }
 
-}  // namespace MaxDoF::GameCommon::World
+}

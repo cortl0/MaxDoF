@@ -1,8 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_GameCommon_Scenes_Scene_H_
-#define MaxDoF_GameCommon_Scenes_Scene_H_
+#pragma once
 
 #include "GameCommon/Types/Entity.h"
 #include "GameCommon/World/Manager.h"
@@ -18,8 +17,6 @@ namespace MaxDoF::GameCommon::Scenes
         Scene(World::Manager&);
         virtual ~Scene();
         virtual void createScene() = 0;
-        virtual Types::Entity createShip() = 0;
+        virtual Types::Entity& createShipEntity() = 0;
     };
-}  // namespace MaxDoF::GameCommon::Scenes
-
-#endif
+}

@@ -1,8 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_GameCommon_Types_Entity_H_
-#define MaxDoF_GameCommon_Types_Entity_H_
+#pragma once
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyID.h>
@@ -15,11 +14,18 @@ namespace MaxDoF::GameCommon::Types
 {
     struct Entity
     {
+        Entity(const JPH::BodyID& physId
+#ifdef MAXDOF_CLIENT_BUILD
+            , Ogre::SceneNode* graphNode
+#endif
+        ) : physId(physId)
+#ifdef MAXDOF_CLIENT_BUILD
+        , graphNode(graphNode)
+#endif
+        {}
         JPH::BodyID physId;
 #ifdef MAXDOF_CLIENT_BUILD
         Ogre::SceneNode* graphNode{ nullptr };
 #endif
     };
-}  // namespace MaxDoF::GameCommon::Types
-
-#endif
+}

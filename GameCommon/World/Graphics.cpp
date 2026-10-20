@@ -56,6 +56,9 @@ namespace MaxDoF::GameClient::World
         node->attachObject( light );
         light->setType( Ogre::Light::LT_DIRECTIONAL );
         light->setDirection( Ogre::Vector3( -1.0f, -1.0f, -1.0f ).normalisedCopy() );
+        printf(">>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<< light %d", light->getCastShadows());
+        light->setCastShadows(true);
+        light->setShadowFarDistance(10000.0f);
         return node;
     }
 #endif
@@ -72,6 +75,7 @@ namespace MaxDoF::GameClient::World
         node->setPosition( pose.position );
         node->setOrientation( pose.orientation );
         node->attachObject( item );
+        item->setCastShadows(true);
         return node;
     }
 
@@ -116,4 +120,4 @@ void Graphics::printAllMaterials()
     std::cout << "=================================================" << std::endl;
 }
 
-}  // namespace MaxDoF::Client::World
+}

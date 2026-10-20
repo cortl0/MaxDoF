@@ -33,19 +33,19 @@ namespace MaxDoF::GameCommon::Scenes
 #endif
         for(int i = -5; i < 5; ++i)
             for(int j = -5; j < 5; ++j)
-            for(int k = -5; k < 5; ++k)
-                {
-                    Types::PhysPose pose
+                for(int k = -5; k < 5; ++k)
                     {
-                        .position = JPH::RVec3( i * 1.1f, j * 1.1f, -20.0f - k * 1.1f ),
-                        .orientation = Types::cIdentity
-                    };
-                    createCube(pose);
-                }
+                        Types::PhysPose pose
+                        {
+                            .position = JPH::RVec3( i * 1.1f, j * 1.1f, -20.0f - k * 1.1f ),
+                            .orientation = JPH::Quat::sIdentity()
+                        };
+                        createCube(pose);
+                    }
         createSphere();
     }
 
-    Types::Entity Scene01::createShip()
+    Types::Entity& Scene01::createShipEntity()
     {
         return mWorldManager.createSphere(Types::cDefaultPhysPose, 0.5f, 1000.0f);
     }
@@ -55,8 +55,8 @@ namespace MaxDoF::GameCommon::Scenes
         Types::PhysPose pose
         {
             .position = JPH::RVec3( 0.0f, 0.0f, -5.0f ),
-            .orientation = Types::cIdentity
+            .orientation = JPH::Quat::sIdentity()
         };
         mWorldManager.createSphere(pose, 0.5f, 1000.0f);
     }
-}  // namespace MaxDoF::GameCommon::Scenes
+}

@@ -1,8 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_GameClient_ShipController_H_
-#define MaxDoF_GameClient_ShipController_H_
+#pragma once
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Quat.h>
@@ -22,16 +21,13 @@ namespace MaxDoF::GameClient
 {
     class ShipController
     {
-    private:
         Ogre::SceneNode*      mShipNode{ nullptr };
-
-        // ИСПРАВЛЕНИЕ: Добавляем хранение физических интерфейсов корабля
         JPH::BodyInterface*   mBodyInterface{ nullptr };
-        JPH::BodyID*          mShipBodyId{ nullptr };
+        const JPH::BodyID*    mShipBodyId{ nullptr };
 
-        const float           mSensitivityPitch{ -1.1f };
-        const float           mSensitivityYaw{ -0.5f };
-        const float           mSensitivityRoll{ -1.2f };
+        const float           mSensitivityPitch{ 1.0f };
+        const float           mSensitivityYaw{ 0.5f };
+        const float           mSensitivityRoll{ 0.5f };
         const float           mThrustMultiplier{ 0.5f };
 
         float                 mThrustPower; // Сила тяги маршевых двигателей в Ньютонах
@@ -52,12 +48,9 @@ namespace MaxDoF::GameClient
             Ogre::Vector3 moveDir{Ogre::Vector3::ZERO};
         };
 
-        // Обновленный конструктор принимает узел графики, интерфейс физики и ID тела корабля
         ShipController( Ogre::SceneNode *shipNode,
-                             JPH::BodyInterface* bodyInterface, JPH::BodyID* shipBodyId );
+                             JPH::BodyInterface* bodyInterface, const JPH::BodyID* shipBodyId );
         GameCommon::Types::Telemetry getTelemetry(float timeDelta);
         bool update( float timeSinceLast, const ControllerData& mControllerData );
     };
-}  // namespace MaxDoF::GameClient
-
-#endif
+}

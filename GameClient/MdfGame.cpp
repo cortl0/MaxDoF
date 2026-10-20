@@ -3,6 +3,8 @@
 
 #include "GameClient/MdfGame.h"
 
+#include <iostream>
+
 #include <OgreCamera.h>
 #include <OgreGpuProgramManager.h>
 #include <OgreHlmsCompute.h>
@@ -32,17 +34,22 @@ namespace MaxDoF::GameClient
     void MdfGame::connectCameraAndControllerToShip()
     {
         Ogre::Camera *camera = mGraphicsSystem->getCamera();
+        std::cout << "<<<<<<<<<<<<<<<<<<<<camera->getNearClipDistance()" << camera->getNearClipDistance() << std::endl; //0.2
+        std::cout << "<<<<<<<<<<<<<<<<<<<<camera->setFarClipDistance()" << camera->getFarClipDistance() << std::endl; //1000
+        // myCamera->setNearClipDistance(0.05f);
+        camera->setFarClipDistance(10000.0f);
         if( camera->getParentSceneNode() )
             camera->getParentSceneNode()->detachObject( camera );
-        mShip.graphNode->attachObject( camera );
+        auto& shipEntity = mShip->getEntity();
+        shipEntity.graphNode->attachObject( camera );
         camera->setPosition( Ogre::Vector3::ZERO );
         //camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
         camera->setOrientation( Ogre::Quaternion::IDENTITY );
 
         mShipController = std::make_unique<ShipController>(
-            mShip.graphNode,
+            shipEntity.graphNode,
             mWorldManager.getBodyInterface(),
-            &mShip.physId
+            &shipEntity.physId
         );
     }
 
@@ -51,20 +58,33 @@ namespace MaxDoF::GameClient
         mScene = std::make_unique<GameCommon::Scenes::Scene01>(mWorldManager);
         mWorldManager.initialize( mMaxBodiesLimit );
         mScene->createScene();
-        mShip = mScene->createShip();
-        connectCameraAndControllerToShip();
+        auto& shipEntity = mScene->createShipEntity();
 
 #ifdef MAXDOF_CLIENT_BUILD
+        mShip = new GameClient::Ship::Ship(mGraphicsSystem->getSceneManager(), shipEntity);
         mTextOverleyManager.createCrosshair();
         mTextOverleyManager.createDebugTextOverlay();
 #endif
+        connectCameraAndControllerToShip();
+
+        mGraphicsSystem->getSceneManager()->setForwardClustered(
+            true,     // bEnable: Активируем систему
+            4,       // width: Разрешение сетки по горизонтали. 16 — стандарт для 1080p/4K.
+            4,        // height: Разрешение по вертикали.
+            24,       // numSlices: 24 слоя глубины дают плавное распределение света без резких переключений.
+            8,        // lightsPerCell: Максимум 8 источников на одну ячейку экрана. Для кабины (3 прибора + пара ламп) этого хватит с запасом.
+            1,        // decalsPerCell: Минимальное безопасное значение 1 (для экономии памяти, раз декали не используем).
+            1,        // cubemapProbesPerCel: Минимальное безопасное значение 1.
+            0.05f,    // minDistance: КРИТИЧЕСКИ ВАЖНО. Ставим 5 см от камеры, чтобы свет приборов не гас, когда камера пилота приближается к Dashboard.
+            500.0f    // maxDistance: Дальность работы точечного света. 500 единиц хватит, чтобы видеть свет от взрывов или пролетающих рядом ракет.
+        );
     }
 
     void MdfGame::update( float timeSinceLast )
     {
         // 1. Шагаем физику (Jolt считает мир и автоматически двигает Ogre-узлы из mEntities)
-        mWorldManager.update( timeSinceLast );
-
+        mWorldManager.update( timeSinceLast, mShip->getEntity().physId );
+        //mShip->mEntity.graphNode->setPosition(Ogre::Vector3::ZERO);
         // 2. Опрашиваем устройства ввода через правильные методы транслятора
         auto data = mInputTranslator.translate(&mKeyboardController, &mMouseController);
 
@@ -78,6 +98,7 @@ namespace MaxDoF::GameClient
         {
             auto telemetry = mShipController->getTelemetry(timeSinceLast);
             mTextOverleyManager.generateDebugText( timeSinceLast, telemetry);
+            mShip->update(timeSinceLast, telemetry);
         }
 #endif
     }
@@ -157,4 +178,4 @@ namespace MaxDoF::GameClient
         mMouseController.mouseMoved( arg );
         GameState::mouseMoved( arg );
     }
-}  // namespace MaxDoF::GameClient
+}

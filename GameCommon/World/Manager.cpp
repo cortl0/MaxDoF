@@ -83,13 +83,14 @@ namespace MaxDoF::GameCommon::World
 #endif
     }
 
-    void Manager::update(float timeSinceLast)
+    void Manager::update(float timeSinceLast, const JPH::BodyID& shipBodyId)
     {
-        if (!mPhysicsSystem) return;
+        if (!mPhysicsSystem)
+            return;
 
+JPH::RVec3 shipPosition = mPhysics.getBodyInterface()->GetPosition(shipBodyId);
         float physicsTimeStep = std::min(timeSinceLast, 0.1f);
         mPhysicsSystem->Update(physicsTimeStep, 1, mPhysicsAllocator, mJobSystem);
-
 #ifdef MAXDOF_CLIENT_BUILD
         for (const auto& entity : mEntities)
         {
@@ -99,37 +100,34 @@ namespace MaxDoF::GameCommon::World
             JPH::RVec3 position;
             JPH::Quat rotation;
             mPhysics.getBodyInterface()->GetPositionAndRotation(entity.physId, position, rotation);
-            entity.graphNode->setPosition(position.GetX(), position.GetY(), position.GetZ());
+            JPH::Vec3 localPos = JPH::Vec3(position - shipPosition);
+            entity.graphNode->setPosition(localPos.GetX(), localPos.GetY(), localPos.GetZ());
             entity.graphNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
         }
 #endif
     }
 
-    Types::Entity Manager::createEntity(
+    Types::Entity& Manager::createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
         Ogre::SceneNode* ogreNode,
 #endif
         JPH::BodyID bodyId)
     {
-        Types::Entity entity
-        {
-            .physId = bodyId,
+        auto& entity = mEntities.emplace_back(bodyId
 #ifdef MAXDOF_CLIENT_BUILD
-            .graphNode = ogreNode
+            , ogreNode
 #endif
-        };
-
-        mEntities.push_back(entity);
+        );
         mEntitiesIndex[bodyId.GetIndex()] = mEntities.size() - 1;
 
         return entity;
     }
 
-    Types::Entity Manager::createCube(const Types::PhysPose& pose, const JPH::RVec3& halfSize, float mass)
+    Types::Entity& Manager::createCube(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
-            mGraphics.createCube( MaxDoF::GameClient::Utils::PhysPoseToGraphPose( pose ), MaxDoF::GameClient::Utils::JphRVec3ToOgreVector3( halfSize ) ),
+            mGraphics.createCube(MaxDoF::GameClient::Utils::PhysPoseToGraphPose(pose), MaxDoF::GameClient::Utils::JphVec3ToOgreVector3(halfSize)),
 #endif
             mPhysics.createBox(pose, halfSize, mass));
     }
@@ -141,7 +139,7 @@ namespace MaxDoF::GameCommon::World
     }
 #endif
 
-    Types::Entity Manager::createSphere(const Types::PhysPose& pose, float radius, float mass)
+    Types::Entity& Manager::createSphere(const Types::PhysPose& pose, float radius, float mass)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
@@ -149,4 +147,4 @@ namespace MaxDoF::GameCommon::World
 #endif
             mPhysics.createSphere( pose, radius, mass ));
     }
-}  // namespace MaxDoF::GameCommon::World
+}

@@ -1,8 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_GameCommon_Types_Poses_H_
-#define MaxDoF_GameCommon_Types_Poses_H_
+#pragma once
 
 #include <Jolt/Jolt.h>
 
@@ -14,9 +13,7 @@
 
 namespace MaxDoF::GameCommon::Types
 {
-    inline const JPH::RVec3 cUnitScaleVector{ 1.0f, 1.0f, 1.0f };
-    inline const JPH::RVec3 cZeroVector = JPH::RVec3::sZero();
-    inline const JPH::Quat cIdentity = JPH::Quat::sIdentity();
+    inline const JPH::Vec3 cUnitScaleVector{ 1.0f, 1.0f, 1.0f };
 
     struct PhysPose
     {
@@ -26,8 +23,8 @@ namespace MaxDoF::GameCommon::Types
 
     inline const PhysPose cDefaultPhysPose
     {
-        .position = cZeroVector,
-        .orientation = cIdentity
+        .position = JPH::RVec3::sZero(),
+        .orientation = JPH::Quat::sIdentity()
     };
 
 #ifdef MAXDOF_CLIENT_BUILD
@@ -43,6 +40,4 @@ namespace MaxDoF::GameCommon::Types
         .orientation = Ogre::Quaternion::IDENTITY
     };
 #endif
-}  // namespace MaxDoF::GameCommon::Types
-
-#endif
+}

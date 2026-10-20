@@ -20,6 +20,11 @@ namespace MaxDoF::GameClient::Utils
         return Ogre::Quaternion( q.GetX(), q.GetY(), q.GetZ(), q.GetW() );
     }
 
+    Ogre::Vector3 JphVec3ToOgreVector3( const JPH::Vec3& v )
+    {
+        return Ogre::Vector3( v.GetX(), v.GetY(), v.GetZ() );
+    }
+
     Ogre::Vector3 JphRVec3ToOgreVector3( const JPH::RVec3& v )
     {
         return Ogre::Vector3( v.GetX(), v.GetY(), v.GetZ() );
@@ -42,5 +47,4 @@ namespace MaxDoF::GameClient::Utils
             .orientation = OgreQuaternionToJphQuat( p.orientation )
         };
     }
-
-}  // namespace MaxDoF::GameClient::Utils
+}
