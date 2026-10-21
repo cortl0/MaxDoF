@@ -1,8 +1,7 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#ifndef MaxDoF_GameClient_World_Graphics_H_
-#define MaxDoF_GameClient_World_Graphics_H_
+#pragma once
 
 #include <GraphicsSystem.h>
 
@@ -26,12 +25,12 @@ namespace MaxDoF::GameClient::World
 
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
         void initialize();
+        void changeTexture(Ogre::Item*, const Ogre::String& newTextureFileName);
+        void changeUniqueTexture(Ogre::Item*, const Ogre::String& newTextureFileName, const Ogre::String& uniqueMaterialName);
         Ogre::SceneNode* createCube(const GameCommon::Types::GraphPose&, const Ogre::Vector3& halfSize);
         Ogre::SceneNode* createLight();
         Ogre::SceneNode* createShape( const Ogre::String& meshName, const GameCommon::Types::GraphPose&);
         Ogre::SceneNode* createSphere(const GameCommon::Types::GraphPose&, float radius);
         void printAllMaterials();
     };
-}  // namespace MaxDoF::Client::World
-
-#endif
+}

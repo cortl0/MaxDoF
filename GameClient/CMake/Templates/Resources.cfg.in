@@ -8,6 +8,8 @@ FileSystem=@OGRE_MEDIA_DIR@Data/Materials/Common/Any
 FileSystem=@OGRE_MEDIA_DIR@Data/Materials/Common/GLSL
 FileSystem=@OGRE_MEDIA_DIR@Data/Materials/Common/HLSL
 FileSystem=@OGRE_MEDIA_DIR@Data/Materials/Common/Metal
+FileSystem=@OGRE_MEDIA_DIR@../../MaxDoF-Dependencies/ogre-next/Samples/Media/models
+FileSystem=@OGRE_MEDIA_DIR@../../MaxDoF-Dependencies/ogre-next/Samples/Media/materials/textures
 
 # Do not load this as a resource. It's here merely to tell the code where
 # the Hlms templates are located

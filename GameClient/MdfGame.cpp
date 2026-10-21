@@ -34,9 +34,6 @@ namespace MaxDoF::GameClient
     void MdfGame::connectCameraAndControllerToShip()
     {
         Ogre::Camera *camera = mGraphicsSystem->getCamera();
-        std::cout << "<<<<<<<<<<<<<<<<<<<<camera->getNearClipDistance()" << camera->getNearClipDistance() << std::endl; //0.2
-        std::cout << "<<<<<<<<<<<<<<<<<<<<camera->setFarClipDistance()" << camera->getFarClipDistance() << std::endl; //1000
-        // myCamera->setNearClipDistance(0.05f);
         camera->setFarClipDistance(10000.0f);
         if( camera->getParentSceneNode() )
             camera->getParentSceneNode()->detachObject( camera );
