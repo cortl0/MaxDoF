@@ -7,6 +7,8 @@ project(MaxDoFGame)
 
 find_package(SDL2 REQUIRED)
 
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/MaxDoFWorkspace.compositor" "${CMAKE_SOURCE_DIR}/bin/Data/MaxDoFWorkspace.compositor")
+
 include(CMake/Bootstrap.cmake)
 include(CMake/Dependencies/OGRE.cmake)
 

@@ -3,7 +3,10 @@
 
 #include "version.h"
 
+#include <Compositor/OgreCompositorManager2.h>
 #include <OgreConfigFile.h>
+#include <OgreRoot.h>
+#include <OgreWindow.h>
 
 #include "GameClient/MdfGame.h"
 
@@ -50,7 +53,15 @@ namespace MaxDoF::GameClient
     {
         Ogre::CompositorWorkspace *setupCompositor() override
         {
-            return GraphicsSystem::setupCompositor();
+            Ogre::CompositorManager2 *compositorManager = mRoot->getCompositorManager2();
+
+            const Ogre::String workspaceName( "MaxDoFWorkspace" );
+            if( !compositorManager->hasWorkspaceDefinition( workspaceName ) )
+            {
+                compositorManager->createBasicWorkspaceDef( workspaceName, mBackgroundColour, Ogre::IdString() );
+            }
+
+            return compositorManager->addWorkspace( mSceneManager, mRenderWindow->getTexture(), mCamera, workspaceName, true );
         }
 
         void setupResources() override

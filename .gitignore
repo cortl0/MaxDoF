@@ -1,4 +1,5 @@
 build/
+bin
 bin/Debug
 bin/MinSizeRel
 bin/Release
