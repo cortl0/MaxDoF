@@ -5,13 +5,9 @@ cmake_minimum_required( VERSION 3.5.1 )
 project(MaxDoFServer)
 
 file(GLOB_RECURSE SRC_FILES_GAMESERVER "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
-file(GLOB_RECURSE SRC_FILES_GAMECOMMON_SCENES "${CMAKE_SOURCE_DIR}/GameCommon/Scenes/*.cpp")
-set(SRC_FILES_GAMECOMMON_WORLD
-    ${CMAKE_SOURCE_DIR}/GameCommon/World/Manager.cpp
-    ${CMAKE_SOURCE_DIR}/GameCommon/World/Physics.cpp
-)
+file(GLOB_RECURSE SRC_FILES_GAMECOMMON "${CMAKE_SOURCE_DIR}/GameCommon/*.cpp")
 
-add_executable(${PROJECT_NAME} ${SRC_FILES_GAMESERVER} ${SRC_FILES_GAMECOMMON_SCENES} ${SRC_FILES_GAMECOMMON_WORLD})
+add_executable(${PROJECT_NAME} ${SRC_FILES_GAMESERVER} ${SRC_FILES_GAMECOMMON})
 target_link_directories(${PROJECT_NAME} PRIVATE ${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/Build)
 target_link_libraries(${PROJECT_NAME} PRIVATE Jolt)
 target_include_directories(${PROJECT_NAME} PRIVATE

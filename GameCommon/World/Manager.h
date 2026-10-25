@@ -9,7 +9,7 @@
 #include "GameCommon/Types/Entity.h"
 
 #ifdef MAXDOF_CLIENT_BUILD
-#include "GameCommon/World/Graphics.h"
+#include "GameClient/World/Graphics.h"
 #endif
 
 #include "GameClient/Ships/Ship.h"
