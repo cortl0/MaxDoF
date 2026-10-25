@@ -12,7 +12,7 @@
 #include "GameCommon/World/Graphics.h"
 #endif
 
-#include "GameClient/Ship/Ship.h"
+#include "GameClient/Ships/Ship.h"
 
 #include "GameCommon/World/Physics.h"
 namespace JPH

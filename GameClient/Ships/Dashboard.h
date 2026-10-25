@@ -9,7 +9,7 @@
 
 #include "GameCommon/Types/Telemetry.h"
 
-namespace MaxDoF::GameClient::Ship
+namespace MaxDoF::GameClient::Ships
 {
     class Dashboard {
         Ogre::SceneManager* mSceneMgr;

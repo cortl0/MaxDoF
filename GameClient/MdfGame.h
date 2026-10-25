@@ -10,7 +10,7 @@
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/ControllerTranslator.h"
-#include "GameClient/Ship/Ship.h"
+#include "GameClient/Ships/Ship.h"
 #include "GameClient/ShipController.h"
 #include "GameCommon/Scenes/Scene01.h"
 #include "GameCommon/Types/Entity.h"
@@ -33,7 +33,7 @@ namespace MaxDoF::GameClient
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;
         std::unique_ptr<GameCommon::Scenes::Scene> mScene;
-        GameClient::Ship::Ship* mShip;
+        GameClient::Ships::Ship* mShip;
 
     public:
         MdfGame( const Ogre::String &helpDescription );

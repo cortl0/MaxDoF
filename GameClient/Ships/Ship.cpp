@@ -1,11 +1,11 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "GameClient/Ship/Ship.h"
+#include "GameClient/Ships/Ship.h"
 
 #include <OgreItem.h>
 
-namespace MaxDoF::GameClient::Ship
+namespace MaxDoF::GameClient::Ships
 {
     Ship::Ship(Ogre::SceneManager* sceneMgr, const GameCommon::Types::Entity& shipEntity)
         : mSceneMgr(sceneMgr)

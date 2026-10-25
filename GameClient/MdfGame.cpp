@@ -58,7 +58,7 @@ namespace MaxDoF::GameClient
         auto& shipEntity = mScene->createShipEntity();
 
 #ifdef MAXDOF_CLIENT_BUILD
-        mShip = new GameClient::Ship::Ship(mGraphicsSystem->getSceneManager(), shipEntity);
+        mShip = new GameClient::Ships::Ship(mGraphicsSystem->getSceneManager(), shipEntity);
         mTextOverleyManager.createCrosshair();
         mTextOverleyManager.createDebugTextOverlay();
 #endif

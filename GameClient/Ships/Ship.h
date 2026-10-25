@@ -4,13 +4,13 @@
 #pragma once
 
 #ifdef MAXDOF_CLIENT_BUILD
-#include "GameClient/Ship/Dashboard.h"
+#include "GameClient/Ships/Dashboard.h"
 #endif
 
 #include "GameCommon/Types/Entity.h"
 #include "GameCommon/Types/Telemetry.h"
 
-namespace MaxDoF::GameClient::Ship
+namespace MaxDoF::GameClient::Ships
 {
     class Ship {
 #ifdef MAXDOF_CLIENT_BUILD

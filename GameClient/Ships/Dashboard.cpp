@@ -1,11 +1,11 @@
 // https://Github/cortl0/MaxDoF
 // GPL-3.0 license
 
-#include "GameClient/Ship/Dashboard.h"
+#include "GameClient/Ships/Dashboard.h"
 
 #include <Ogre.h>
 
-namespace MaxDoF::GameClient::Ship
+namespace MaxDoF::GameClient::Ships
 {
     Dashboard::Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position)
         : mSceneMgr(sceneMgr)
