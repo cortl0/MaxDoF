@@ -22,7 +22,7 @@ namespace MaxDoF::GameCommon::Scenes
 #ifdef MAXDOF_CLIENT_BUILD
     void Scene01::createLight()
     {
-        mWorldManager.createLight();
+        //mWorldManager.createLight();
     }
 #endif
 

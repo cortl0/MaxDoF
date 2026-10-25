@@ -16,6 +16,8 @@ namespace MaxDoF::GameClient::Ships
 #ifdef MAXDOF_CLIENT_BUILD
         Ogre::SceneManager* mSceneMgr;
         Dashboard mDashboard;
+        Ogre::SceneNode* lightNode;
+        Ogre::Light* light;
 #endif
         GameCommon::Types::Entity mEntity;
 

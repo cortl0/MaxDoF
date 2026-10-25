@@ -16,44 +16,54 @@ namespace MaxDoF::GameClient::Ships
 
         deskCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         deskCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
+        deskCube.entity->setCastShadows(false);
         deskCube.node->attachObject(deskCube.entity);
         deskCube.node->setScale(0.0005f, 0.0003f, 0.00001f);
 
         gyroscopeCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         gyroscopeCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
+        gyroscopeCube.entity->setCastShadows(false);
         gyroscopeCube.node->attachObject(gyroscopeCube.entity);
         gyroscopeCube.node->setScale(0.0001f, 0.0001f, 0.0001f);
         gyroscopeCube.node->setPosition(0.0f, 0.0f, 0.015f);
 /*
         angularVelocityCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         angularVelocityCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
+        angularVelocityCube.entity->setCastShadows(false);
         angularVelocityCube.node->attachObject(angularVelocityCube.entity);
         angularVelocityCube.node->setScale(0.0001f, 0.0001f, 0.0001f);
         angularVelocityCube.node->setPosition(-0.015f, 0.0f, 0.015f);
 */
         velocityCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         velocityCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
+        velocityCube.entity->setCastShadows(false);
         velocityCube.node->attachObject(velocityCube.entity);
         velocityCube.node->setScale(0.0001f, 0.0001f, 0.0001f);
         velocityCube.node->setPosition(0.015f, 0.0f, 0.015f);
 
+/*
         lightNode = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         lightNode->setPosition(Ogre::Vector3(0.0f, 0.0f, 0.25f));
         light = mSceneMgr->createLight();
         light->setType(Ogre::Light::LT_POINT);
+*/
 /*
         light->setDiffuseColour(Ogre::ColourValue(0.2f, 0.7f, 1.5f));
         light->setSpecularColour(Ogre::ColourValue(0.5f, 0.8f, 1.5f));
         light->setPowerScale(Ogre::Math::PI * 4.0f);
 */
-        float lightRadius = 0.3f;
+/*
+        constexpr float lightRadius = 0.3f;
         light->setAttenuation(lightRadius, 1.0f, 0.0f, 0.0f);
         lightNode->attachObject(light);
+*/
     }
 
     Dashboard::~Dashboard() {
+/*
         mSceneMgr->destroyLight(light);
         mSceneMgr->destroySceneNode(lightNode);
+*/
         mSceneMgr->destroyEntity(velocityCube.entity);
         mSceneMgr->destroySceneNode(velocityCube.node);
 /*

@@ -25,8 +25,10 @@ namespace MaxDoF::GameClient::Ships
         Element velocityCube;
         Element deskCube;
 
+/*
         Ogre::SceneNode* lightNode;
         Ogre::Light* light;
+*/
 
     public:
         Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position);
