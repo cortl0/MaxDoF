@@ -10,7 +10,6 @@
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/ControllerTranslator.h"
-#include "GameClient/Ships/Ship.h"
 #include "GameClient/ShipController.h"
 #include "GameCommon/Scenes/Scene01.h"
 #include "GameCommon/Types/Entity.h"
@@ -23,7 +22,9 @@ namespace MaxDoF::GameClient
         JPH::Quat qCameraPreviousQuaternion{JPH::Quat::sIdentity()};
         JPH::Vec3 getJoltLocalAngularVelocities(JPH::Quat &qPrev, const JPH::Quat &qCurr, float dt);
 
-        protected:
+        void connectControllerToShip();
+
+    protected:
         Demo::GraphicsSystem *mGraphicsSystem{ nullptr };
         TextOverleyManager mTextOverleyManager;
         const unsigned int mMaxBodiesLimit{ 2048 };
@@ -33,13 +34,11 @@ namespace MaxDoF::GameClient
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;
         std::unique_ptr<GameCommon::Scenes::Scene> mScene;
-        GameClient::Ships::Ship* mShip;
 
     public:
         MdfGame( const Ogre::String &helpDescription );
         ~MdfGame() override;
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
-        void connectCameraAndControllerToShip();
         void createScene01() override;
         void update( float timeSinceLast ) override;
         void keyPressed( const SDL_KeyboardEvent &arg ) override;

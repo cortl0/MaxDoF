@@ -5,7 +5,6 @@
 
 #include <iostream>
 
-#include <OgreCamera.h>
 #include <OgreGpuProgramManager.h>
 #include <OgreHlmsCompute.h>
 #include <OgreHlmsManager.h>
@@ -31,18 +30,9 @@ namespace MaxDoF::GameClient
     }
 #endif
 
-    void MdfGame::connectCameraAndControllerToShip()
+    void MdfGame::connectControllerToShip()
     {
-        Ogre::Camera *camera = mGraphicsSystem->getCamera();
-        camera->setFarClipDistance(10000.0f);
-        if( camera->getParentSceneNode() )
-            camera->getParentSceneNode()->detachObject( camera );
-        auto& shipEntity = mShip->getEntity();
-        shipEntity.graphNode->attachObject( camera );
-        camera->setPosition( Ogre::Vector3::ZERO );
-        //camera->setPosition( Ogre::Vector3( 0.0f, 0.0f, 10.0f ) );
-        camera->setOrientation( Ogre::Quaternion::IDENTITY );
-
+        auto& shipEntity = mScene->getShip().getEntity();
         mShipController = std::make_unique<ShipController>(
             shipEntity.graphNode,
             mWorldManager.getBodyInterface(),
@@ -55,14 +45,12 @@ namespace MaxDoF::GameClient
         mScene = std::make_unique<GameCommon::Scenes::Scene01>(mWorldManager);
         mWorldManager.initialize( mMaxBodiesLimit );
         mScene->createScene();
-        auto& shipEntity = mScene->createShipEntity();
-
 #ifdef MAXDOF_CLIENT_BUILD
-        mShip = new GameClient::Ships::Ship(mGraphicsSystem->getSceneManager(), shipEntity);
         mTextOverleyManager.createCrosshair();
         mTextOverleyManager.createDebugTextOverlay();
 #endif
-        connectCameraAndControllerToShip();
+        mScene->getShip().connectCameraToShip(mGraphicsSystem->getCamera());
+        connectControllerToShip();
 
         mGraphicsSystem->getSceneManager()->setForwardClustered(
             true,     // bEnable: Активируем систему
@@ -80,7 +68,7 @@ namespace MaxDoF::GameClient
     void MdfGame::update( float timeSinceLast )
     {
         // 1. Шагаем физику (Jolt считает мир и автоматически двигает Ogre-узлы из mEntities)
-        mWorldManager.update( timeSinceLast, mShip->getEntity().physId );
+        mWorldManager.update( timeSinceLast, mScene->getShip().getEntity().physId );
         //mShip->mEntity.graphNode->setPosition(Ogre::Vector3::ZERO);
         // 2. Опрашиваем устройства ввода через правильные методы транслятора
         auto data = mInputTranslator.translate(&mKeyboardController, &mMouseController);
@@ -95,7 +83,7 @@ namespace MaxDoF::GameClient
         {
             auto telemetry = mShipController->getTelemetry(timeSinceLast);
             mTextOverleyManager.generateDebugText( timeSinceLast, telemetry);
-            mShip->update(timeSinceLast, telemetry);
+            mScene->getShip().update(timeSinceLast, telemetry);
         }
 #endif
     }

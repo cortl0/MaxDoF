@@ -28,6 +28,19 @@ namespace MaxDoF::GameClient::Ships
         mSceneMgr->destroySceneNode(lightNode);
     }
 
+#ifdef MAXDOF_CLIENT_BUILD
+    void Ship::connectCameraToShip(Ogre::Camera* camera)
+    {
+        camera->setFarClipDistance(10000.0f);
+        if(camera->getParentSceneNode())
+            camera->getParentSceneNode()->detachObject(camera);
+        mEntity.graphNode->attachObject(camera);
+        camera->setPosition(Ogre::Vector3::ZERO);
+        //camera->setPosition(Ogre::Vector3(0.0f, 0.0f, 10.0f));
+        camera->setOrientation(Ogre::Quaternion::IDENTITY);
+    }
+#endif
+
     void Ship::update(float timeSinceLastFrame, const GameCommon::Types::Telemetry& telemetry)
     {
         mDashboard.update(telemetry);

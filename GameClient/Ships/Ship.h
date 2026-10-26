@@ -4,6 +4,7 @@
 #pragma once
 
 #ifdef MAXDOF_CLIENT_BUILD
+#include <OgreCamera.h>
 #include "GameClient/Ships/Dashboard.h"
 #endif
 
@@ -28,6 +29,9 @@ namespace MaxDoF::GameClient::Ships
 #endif
             const GameCommon::Types::Entity& shipEntity);
         ~Ship();
+#ifdef MAXDOF_CLIENT_BUILD
+        void connectCameraToShip(Ogre::Camera*);
+#endif
         const GameCommon::Types::Entity& getEntity() const { return mEntity; }
         void update(float timeSinceLastFrame, const GameCommon::Types::Telemetry&);
     };

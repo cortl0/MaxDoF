@@ -13,4 +13,4 @@ namespace MaxDoF::GameCommon::Scenes
     Scene::~Scene()
     {
     }
-}  // namespace MaxDoF::GameCommon::Scenes
+}

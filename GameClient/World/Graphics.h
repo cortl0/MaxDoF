@@ -24,6 +24,7 @@ namespace MaxDoF::GameClient::World
         Graphics( const Ogre::String &helpDescription );
         ~Graphics();
 
+        Demo::GraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
         void initialize();
         void changeTexture(Ogre::Item*, const Ogre::String& newTextureFileName);
