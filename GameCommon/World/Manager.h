@@ -86,10 +86,7 @@ namespace MaxDoF::GameCommon::World
             JPH::BodyID bodyId);
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
-        Types::Entity& createCube(const Types::PhysPose&, const JPH::Vec3& halfSize, float mass);
-#ifdef MAXDOF_CLIENT_BUILD
-        Ogre::SceneNode* createLight();
-#endif
+        Types::Entity& createCube(const Types::PhysPose&, const JPH::Vec3& halfSize, float mass, bool dynamic = true);
         Types::Entity& createSphere(const Types::PhysPose&, float radius, float mass);
     };
 }

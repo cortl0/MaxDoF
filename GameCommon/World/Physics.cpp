@@ -17,13 +17,14 @@ namespace MaxDoF::GameCommon::World
     {
     }
 
-    JPH::BodyID Physics::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::PhysPose& pose, float mass)
+    JPH::BodyID Physics::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::PhysPose& pose, float mass, bool dynamic)
     {
         JPH::BodyCreationSettings bodySettings(
             shapeResult.Get(),
             pose.position,
             pose.orientation,
-            JPH::EMotionType::Dynamic, JPH::ObjectLayer(0)
+            (dynamic ? JPH::EMotionType::Dynamic : JPH::EMotionType::Static),
+            JPH::ObjectLayer(0)
         );
 
         bodySettings.mAllowSleeping = false; 
@@ -35,16 +36,16 @@ namespace MaxDoF::GameCommon::World
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass)
+    JPH::BodyID Physics::createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
-        return setBodySettings(shapeSettings.Create(), pose, mass);
+        return setBodySettings(shapeSettings.Create(), pose, mass, dynamic);
     }
 
     JPH::BodyID Physics::createSphere(const Types::PhysPose& pose, float radius, float mass)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
-        return setBodySettings(shapeSettings.Create(), pose, mass);
+        return setBodySettings(shapeSettings.Create(), pose, mass, true);
     }
 
 }

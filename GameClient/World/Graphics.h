@@ -15,6 +15,7 @@ namespace MaxDoF::GameClient::World
     protected:
         TextOverleyManager mTextOverleyManager;
         Demo::GraphicsSystem *mGraphicsSystem;
+        Ogre::SceneNode* globalStaticNode;
 
     public:
         const Ogre::String ortSphereMeshName{"MyV2Sphere"};
@@ -28,9 +29,10 @@ namespace MaxDoF::GameClient::World
         void changeTexture(Ogre::Item*, const Ogre::String& newTextureFileName);
         void changeUniqueTexture(Ogre::Item*, const Ogre::String& newTextureFileName, const Ogre::String& uniqueMaterialName);
         Ogre::SceneNode* createCube(const GameCommon::Types::GraphPose&, const Ogre::Vector3& halfSize);
-        Ogre::SceneNode* createLight();
+        Ogre::SceneNode* createPointLight(Ogre::Vector3 position);
         Ogre::SceneNode* createShape( const Ogre::String& meshName, const GameCommon::Types::GraphPose&);
         Ogre::SceneNode* createSphere(const GameCommon::Types::GraphPose&, float radius);
+        void setPositionOfGlobalStaticNode(const Ogre::Vector3&);
         void printAllMaterials();
     };
 }

@@ -24,7 +24,7 @@ compositor_node MaxDoFWorkspace_Node
 compositor_node_shadow MaxDoFShadowNode
 {
     technique focused
-    texture focusedTex 2048 2048 PFG_D32_FLOAT
+    texture focusedTex 2048 2048 PFG_D32_FLOAT keep_content
     shadow_map 0 focusedTex light 0
     // Render shadow map "0"
     shadow_map_target_type directional spot

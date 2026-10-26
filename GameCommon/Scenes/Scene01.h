@@ -9,15 +9,17 @@ namespace MaxDoF::GameCommon::Scenes
 {
     class Scene01 : public Scene
     {
+        static constexpr double mapHalfSize{75.0f};
+
+        void createMapBoundaries();
+
     public:
         Scene01(World::Manager&);
         ~Scene01() override;
-        void createCube(Types::PhysPose pose);
 #ifdef MAXDOF_CLIENT_BUILD
-        void createLight();
+        void createStaticLights();
 #endif
         void createScene() override;
         Types::Entity& createShipEntity() override;
-        void createSphere();
     };
 }

@@ -16,7 +16,7 @@ namespace MaxDoF::GameClient::Ships
         // lightNode->setPosition(Ogre::Vector3(0.0f, 0.0f, -0.4f));
         light = mSceneMgr->createLight();
         light->setType(Ogre::Light::LT_SPOTLIGHT);
-        constexpr float lightRadius = 100.0f;
+        constexpr float lightRadius = 200.0f;
         light->setAttenuation(lightRadius, 1.0f, 0.0f, 0.01f);
         light->setSpotlightRange(Ogre::Degree(0), Ogre::Degree(60));
         lightNode->attachObject(light);

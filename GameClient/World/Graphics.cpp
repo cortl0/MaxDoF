@@ -119,32 +119,27 @@ namespace MaxDoF::GameClient::World
 
         changeUniqueTexture(sceneManager->createItem("Sphere1000.mesh"), "1d_SPIRAL.png", "MyWoodMaterial");
         changeUniqueTexture(sceneManager->createItem("cube_d.mesh"), "BeachStones.jpg", "MyStoneMaterial");
+        globalStaticNode = sceneManager->getRootSceneNode()->createChildSceneNode(Ogre::SceneMemoryMgrTypes::SCENE_DYNAMIC);
     }
 
     Ogre::SceneNode* Graphics::createCube(const GameCommon::Types::GraphPose& pose, const Ogre::Vector3& halfSize)
     {
-        auto graphPose = GameCommon::Types::GraphPose
-        {
-            .position = { 1.0f, 0.0f, -5.0f },
-            .orientation = Ogre::Quaternion::IDENTITY
-        };
-        auto* node = createShape("cube_d.mesh", graphPose);
+        auto* node = createShape("cube_d.mesh", pose);
         node->setScale( halfSize * 2.0f / 2 );
         return node;
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
-    Ogre::SceneNode* Graphics::createLight()
+    Ogre::SceneNode* Graphics::createPointLight(Ogre::Vector3 position)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
-        auto* node = sceneManager->getRootSceneNode()->createChildSceneNode();
+        auto* node = globalStaticNode->createChildSceneNode(Ogre::SceneMemoryMgrTypes::SCENE_DYNAMIC, position);
         auto* light = sceneManager->createLight();
         node->attachObject( light );
-        light->setType( Ogre::Light::LT_DIRECTIONAL );
-        light->setDirection( Ogre::Vector3( -1.0f, -1.0f, -1.0f ).normalisedCopy() );
-        printf(">>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<< light %d", light->getCastShadows());
+        light->setType( Ogre::Light::LT_POINT );
         light->setCastShadows(true);
-        light->setShadowFarDistance(10000.0f);
+        light->setAttenuation(100.0f, 1.0f, 0.0f, 0.01f);
+        light->setShadowFarDistance(100.0f);
         return node;
     }
 #endif
@@ -171,6 +166,11 @@ namespace MaxDoF::GameClient::World
         auto* node = createShape( ortSphereMeshName, pose );
         node->setScale( Ogre::Vector3::UNIT_SCALE * radius * 2.0f );
         return node;
+    }
+
+    void Graphics::setPositionOfGlobalStaticNode(const Ogre::Vector3 & position)
+    {
+        globalStaticNode->setPosition(position);
     }
 
 void Graphics::printAllMaterials()
