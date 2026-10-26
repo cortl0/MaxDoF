@@ -9,6 +9,7 @@
 #include <OgreVector3.h>
 #include <OgreSceneNode.h>
 
+#include "GameCommon/Types/Entity.h"
 #include "GameCommon/Types/Telemetry.h"
 
 // Добавляем опережающие объявления Jolt, чтобы не перегружать заголовок
@@ -21,9 +22,8 @@ namespace MaxDoF::GameClient
 {
     class ShipController
     {
-        Ogre::SceneNode*      mShipNode{ nullptr };
+        GameCommon::Types::Entity mShipEntity;
         JPH::BodyInterface*   mBodyInterface{ nullptr };
-        const JPH::BodyID*    mShipBodyId{ nullptr };
 
         const float           mSensitivityPitch{ 1.0f };
         const float           mSensitivityYaw{ 0.5f };
@@ -33,7 +33,6 @@ namespace MaxDoF::GameClient
         float                 mThrustPower; // Сила тяги маршевых двигателей в Ньютонах
         float                 ControlPower{10.0f}; // Сила тяги маневровых двигателей в Ньютонах
 
-        float                 mCameraBaseSpeed;
         bool                  mUseSceneNode;
 
         JPH::Vec3 mShipPreviousPosition{-JPH::Vec3::sAxisZ()};
@@ -48,8 +47,7 @@ namespace MaxDoF::GameClient
             Ogre::Vector3 moveDir{Ogre::Vector3::ZERO};
         };
 
-        ShipController( Ogre::SceneNode *shipNode,
-                             JPH::BodyInterface* bodyInterface, const JPH::BodyID* shipBodyId );
+        ShipController(const GameCommon::Types::Entity& shipEntity, JPH::BodyInterface* bodyInterface);
         GameCommon::Types::Telemetry getTelemetry(float timeDelta);
         bool update( float timeSinceLast, const ControllerData& mControllerData );
     };

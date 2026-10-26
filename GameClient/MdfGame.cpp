@@ -34,9 +34,8 @@ namespace MaxDoF::GameClient
     {
         auto& shipEntity = mScene->getShip().getEntity();
         mShipController = std::make_unique<ShipController>(
-            shipEntity.graphNode,
-            mWorldManager.getBodyInterface(),
-            &shipEntity.physId
+            shipEntity,
+            mWorldManager.getBodyInterface()
         );
     }
 
