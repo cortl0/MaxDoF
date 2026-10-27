@@ -7,9 +7,15 @@
 
 namespace MaxDoF::GameClient::Ships
 {
-    Ship::Ship(Ogre::SceneManager* sceneMgr, const GameCommon::Types::Entity& shipEntity)
+    Ship::Ship(
+#ifdef MAXDOF_CLIENT_BUILD
+        Ogre::SceneManager* sceneMgr, GameClient::World::Graphics& graphics,
+#endif
+        const GameCommon::Types::Entity& shipEntity)
+#ifdef MAXDOF_CLIENT_BUILD
         : mSceneMgr(sceneMgr)
-        , mDashboard(mSceneMgr, shipEntity.graphNode, Ogre::Vector3(0.0f, -0.1f, -0.3f))
+        , mDashboard(mSceneMgr, shipEntity.graphNode, Ogre::Vector3(0.0f, -0.1f, -0.3f), graphics)// Ogre::Vector3(0.0f, -0.1f, -0.3f))
+#endif
         , mEntity(shipEntity)
     {
         lightNode = mEntity.graphNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);

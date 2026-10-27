@@ -33,10 +33,7 @@ namespace MaxDoF::GameClient
     void MdfGame::connectControllerToShip()
     {
         auto& shipEntity = mScene->getShip().getEntity();
-        mShipController = std::make_unique<ShipController>(
-            shipEntity,
-            mWorldManager.getBodyInterface()
-        );
+        mShipController = std::make_unique<ShipController>(shipEntity, mWorldManager.getBodyInterface());
     }
 
     void MdfGame::createScene01()
@@ -53,7 +50,7 @@ namespace MaxDoF::GameClient
 
         mGraphicsSystem->getSceneManager()->setForwardClustered(
             true,     // bEnable: Активируем систему
-            4,       // width: Разрешение сетки по горизонтали. 16 — стандарт для 1080p/4K.
+            4,        // width: Разрешение сетки по горизонтали. 16 — стандарт для 1080p/4K.
             4,        // height: Разрешение по вертикали.
             24,       // numSlices: 24 слоя глубины дают плавное распределение света без резких переключений.
             8,        // lightsPerCell: Максимум 8 источников на одну ячейку экрана. Для кабины (3 прибора + пара ламп) этого хватит с запасом.

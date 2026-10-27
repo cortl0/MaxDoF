@@ -111,7 +111,7 @@ namespace MaxDoF::GameCommon::Scenes
         mWorldManager.createSphere(pose, 0.5f, 1000.0f);
         auto& shipEntity = createShipEntity();
 #ifdef MAXDOF_CLIENT_BUILD
-        mShip = new GameClient::Ships::Ship(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), shipEntity);
+        mShip = new GameClient::Ships::Ship(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), mWorldManager.getGraphics(), shipEntity);
 #endif
     }
 

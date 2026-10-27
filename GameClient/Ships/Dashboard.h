@@ -7,12 +7,14 @@
 
 #include <OgreSceneManager.h>
 
+#include "GameClient/World/Graphics.h"
 #include "GameCommon/Types/Telemetry.h"
 
 namespace MaxDoF::GameClient::Ships
 {
     class Dashboard {
         Ogre::SceneManager* mSceneMgr;
+        GameClient::World::Graphics& mGraphics;
         Ogre::SceneNode* mDashboardNode; // Корневой узел панели
 
         struct Element
@@ -31,7 +33,7 @@ namespace MaxDoF::GameClient::Ships
 */
 
     public:
-        Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position);
+        Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position, GameClient::World::Graphics&);
         ~Dashboard();
         void update(const GameCommon::Types::Telemetry&);
     };

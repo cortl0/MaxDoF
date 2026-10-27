@@ -7,8 +7,9 @@
 
 namespace MaxDoF::GameClient::Ships
 {
-    Dashboard::Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position)
+    Dashboard::Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position, GameClient::World::Graphics& graphics)
         : mSceneMgr(sceneMgr)
+        , mGraphics(graphics)
     {
         mDashboardNode = parentNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         mDashboardNode->setPosition(position);
@@ -26,14 +27,18 @@ namespace MaxDoF::GameClient::Ships
         gyroscopeCube.node->attachObject(gyroscopeCube.entity);
         gyroscopeCube.node->setScale(0.0001f, 0.0001f, 0.0001f);
         gyroscopeCube.node->setPosition(0.0f, 0.0f, 0.015f);
-/*
+
         angularVelocityCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
+        // angularVelocityCube.node = mGraphics.createSphere(MaxDoF::GameCommon::Types::GraphPose{
+        //     .position = {-0.015f, 0.0f, 0.015f},
+        //     .orientation = Ogre::Quaternion::IDENTITY
+        // }, 0.5f);
         angularVelocityCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
         angularVelocityCube.entity->setCastShadows(false);
         angularVelocityCube.node->attachObject(angularVelocityCube.entity);
         angularVelocityCube.node->setScale(0.0001f, 0.0001f, 0.0001f);
         angularVelocityCube.node->setPosition(-0.015f, 0.0f, 0.015f);
-*/
+
         velocityCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         velocityCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
         velocityCube.entity->setCastShadows(false);
@@ -66,10 +71,10 @@ namespace MaxDoF::GameClient::Ships
 */
         mSceneMgr->destroyEntity(velocityCube.entity);
         mSceneMgr->destroySceneNode(velocityCube.node);
-/*
+
         mSceneMgr->destroyEntity(angularVelocityCube.entity);
         mSceneMgr->destroySceneNode(angularVelocityCube.node);
-*/
+
         mSceneMgr->destroyEntity(gyroscopeCube.entity);
         mSceneMgr->destroySceneNode(gyroscopeCube.node);
         mSceneMgr->destroyEntity(deskCube.entity);
@@ -91,12 +96,32 @@ namespace MaxDoF::GameClient::Ships
     void Dashboard::update(const GameCommon::Types::Telemetry& telemetry)
     {
         auto shipOrientation = gyroscopeCube.node->getParent()->getParent()->getOrientation();
-        gyroscopeCube.node->setOrientation(shipOrientation.Inverse());
+        auto gyroscopeOrientation = shipOrientation.Inverse();
+        gyroscopeCube.node->setOrientation(gyroscopeOrientation);
         Ogre::Vector3 localVelocity(telemetry.localVelocity.x, telemetry.localVelocity.y, telemetry.localVelocity.z);
         float l = localVelocity.length();
         if(l>10.0f)
             localVelocity *= 10.0f / l;
         Ogre::Vector3 vec_(0.015f, 0.0f, 0.015f);
         velocityCube.node->setPosition(vec_ + localVelocity/2000.0f);
+
+        static auto gyroscopeOrientationOld = Ogre::Quaternion::IDENTITY;
+        // 1. Получаем дельту в локальных координатах гироскопа
+        Ogre::Quaternion deltaQ1_local = gyroscopeOrientationOld.Inverse() * gyroscopeOrientation;
+        deltaQ1_local.normalise();
+
+        // 2. Переводим дельту гироскопа в МИРОВЫЕ координаты
+        // Для этого сопрягаем её с текущим мировым вращением гироскопа
+        Ogre::Quaternion deltaQ1_world = gyroscopeOrientation * deltaQ1_local * gyroscopeOrientation.Inverse();
+
+        // 3. Инвертируем мировую дельту (зеркальное вращение в мировом пространстве)
+        Ogre::Quaternion inverseDeltaQ1_world = deltaQ1_world.UnitInverse();
+
+        // 4. Применяем мировую дельту к кубу СЛЕВА (так как приращение мировое)
+        auto gyroscopeOrientationNew = inverseDeltaQ1_world * angularVelocityCube.node->getOrientation();
+        gyroscopeOrientationNew.normalise();
+
+        angularVelocityCube.node->setOrientation(gyroscopeOrientationNew);
+        gyroscopeOrientationOld = gyroscopeOrientation;
     }
 }

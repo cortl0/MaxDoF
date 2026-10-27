@@ -16,7 +16,7 @@ namespace MaxDoF::GameClient::Ships
     class Ship {
 #ifdef MAXDOF_CLIENT_BUILD
         Ogre::SceneManager* mSceneMgr;
-        Dashboard mDashboard;
+        GameClient::Ships::Dashboard mDashboard;
         Ogre::SceneNode* lightNode;
         Ogre::Light* light;
 #endif
@@ -25,7 +25,8 @@ namespace MaxDoF::GameClient::Ships
     public:
         Ship(
 #ifdef MAXDOF_CLIENT_BUILD
-            Ogre::SceneManager* sceneMgr,
+            Ogre::SceneManager*,
+            GameClient::World::Graphics&,
 #endif
             const GameCommon::Types::Entity& shipEntity);
         ~Ship();
