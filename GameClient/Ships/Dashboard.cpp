@@ -15,36 +15,29 @@ namespace MaxDoF::GameClient::Ships
         mDashboardNode->setPosition(position);
         mDashboardNode->pitch(-Ogre::Radian(position.y / position.z));
 
-        deskCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
-        deskCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
-        deskCube.entity->setCastShadows(false);
-        deskCube.node->attachObject(deskCube.entity);
-        deskCube.node->setScale(0.0005f, 0.0003f, 0.00001f);
+        deskCube.node = mGraphics.createCube(MaxDoF::GameCommon::Types::GraphPose{
+            .position = {0.0f, 0.0f, 0.0f},
+            .orientation = Ogre::Quaternion::IDENTITY
+        }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
+        deskCube.node->setScale(0.05f, 0.03f, 0.001f);
 
-        gyroscopeCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
-        gyroscopeCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
-        gyroscopeCube.entity->setCastShadows(false);
-        gyroscopeCube.node->attachObject(gyroscopeCube.entity);
-        gyroscopeCube.node->setScale(0.0001f, 0.0001f, 0.0001f);
-        gyroscopeCube.node->setPosition(0.0f, 0.0f, 0.015f);
+        gyroscopeCube.node = mGraphics.createCube(MaxDoF::GameCommon::Types::GraphPose{
+            .position = {0.0f, 0.0f, 0.015f},
+            .orientation = Ogre::Quaternion::IDENTITY
+        }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
+        gyroscopeCube.node->setScale(0.01f, 0.01f, 0.01f);
 
-        angularVelocityCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
-        // angularVelocityCube.node = mGraphics.createSphere(MaxDoF::GameCommon::Types::GraphPose{
-        //     .position = {-0.015f, 0.0f, 0.015f},
-        //     .orientation = Ogre::Quaternion::IDENTITY
-        // }, 0.5f);
-        angularVelocityCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
-        angularVelocityCube.entity->setCastShadows(false);
-        angularVelocityCube.node->attachObject(angularVelocityCube.entity);
-        angularVelocityCube.node->setScale(0.0001f, 0.0001f, 0.0001f);
-        angularVelocityCube.node->setPosition(-0.015f, 0.0f, 0.015f);
+        angularVelocityCube.node = mGraphics.createSphere(MaxDoF::GameCommon::Types::GraphPose{
+            .position = {-0.015f, 0.0f, 0.015f},
+            .orientation = Ogre::Quaternion::IDENTITY
+        }, 0.5f, mDashboardNode);
+        angularVelocityCube.node->setScale(0.01f, 0.01f, 0.01f);
 
-        velocityCube.node = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
-        velocityCube.entity = mSceneMgr->createEntity(Ogre::SceneManager::PT_CUBE, Ogre::SCENE_DYNAMIC);
-        velocityCube.entity->setCastShadows(false);
-        velocityCube.node->attachObject(velocityCube.entity);
-        velocityCube.node->setScale(0.0001f, 0.0001f, 0.0001f);
-        velocityCube.node->setPosition(0.015f, 0.0f, 0.015f);
+        velocityCube.node = mGraphics.createSphere(MaxDoF::GameCommon::Types::GraphPose{
+            .position = {0.015f, 0.0f, 0.015f},
+            .orientation = Ogre::Quaternion::IDENTITY
+        }, 0.5f, mDashboardNode);
+        velocityCube.node->setScale(0.01f, 0.01f, 0.01f);
 
 /*
         lightNode = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
@@ -69,15 +62,15 @@ namespace MaxDoF::GameClient::Ships
         mSceneMgr->destroyLight(light);
         mSceneMgr->destroySceneNode(lightNode);
 */
-        mSceneMgr->destroyEntity(velocityCube.entity);
+        // mSceneMgr->destroyEntity(velocityCube.entity);
         mSceneMgr->destroySceneNode(velocityCube.node);
 
-        mSceneMgr->destroyEntity(angularVelocityCube.entity);
+        // mSceneMgr->destroyEntity(angularVelocityCube.entity);
         mSceneMgr->destroySceneNode(angularVelocityCube.node);
 
-        mSceneMgr->destroyEntity(gyroscopeCube.entity);
+        // mSceneMgr->destroyEntity(gyroscopeCube.entity);
         mSceneMgr->destroySceneNode(gyroscopeCube.node);
-        mSceneMgr->destroyEntity(deskCube.entity);
+        // mSceneMgr->destroyEntity(deskCube.entity);
         mSceneMgr->destroySceneNode(deskCube.node);
         mSceneMgr->destroySceneNode(mDashboardNode);
     }

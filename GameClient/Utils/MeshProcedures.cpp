@@ -26,48 +26,48 @@ namespace MaxDoF::GameClient::Utils
         unsigned int numIndices = 36;
         manual->estimateVertexCount(numVertices);
         manual->estimateIndexCount(numIndices);
-        manual->begin("BaseWhite", Ogre::OT_TRIANGLE_LIST); 
+        manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST); 
 
-        // --- 1. ПЕРЕДНЯЯ ГРАНЬ (Нормаль смотрит строго на вас: 0, 0, 1) ---
-        manual->position(-hX, -hY,  hZ); manual->normal(0, 0, 1);
-        manual->position( hX, -hY,  hZ); manual->normal(0, 0, 1);
-        manual->position( hX,  hY,  hZ); manual->normal(0, 0, 1);
-        manual->position(-hX,  hY,  hZ); manual->normal(0, 0, 1);
+        // --- 1. ПЕРЕДНЯЯ ГРАНЬ ---
+        manual->position(-hX, -hY,  hZ); manual->normal(0, 0, 1); manual->textureCoord(0.0f, 1.0f);
+        manual->position( hX, -hY,  hZ); manual->normal(0, 0, 1); manual->textureCoord(1.0f, 1.0f);
+        manual->position( hX,  hY,  hZ); manual->normal(0, 0, 1); manual->textureCoord(1.0f, 0.0f);
+        manual->position(-hX,  hY,  hZ); manual->normal(0, 0, 1); manual->textureCoord(0.0f, 0.0f);
         manual->quad(0, 1, 2, 3);
 
-        // --- 2. ЗАДНЯЯ ГРАНЬ (Нормаль смотрит вглубь экрана: 0, 0, -1) ---
-        manual->position( hX, -hY, -hZ); manual->normal(0, 0, -1);
-        manual->position(-hX, -hY, -hZ); manual->normal(0, 0, -1);
-        manual->position(-hX,  hY, -hZ); manual->normal(0, 0, -1);
-        manual->position( hX,  hY, -hZ); manual->normal(0, 0, -1);
+        // --- 2. ЗАДНЯЯ ГРАНЬ ---
+        manual->position( hX, -hY, -hZ); manual->normal(0, 0, -1); manual->textureCoord(0.0f, 1.0f);
+        manual->position(-hX, -hY, -hZ); manual->normal(0, 0, -1); manual->textureCoord(1.0f, 1.0f);
+        manual->position(-hX,  hY, -hZ); manual->normal(0, 0, -1); manual->textureCoord(1.0f, 0.0f);
+        manual->position( hX,  hY, -hZ); manual->normal(0, 0, -1); manual->textureCoord(0.0f, 0.0f);
         manual->quad(4, 5, 6, 7);
 
-        // --- 3. ЛЕВАЯ ГРАНЬ (Нормаль смотрит влево: -1, 0, 0) ---
-        manual->position(-hX, -hY, -hZ); manual->normal(-1, 0, 0);
-        manual->position(-hX, -hY,  hZ); manual->normal(-1, 0, 0);
-        manual->position(-hX,  hY,  hZ); manual->normal(-1, 0, 0);
-        manual->position(-hX,  hY, -hZ); manual->normal(-1, 0, 0);
+        // --- 3. ЛЕВАЯ ГРАНЬ ---
+        manual->position(-hX, -hY, -hZ); manual->normal(-1, 0, 0); manual->textureCoord(0.0f, 1.0f);
+        manual->position(-hX, -hY,  hZ); manual->normal(-1, 0, 0); manual->textureCoord(1.0f, 1.0f);
+        manual->position(-hX,  hY,  hZ); manual->normal(-1, 0, 0); manual->textureCoord(1.0f, 0.0f);
+        manual->position(-hX,  hY, -hZ); manual->normal(-1, 0, 0); manual->textureCoord(0.0f, 0.0f);
         manual->quad(8, 9, 10, 11);
 
-        // --- 4. ПРАВАЯ ГРАНЬ (Нормаль смотрит вправо: 1, 0, 0) ---
-        manual->position( hX, -hY,  hZ); manual->normal(1, 0, 0);
-        manual->position( hX, -hY, -hZ); manual->normal(1, 0, 0);
-        manual->position( hX,  hY, -hZ); manual->normal(1, 0, 0);
-        manual->position( hX,  hY,  hZ); manual->normal(1, 0, 0);
+        // --- 4. ПРАВАЯ ГРАНЬ ---
+        manual->position( hX, -hY,  hZ); manual->normal(1, 0, 0); manual->textureCoord(0.0f, 1.0f);
+        manual->position( hX, -hY, -hZ); manual->normal(1, 0, 0); manual->textureCoord(1.0f, 1.0f);
+        manual->position( hX,  hY, -hZ); manual->normal(1, 0, 0); manual->textureCoord(1.0f, 0.0f);
+        manual->position( hX,  hY,  hZ); manual->normal(1, 0, 0); manual->textureCoord(0.0f, 0.0f);
         manual->quad(12, 13, 14, 15);
 
-        // --- 5. ВЕРХНЯЯ ГРАНЬ (Нормаль смотрит вверх: 0, 1, 0) ---
-        manual->position(-hX,  hY,  hZ); manual->normal(0, 1, 0);
-        manual->position( hX,  hY,  hZ); manual->normal(0, 1, 0);
-        manual->position( hX,  hY, -hZ); manual->normal(0, 1, 0);
-        manual->position(-hX,  hY, -hZ); manual->normal(0, 1, 0);
+        // --- 5. ВЕРХНЯЯ ГРАНЬ ---
+        manual->position(-hX,  hY,  hZ); manual->normal(0, 1, 0); manual->textureCoord(0.0f, 1.0f);
+        manual->position( hX,  hY,  hZ); manual->normal(0, 1, 0); manual->textureCoord(1.0f, 1.0f);
+        manual->position( hX,  hY, -hZ); manual->normal(0, 1, 0); manual->textureCoord(1.0f, 0.0f);
+        manual->position(-hX,  hY, -hZ); manual->normal(0, 1, 0); manual->textureCoord(0.0f, 0.0f);
         manual->quad(16, 17, 18, 19);
 
-        // --- 6. НИЖНЯЯ ГРАНЬ (Нормаль смотрит вниз: 0, -1, 0) ---
-        manual->position(-hX, -hY, -hZ); manual->normal(0, -1, 0);
-        manual->position( hX, -hY, -hZ); manual->normal(0, -1, 0);
-        manual->position( hX, -hY,  hZ); manual->normal(0, -1, 0);
-        manual->position(-hX, -hY,  hZ); manual->normal(0, -1, 0);
+        // --- 6. НИЖНЯЯ ГРАНЬ ---
+        manual->position(-hX, -hY, -hZ); manual->normal(0, -1, 0); manual->textureCoord(0.0f, 1.0f);
+        manual->position( hX, -hY, -hZ); manual->normal(0, -1, 0); manual->textureCoord(1.0f, 1.0f);
+        manual->position( hX, -hY,  hZ); manual->normal(0, -1, 0); manual->textureCoord(1.0f, 0.0f);
+        manual->position(-hX, -hY,  hZ); manual->normal(0, -1, 0); manual->textureCoord(0.0f, 0.0f);
         manual->quad(20, 21, 22, 23);
 
         manual->end();
@@ -87,7 +87,7 @@ namespace MaxDoF::GameClient::Utils
         unsigned int numIndices = rings * segments * 6;
         manual->estimateVertexCount(numVertices);
         manual->estimateIndexCount(numIndices);
-        manual->begin("BaseWhite", Ogre::OT_TRIANGLE_LIST);
+        manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST);
 
         float fDeltaRingAngle = (Ogre::Math::PI / rings);
         float fDeltaSeqAngle = (Ogre::Math::TWO_PI / segments);

@@ -105,11 +105,42 @@ namespace MaxDoF::GameClient::World
         cubeItem->setDatablock(uniqueDatablock);
     }
 
+    void createMaterials()
+    {
+        Ogre::Root* root = Ogre::Root::getSingletonPtr();
+        Ogre::HlmsManager* hlmsManager = root->getHlmsManager();
+        Ogre::HlmsPbs* hlmsPbs = static_cast<Ogre::HlmsPbs*>(hlmsManager->getHlms(Ogre::HLMS_PBS));
+
+        Ogre::String materialName = "CubeMaterial";
+        Ogre::HlmsPbsDatablock* datablock = static_cast<Ogre::HlmsPbsDatablock*>(
+            hlmsPbs->createDatablock(materialName, materialName, Ogre::HlmsMacroblock(), Ogre::HlmsBlendblock(), Ogre::HlmsParamVec())
+        );
+
+        // 1. Получаем TextureGpuManager из RenderSystem
+        Ogre::RenderSystem* renderSystem = root->getRenderSystem();
+        Ogre::TextureGpuManager* textureGpuManager = renderSystem->getTextureGpuManager();
+
+        // 2. Запрашиваем создание/получение текстуры по имени файла
+        Ogre::String textureName = "BeachStones.jpg"; // Укажите ваше имя файла
+        Ogre::TextureGpu* texture = textureGpuManager->createOrRetrieveTexture(
+            textureName,
+            Ogre::GpuPageOutStrategy::Discard,
+            Ogre::TextureFlags::AutomaticBatching, // Оставляем только этот флаг для обычной текстуры
+            Ogre::TextureTypes::Type2D,
+            Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
+        );
+
+        // 3. Передаем указатель на TextureGpu в датаблок
+        // Обратите внимание: первый аргумент приводится к uint8 (так как тип в перечислении Ogre::PbsTextureTypes)
+        datablock->setTexture(static_cast<Ogre::uint8>(Ogre::PBSM_DIFFUSE), texture);
+    }
+
     void Graphics::initialize()
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
+        createMaterials();
         Utils::createProceduralSphereV2( sceneManager, ortSphereMeshName, 0.5f, 16, 16 );
-        // Utils::createProceduralCubeV2( sceneManager, ortCubeMeshName, 0.5f, 0.5f, 0.5f );
+        Utils::createProceduralCubeV2( sceneManager, ortCubeMeshName, 0.5f, 0.5f, 0.5f );
         printAllMaterials();
 
         // Ogre::Item* item = sceneManager->createItem("cube_d.mesh");
@@ -122,10 +153,10 @@ namespace MaxDoF::GameClient::World
         globalStaticNode = sceneManager->getRootSceneNode()->createChildSceneNode(Ogre::SceneMemoryMgrTypes::SCENE_DYNAMIC);
     }
 
-    Ogre::SceneNode* Graphics::createCube(const GameCommon::Types::GraphPose& pose, const Ogre::Vector3& halfSize)
+    Ogre::SceneNode* Graphics::createCube(const GameCommon::Types::GraphPose& pose, const Ogre::Vector3& halfSize, Ogre::SceneNode* parent)
     {
-        auto* node = createShape("cube_d.mesh", pose);
-        node->setScale( halfSize * 2.0f / 2 );
+        auto* node = createShape(ortCubeMeshName, pose, parent);
+        node->setScale(halfSize * 2.0f);
         return node;
     }
 
@@ -144,10 +175,16 @@ namespace MaxDoF::GameClient::World
     }
 #endif
 
-    Ogre::SceneNode* Graphics::createShape(const Ogre::String& meshName, const GameCommon::Types::GraphPose& pose)
+    Ogre::SceneNode* Graphics::createShape(const Ogre::String& meshName, const GameCommon::Types::GraphPose& pose, Ogre::SceneNode* parent)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
-        auto* node = sceneManager->getRootSceneNode()->createChildSceneNode( Ogre::SCENE_DYNAMIC );
+        Ogre::SceneNode* node;
+
+        if(parent == nullptr)
+            node = sceneManager->getRootSceneNode()->createChildSceneNode( Ogre::SCENE_DYNAMIC );
+        else
+            node = parent->createChildSceneNode( Ogre::SCENE_DYNAMIC );
+
         Ogre::Item *item = sceneManager->createItem(
             meshName,
             Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
@@ -161,10 +198,10 @@ namespace MaxDoF::GameClient::World
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createSphere(const GameCommon::Types::GraphPose& pose, float radius)
+    Ogre::SceneNode* Graphics::createSphere(const GameCommon::Types::GraphPose& pose, float radius, Ogre::SceneNode* parent)
     {
-        auto* node = createShape( ortSphereMeshName, pose );
-        node->setScale( Ogre::Vector3::UNIT_SCALE * radius * 2.0f );
+        auto* node = createShape(ortSphereMeshName, pose, parent);
+        node->setScale(Ogre::Vector3::UNIT_SCALE * radius * 2.0f);
         return node;
     }
 
