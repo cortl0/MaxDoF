@@ -5,9 +5,11 @@
 
 #include "GameCommon/Scenes/Scene01.h"
 
+#include "GameCommon/LevelMeshes/MeshBuilder.h"
+
 namespace MaxDoF::GameCommon::Scenes
 {
-    Scene01::Scene01(World::Manager& worldManager) : 
+    Scene01::Scene01(World::Manager& worldManager) :
         Scene(worldManager)
     {
     }
@@ -69,7 +71,6 @@ namespace MaxDoF::GameCommon::Scenes
         }
     }
 
-
 #ifdef MAXDOF_CLIENT_BUILD
     void Scene01::createStaticLights()
     {
@@ -115,6 +116,11 @@ namespace MaxDoF::GameCommon::Scenes
 #ifdef MAXDOF_CLIENT_BUILD
         mShip = new GameClient::Ships::Ship(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), mWorldManager.getGraphics(), shipEntity);
 #endif
+
+        GameCommon::LevelMeshes::MeshBuilder meshBuilder;
+        GameCommon::LevelMeshes::MeshData meshData;
+        meshBuilder.BuildMeshData(meshData);
+        mWorldManager.createMesh(meshData);
     }
 
     Types::Entity& Scene01::createShipEntity()

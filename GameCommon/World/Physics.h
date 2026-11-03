@@ -9,6 +9,7 @@
 #include <Jolt/Physics/Body/BodyInterface.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
+#include "GameCommon/LevelMeshes/MeshData.h"
 #include "GameCommon/Types/Poses.h"
 
 namespace MaxDoF::GameCommon::World
@@ -26,6 +27,7 @@ namespace MaxDoF::GameCommon::World
         void initialize(unsigned int maxBodies = 1024);
         JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic);
         JPH::BodyID createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic);
+        JPH::BodyID createMesh(const LevelMeshes::MeshData&);
         JPH::BodyID createSphere(const Types::PhysPose& pose, float radius, float mass);
     };
 }

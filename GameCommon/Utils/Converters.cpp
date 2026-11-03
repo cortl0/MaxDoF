@@ -24,7 +24,7 @@ namespace MaxDoF::GameCommon::Utils
         if (angle < 1e-6f)
             return JPH::Vec3::sZero();
 
-        // Корректируем направление оси (Jolt возвращает положительный угол, 
+        // Корректируем направление оси (Jolt возвращает положительный угол,
         // направление вращения кодируется вектором оси)
         JPH::Vec3 localAngularVelocity = axis * (angle / dt);
 

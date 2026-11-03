@@ -10,6 +10,8 @@
 #include <OgreMeshManager.h>
 #include <OgreMeshManager2.h>
 
+#include "GameCommon/Utils/SystemUtils.h"
+
 namespace MaxDoF::GameClient::Utils
 {
     bool testName(const Ogre::String &meshName)
@@ -28,7 +30,7 @@ namespace MaxDoF::GameClient::Utils
         unsigned int numIndices = 36;
         manual->estimateVertexCount(numVertices);
         manual->estimateIndexCount(numIndices);
-        manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST); 
+        manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST);
 
         // --- 1. ПЕРЕДНЯЯ ГРАНЬ ---
         manual->position(-hX, -hY,  hZ); manual->normal(0, 0, 1); manual->textureCoord(0.0f, 1.0f);
@@ -110,7 +112,6 @@ namespace MaxDoF::GameClient::Utils
                 Ogre::Vector3 normal(x0, y0, z0);
                 normal.normalise();
                 manual->normal(normal);
-
                 manual->textureCoord((float)seg / (float)segments, (float)ring / (float)rings);
             }
         }
@@ -145,4 +146,59 @@ namespace MaxDoF::GameClient::Utils
         mesh->load();
         sceneManager->destroyManualObject(manual);
     }
-}  // namespace MaxDoF::GameClient::Utils
+
+    void createMeshFromMeshData(Ogre::SceneManager* sceneManager, const Ogre::String& meshName, const MaxDoF::GameCommon::LevelMeshes::MeshData& meshData)
+    {
+        if (Ogre::MeshManager::getSingleton().resourceExists(meshName))
+        {
+            return;
+        }
+
+        if (meshData.vertices.empty() || meshData.indices.empty())
+        {
+            MaxDoF_LOG_AND_ABORT("bad data")
+        }
+
+        Ogre::ManualObject* manual = sceneManager->createManualObject();
+        manual->estimateVertexCount(meshData.vertices.size());
+        manual->estimateIndexCount(meshData.indices.size());
+        manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST);
+
+        for (const auto& v : meshData.vertices)
+        {
+            manual->position(v.x, v.y, v.z);
+            manual->normal(v.nx, v.ny, v.nz);
+            manual->textureCoord(v.u, v.v);
+        }
+
+        for (size_t i = 0; i < meshData.indices.size(); ++i)
+        {
+            manual->index(meshData.indices[i]);
+        }
+
+        manual->end();
+        Ogre::MeshPtr mesh = manual->convertToMesh(meshName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+        mesh->load();
+        sceneManager->destroyManualObject(manual);
+    }
+
+    void removeMesh(const Ogre::String& meshName)
+    {
+        Ogre::MeshManager& meshManager = Ogre::MeshManager::getSingleton();
+
+        if (meshManager.resourceExists(meshName))
+        {
+            Ogre::ResourcePtr meshResource = meshManager.getByName(
+                meshName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
+            );
+
+            if (!meshResource.operator bool())
+            {
+                meshResource->unload();
+
+                meshManager.remove(meshResource);
+            }
+        }
+    }
+
+}

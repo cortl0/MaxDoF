@@ -135,6 +135,15 @@ namespace MaxDoF::GameCommon::World
             mPhysics.createBox(pose, halfSize, mass, dynamic));
     }
 
+    Types::Entity& Manager::createMesh(const GameCommon::LevelMeshes::MeshData& meshData)
+    {
+        return createEntity(
+#ifdef MAXDOF_CLIENT_BUILD
+            mGraphics.createMesh(meshData),
+#endif
+            mPhysics.createMesh(meshData));
+    }
+
     Types::Entity& Manager::createSphere(const Types::PhysPose& pose, float radius, float mass)
     {
         return createEntity(

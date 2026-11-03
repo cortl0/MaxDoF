@@ -6,7 +6,7 @@
 compositor_node MaxDoFWorkspace_Node
 {
     in 0 renderwindow
- 
+
     target renderwindow
     {
         pass render_scene
@@ -16,7 +16,7 @@ compositor_node MaxDoFWorkspace_Node
                 all clear
                 clear_colour 0.0 0.0 0.0 1.0
             }
- 
+
             rq_first    0
             rq_last     max
 

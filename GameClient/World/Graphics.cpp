@@ -42,7 +42,7 @@ namespace MaxDoF::GameClient::World
             Ogre::HlmsPbsDatablock* pbsDatablock = static_cast<Ogre::HlmsPbsDatablock*>(baseDatablock);
 
             // 3. Загружаем новую текстуру через менеджер текстур Ogre-Next 4.0
-            Ogre::TextureGpuManager* textureGpuManager = 
+            Ogre::TextureGpuManager* textureGpuManager =
                 Ogre::Root::getSingleton().getRenderSystem()->getTextureGpuManager();
 
             Ogre::TextureGpu* newTexture = textureGpuManager->createOrRetrieveTexture(
@@ -141,8 +141,9 @@ namespace MaxDoF::GameClient::World
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         createMaterials();
-        Utils::createProceduralSphereV2( sceneManager, ortSphereMeshName, 0.5f, 16, 16 );
-        Utils::createProceduralCubeV2( sceneManager, ortCubeMeshName, 0.5f, 0.5f, 0.5f );
+        Utils::createProceduralSphereV2(sceneManager, cOrtSphereMeshName, 0.5f, 16, 16);
+        Utils::createProceduralCubeV2(sceneManager, cOrtCubeMeshName, 0.5f, 0.5f, 0.5f);
+        //Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, MaxDoF::GameCommon::Types::mMeshData);
         printAllMaterials();
 
         // Ogre::Item* item = sceneManager->createItem("cube_d.mesh");
@@ -157,9 +158,20 @@ namespace MaxDoF::GameClient::World
 
     Ogre::SceneNode* Graphics::createCube(const GameCommon::Types::GraphPose& pose, const Ogre::Vector3& halfSize, Ogre::SceneNode* parent)
     {
-        auto* node = createShape(ortCubeMeshName, pose, parent);
+        auto* node = createShape(cOrtCubeMeshName, pose, parent);
         node->setScale(halfSize * 2.0f);
         return node;
+    }
+
+    Ogre::SceneNode* Graphics::createMesh(const GameCommon::LevelMeshes::MeshData& meshData)
+    {
+        auto* sceneManager = mGraphicsSystem->getSceneManager();
+        Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, meshData);
+
+        return createShape(cAsteroidMeshName, MaxDoF::GameCommon::Types::GraphPose{
+            .position = Ogre::Vector3::ZERO,
+            .orientation = Ogre::Quaternion::IDENTITY
+        });
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
@@ -203,7 +215,7 @@ namespace MaxDoF::GameClient::World
 
     Ogre::SceneNode* Graphics::createSphere(const GameCommon::Types::GraphPose& pose, float radius, Ogre::SceneNode* parent)
     {
-        auto* node = createShape(ortSphereMeshName, pose, parent);
+        auto* node = createShape(cOrtSphereMeshName, pose, parent);
         node->setScale(Ogre::Vector3::UNIT_SCALE * radius * 2.0f);
         return node;
     }
@@ -221,10 +233,10 @@ void Graphics::printAllMaterials()
     for (size_t i = 0; i < Ogre::HLMS_MAX; ++i)
     {
         Ogre::Hlms* hlms = hlmsManager->getHlms(static_cast<Ogre::HlmsTypes>(i));
-        if (!hlms) 
+        if (!hlms)
             continue;
 
-        std::string typeName = (i == Ogre::HLMS_PBS) ? "PBS" : 
+        std::string typeName = (i == Ogre::HLMS_PBS) ? "PBS" :
                             (i == Ogre::HLMS_UNLIT) ? "Unlit" : "Other";
 
         std::cout << "--- Тип HLMS: " << typeName << " ---" << std::endl;
@@ -235,7 +247,7 @@ void Graphics::printAllMaterials()
         {
             // Извлекаем указатель на датаблок из структуры DatablockEntry
             Ogre::HlmsDatablock* datablock = entry.datablock;
-            
+
             if (datablock)
             {
                 // Получаем читаемое имя материала
