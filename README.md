@@ -6,6 +6,6 @@ Maximum Degrees of Freedom. The Game with Six Degrees of Freedom and First-Perso
 [Jolt Physics](https://github.com/jrouwe/JoltPhysics) (A multi core friendly rigid body physics and collision detection library)  
 [OGRE-Next 3D](https://github.com/OGRECave/ogre-next) (Object-Oriented Graphics Rendering Engine Next Generation)
 ## License
-This project is licensed under the GPL v3.0 - see the LICENSE file for details
+This project is licensed under the GNU AGPLv3.0 - see the LICENSE file for details
 ## Videos
 [![Смотреть видео](https://pic.rtbcdn.ru/video/2026-10-28/11/e9/11e9bfdb14183dc80cb72e8ffd77c6ad.jpg)](https://rutube.ru/video/060ca5a92cc62cb236a9259035594959/)
