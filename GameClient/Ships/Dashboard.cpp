@@ -20,24 +20,28 @@ namespace MaxDoF::GameClient::Ships
             .orientation = Ogre::Quaternion::IDENTITY
         }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
         deskCube.node->setScale(0.05f, 0.03f, 0.001f);
+        //deskCube.entity->setCastShadows(false);
 
         gyroscopeCube.node = mGraphics.createCube(MaxDoF::GameCommon::Types::GraphPose{
             .position = {0.0f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
         gyroscopeCube.node->setScale(0.01f, 0.01f, 0.01f);
+        //gyroscopeCube.entity->setCastShadows(false);
 
         angularVelocityCube.node = mGraphics.createSphere(MaxDoF::GameCommon::Types::GraphPose{
             .position = {-0.015f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, 0.5f, mDashboardNode);
         angularVelocityCube.node->setScale(0.01f, 0.01f, 0.01f);
+        //angularVelocityCube.entity->setCastShadows(false);
 
         velocityCube.node = mGraphics.createSphere(MaxDoF::GameCommon::Types::GraphPose{
             .position = {0.015f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, 0.5f, mDashboardNode);
         velocityCube.node->setScale(0.01f, 0.01f, 0.01f);
+        //velocityCube.entity->setCastShadows(false);
 
 /*
         lightNode = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);

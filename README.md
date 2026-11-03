@@ -8,4 +8,4 @@ Maximum Degrees of Freedom. The Game with Six Degrees of Freedom and First-Perso
 ## License
 This project is licensed under the GPL v3.0 - see the LICENSE file for details
 ## Videos
-[![Смотреть видео](https://pic.rtbcdn.ru/video/2026-10-28/11/e9/11e9bfdb14183dc80cb72e8ffd77c6ad.jpg?width=1000)](https://rutube.ru/video/060ca5a92cc62cb236a9259035594959/)
+[![Смотреть видео](https://pic.rtbcdn.ru/video/2026-10-28/11/e9/11e9bfdb14183dc80cb72e8ffd77c6ad.jpg)](https://rutube.ru/video/060ca5a92cc62cb236a9259035594959/)

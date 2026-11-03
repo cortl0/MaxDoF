@@ -87,9 +87,9 @@ namespace MaxDoF::GameCommon::Scenes
 
     void Scene01::createScene()
     {
-        createMapBoundaries();
+        // createMapBoundaries();
 #ifdef MAXDOF_CLIENT_BUILD
-        createStaticLights();
+        // createStaticLights();
 #endif
         for(int i = -5; i < 5; ++i)
             for(int j = -5; j < 5; ++j)

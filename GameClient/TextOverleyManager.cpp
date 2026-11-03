@@ -90,6 +90,7 @@ namespace MaxDoF::GameClient
             finalText += Ogre::StringConverter::toString( frameStats->getRollingAverageFps() );
             //finalText += "\n\nPress F1 to toggle help";
         }
+        finalText += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         finalText += std::string("\nShip Position")
             + ": x[" + std::to_string(telemetry.position.x)
             + "] y[" + std::to_string(telemetry.position.y)

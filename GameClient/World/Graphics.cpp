@@ -169,8 +169,9 @@ namespace MaxDoF::GameClient::World
         node->attachObject( light );
         light->setType( Ogre::Light::LT_POINT );
         light->setCastShadows(true);
-        light->setAttenuation(100.0f, 1.0f, 0.0f, 0.01f);
-        light->setShadowFarDistance(100.0f);
+        light->setAttenuation(200.0f, 1.0f, 0.0f, 0.01f);
+        // light->setPowerScale(2.0f);
+        light->setShadowFarDistance(200.0f);
         return node;
     }
 #endif
