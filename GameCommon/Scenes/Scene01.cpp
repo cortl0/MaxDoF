@@ -6,6 +6,8 @@
 #include "GameCommon/Scenes/Scene01.h"
 
 #include "GameCommon/LevelMeshes/MeshBuilder.h"
+#include "GameCommon/LevelMeshes/PipeGraphGenerator.h"
+#include "GameCommon/LevelMeshes/TetrahedronGraphGenerator.h"
 
 namespace MaxDoF::GameCommon::Scenes
 {
@@ -94,6 +96,7 @@ namespace MaxDoF::GameCommon::Scenes
 #ifdef MAXDOF_CLIENT_BUILD
         // createStaticLights();
 #endif
+/*
         for(int i = -5; i < 5; ++i)
             for(int j = -5; j < 5; ++j)
                 for(int k = -5; k < 5; ++k)
@@ -105,7 +108,7 @@ namespace MaxDoF::GameCommon::Scenes
                         };
                         mWorldManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
                     }
-
+*/
         Types::PhysPose pose
         {
             .position = JPH::RVec3( 0.0f, 0.0f, -12.0f ),
@@ -118,7 +121,26 @@ namespace MaxDoF::GameCommon::Scenes
 #endif
 
         GameCommon::LevelMeshes::MeshData meshData;
-        GameCommon::LevelMeshes::MeshBuilder::CreateMeshData(meshData);
+
+        if(1)
+        {
+            // 1. Создаем пустой контейнер для графа
+            MaxDoF::GameCommon::LevelGraphs::PureLevelGraph levelGraph;
+            // 2. Генерируем идеальную симметричную Deathmatch-станцию (36 полигонов внутреннего мира)
+            MaxDoF::GameCommon::LevelGraphs::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
+            // 4. Наш новый метод за один проход превращает граф в готовый меш с нормалями и UV
+            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
+        }
+        else
+        {        // 1. Создаем пустой контейнер для графа
+            MaxDoF::GameCommon::LevelGraphs::PureLevelGraph levelGraph;
+            // 2. Генерируем идеальную симметричную Deathmatch-станцию (36 полигонов внутреннего мира)
+            MaxDoF::GameCommon::LevelGraphs::PipeGraphGenerator::GenerateGraph(levelGraph);
+            // 4. Наш новый метод за один проход превращает граф в готовый меш с нормалями и UV
+            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
+        }
+
+        // 5. Отдаем готовый буфер в игровой мир (для рендера и запекания коллизий Jolt)
         mWorldManager.createMesh(meshData);
     }
 

@@ -10,20 +10,16 @@
 #include <random>
 #include <vector>
 
+#include "GameCommon/LevelMeshes/Constants.h"
+#include "GameCommon/Utils/SystemUtils.h"
 
 namespace MaxDoF::GameCommon::LevelMeshes
 {
-    void MeshBuilder::CreateMeshData(GameCommon::LevelMeshes::MeshData& meshData)
-    {
-        float radius = 5.0f;
-        BuildPipe(meshData, JPH::RVec3{0,0,10}, JPH::RVec3{0,0,-10}, radius);
-    }
-
     // 1. Вспомогательная функция для сборки одного треугольника (без изменений)
     void MeshBuilder::AddPhysicalTriangle(
-        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData, 
-        const UVVertex& p0, 
-        const UVVertex& p1, 
+        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
+        const UVVertex& p0,
+        const UVVertex& p1,
         const UVVertex& p2)
     {
         JPH::Vec3 edge1 = p1.pos - p0.pos;
@@ -33,18 +29,18 @@ namespace MaxDoF::GameCommon::LevelMeshes
         uint32_t currentBase = static_cast<uint32_t>(meshData.vertices.size());
         std::array<UVVertex, 3> pts = { p0, p1, p2 };
 
-        for (int i = 0; i < 3; ++i) 
+        for (int i = 0; i < 3; ++i)
         {
             MaxDoF::GameCommon::LevelMeshes::Vertex v;
-            v.x = pts[i].pos.GetX(); 
-            v.y = pts[i].pos.GetY(); 
+            v.x = pts[i].pos.GetX();
+            v.y = pts[i].pos.GetY();
             v.z = pts[i].pos.GetZ();
-            
+
 #ifdef MAXDOF_CLIENT_BUILD
-            v.nx = normal.GetX(); 
-            v.ny = normal.GetY(); 
+            v.nx = normal.GetX();
+            v.ny = normal.GetY();
             v.nz = normal.GetZ();
-            v.u  = pts[i].u; 
+            v.u  = pts[i].u;
             v.v  = pts[i].v;
 #endif
             meshData.vertices.push_back(v);
@@ -55,13 +51,12 @@ namespace MaxDoF::GameCommon::LevelMeshes
         meshData.indices.push_back(currentBase + 2);
     }
 
-    // 2. ОБНОВЛЕННАЯ ФУНКЦИЯ: Динамический выбор диагонали против схлопывания
     void MeshBuilder::ConnectTriangles(
-        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData, 
-        const std::array<JPH::Vec3, 3>& verticesBegin, 
+        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
+        const std::array<JPH::Vec3, 3>& verticesBegin,
         const std::array<JPH::Vec3, 3>& verticesEnd)
     {
-        // Комбинаторный поиск кратчайших пар (без изменений)
+        // 1. Комбинаторный поиск пар по кратчайшему расстоянию
         const std::array<std::array<int, 3>, 6> permutations = {{
             {0, 1, 2}, {0, 2, 1},
             {1, 0, 2}, {1, 2, 0},
@@ -71,13 +66,11 @@ namespace MaxDoF::GameCommon::LevelMeshes
         float minTotalDistance = FLT_MAX;
         std::array<int, 3> bestPermutation = {0, 1, 2};
 
-        // --- ИСПРАВЛЕННЫЙ БЛОК КОМБИНАТОРНОГО ПОИСКА ---
         for (const auto& p : permutations) {
-            // p[0], p[1], p[2] — это конкретные индексы вершин (0, 1 или 2)
             float dist0 = (verticesBegin[0] - verticesEnd[p[0]]).Length();
             float dist1 = (verticesBegin[1] - verticesEnd[p[1]]).Length();
             float dist2 = (verticesBegin[2] - verticesEnd[p[2]]).Length();
-            
+
             float currentSum = dist0 + dist1 + dist2;
             if (currentSum < minTotalDistance) {
                 minTotalDistance = currentSum;
@@ -85,77 +78,107 @@ namespace MaxDoF::GameCommon::LevelMeshes
             }
         }
 
-        // Подготовка базовых UV-вершин
+        // 2. Подготовка базовых UV-вершин
         std::array<UVVertex, 3> a;
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i)
+        {
             a[i].pos = verticesBegin[i];
             a[i].u   = static_cast<float>(i) / 3.0f;
             a[i].v   = 0.0f;
         }
 
         std::array<UVVertex, 3> b;
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i)
+        {
             int targetIdx = bestPermutation[i];
             b[i].pos = verticesEnd[targetIdx];
-            b[i].u   = static_cast<float>(i) / 3.0f; 
+            b[i].u   = static_cast<float>(i) / 3.0f;
             b[i].v   = 1.0f;
         }
 
         UVVertex a_last = a[0]; a_last.u = 1.0f;
         UVVertex b_last = b[0]; b_last.u = 1.0f;
 
-        // --- АНАЛИТИЧЕСКИЙ ВЫБОР ДИАГОНАЛИ ---
-        // Берем 4 вершины первой складки трубы: a0, a1 (вход) и b0, b1 (выход)
+        // 3. Выбор диагонали по знаку ориентированного объема складки
         JPH::Vec3 v0 = a[0].pos;
         JPH::Vec3 v1 = a[1].pos;
         JPH::Vec3 v2 = b[0].pos;
         JPH::Vec3 v3 = b[1].pos;
 
-        // Строим три вектора из одной вершины тетраэдра складки
-        JPH::Vec3 edge1 = v1 - v0;
-        JPH::Vec3 edge2 = v2 - v0;
-        JPH::Vec3 edge3 = v3 - v0;
+        JPH::Vec3 volEdge1 = v1 - v0;
+        JPH::Vec3 volEdge2 = v2 - v0;
+        JPH::Vec3 volEdge3 = v3 - v0;
 
-        // Смешанное произведение (Скалярное произведение одного вектора на кросс-продукт двух других)
-        // Оно строго определяет знак пространственной ориентации (хиральность) складки
-        float volumeSign = edge1.Dot(edge2.Cross(edge3));
-
-        // Если знак отрицательный — геометрия пошла на излом "внутрь" оси (схлопывание). 
-        // Принудительно включаем Схему Б, которая расцепит ребра!
+        float volumeSign = volEdge1.Dot(volEdge2.Cross(volEdge3));
         bool useAlternativeDiagonal = (volumeSign < 0.0f);
 
-        // 5. СБОРКА С ДИНАМИЧЕСКИМ ПЕРЕКЛЮЧЕНИЕМ ДИАГОНАЛЕЙ
+        // --- СИСТЕМНЫЙ ТЕСТ ВЫВЕРНУТОСТИ КОЛЬЦА ЧЕРЕЗ ОБЪЕМ ---
+        // Считаем объем первого тетраэдра складки (a0, b0, a1) относительно центра пролета
+        JPH::Vec3 centerBegin = (verticesBegin[0] + verticesBegin[1] + verticesBegin[2]) / 3.0f;
+        JPH::Vec3 centerEnd   = (verticesEnd[0] + verticesEnd[1] + verticesEnd[2]) / 3.0f;
+        JPH::Vec3 localPipeCenter = (centerBegin + centerEnd) * 0.5f;
+
+        JPH::Vec3 e0 = a[0].pos - localPipeCenter;
+        JPH::Vec3 e1 = b[0].pos - localPipeCenter;
+        JPH::Vec3 e2 = a[1].pos - localPipeCenter;
+
+        // Если нормали изначально пошли наружу (> 0), взводим флаг инверсии для всего кольца
+        bool invertRing = (e0.Dot(e1.Cross(e2)) > 0.0f);
+
+        // 4. ЧЕСТНАЯ ГЕОМЕТРИЧЕСКАЯ СБОРКА СТЕН (ЖЕСТКИЙ ПАССИВНЫЙ CCW/CW КОНТРОЛЬ)
         if (useAlternativeDiagonal)
         {
-            // СХЕМА А (Для положительных углов: расширение через базовую диагональ)
-            // Складка 1
-            AddPhysicalTriangle(meshData, a[0], b[0], a[1]);
-            AddPhysicalTriangle(meshData, b[0], b[1], a[1]);
+            // Отрицательные углы
+            if (invertRing)
+            {
+                AddPhysicalTriangle(meshData, a[0], b[1], b[0]);
+                AddPhysicalTriangle(meshData, a[0], a[1], b[1]);
 
-            // Складка 2
-            AddPhysicalTriangle(meshData, a[1], b[1], a[2]);
-            AddPhysicalTriangle(meshData, b[1], b[2], a[2]);
+                AddPhysicalTriangle(meshData, a[1], b[2], b[1]);
+                AddPhysicalTriangle(meshData, a[1], a[2], b[2]);
 
-            // Складка 3 (Замыкающая)
-            AddPhysicalTriangle(meshData, a[2], b[2], a_last);
-            AddPhysicalTriangle(meshData, b[2], b_last, a_last);
+                AddPhysicalTriangle(meshData, a[2], b_last, b[2]);
+                AddPhysicalTriangle(meshData, a[2], a_last, b_last);
+            }
+            else
+            {
+                AddPhysicalTriangle(meshData, a[0], b[0], b[1]);
+                AddPhysicalTriangle(meshData, a[0], b[1], a[1]);
+
+                AddPhysicalTriangle(meshData, a[1], b[1], b[2]);
+                AddPhysicalTriangle(meshData, a[1], b[2], a[2]);
+
+                AddPhysicalTriangle(meshData, a[2], b[2], b_last);
+                AddPhysicalTriangle(meshData, a[2], b_last, a_last);
+            }
         }
         else
         {
-            // СХЕМА Б (Для отрицательных углов: перенос диагонали, предотвращающий схлопывание!)
-            // Переключаем триангуляцию на вторую диагональ четырехугольника: (a0, b0, b1) и (a0, b1, a1)
-            
-            // Складка 1
-            AddPhysicalTriangle(meshData, a[0], b[0], b[1]);
-            AddPhysicalTriangle(meshData, a[0], b[1], a[1]);
+            // Положительные углы
+            if (invertRing)
+            {
+                // Инвертированный системный обход для всех 6 граней: UV-координаты шва защищены!
+                AddPhysicalTriangle(meshData, a[0], a[1], b[0]);
+                AddPhysicalTriangle(meshData, b[0], a[1], b[1]);
 
-            // Складка 2
-            AddPhysicalTriangle(meshData, a[1], b[1], b[2]);
-            AddPhysicalTriangle(meshData, a[1], b[2], a[2]);
+                AddPhysicalTriangle(meshData, a[1], a[2], b[1]);
+                AddPhysicalTriangle(meshData, b[1], a[2], b[2]);
 
-            // Складка 3 (Замыкающая)
-            AddPhysicalTriangle(meshData, a[2], b[2], b_last);
-            AddPhysicalTriangle(meshData, a[2], b_last, a_last);
+                AddPhysicalTriangle(meshData, a[2], a_last, b[2]);
+                AddPhysicalTriangle(meshData, b[2], a_last, b_last);
+            }
+            else
+            {
+                // Прямой системный обход
+                AddPhysicalTriangle(meshData, a[0], b[0], a[1]);
+                AddPhysicalTriangle(meshData, b[0], b[1], a[1]);
+
+                AddPhysicalTriangle(meshData, a[1], b[1], a[2]);
+                AddPhysicalTriangle(meshData, b[1], b[2], a[2]);
+
+                AddPhysicalTriangle(meshData, a[1], b[2], a_last);
+                AddPhysicalTriangle(meshData, b[2], b_last, a_last);
+            }
         }
     }
 
@@ -174,33 +197,86 @@ namespace MaxDoF::GameCommon::LevelMeshes
         return vertices;
     }
 
-    // 4. Очищенная функция с рандомом (без изменений)
-    void MeshBuilder::BuildPipe(MaxDoF::GameCommon::LevelMeshes::MeshData& meshData, const JPH::RVec3& begin, const JPH::RVec3& end, float radius)
+    // Локальная утилита контроля вывернутости индивидуальной боковой стены
+    void MeshBuilder::AddOrientedWallTriangle(
+        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
+        const MaxDoF::GameCommon::LevelMeshes::MeshBuilder::UVVertex& p0,
+        const MaxDoF::GameCommon::LevelMeshes::MeshBuilder::UVVertex& p1,
+        const MaxDoF::GameCommon::LevelMeshes::MeshBuilder::UVVertex& p2,
+        const JPH::Vec3& localPipeCenter)
     {
-        const float PI = 3.1415926535f;
+        JPH::Vec3 e0 = p0.pos - localPipeCenter;
+        JPH::Vec3 e1 = p1.pos - localPipeCenter;
+        JPH::Vec3 e2 = p2.pos - localPipeCenter;
 
-        JPH::Vec3 pBegin(begin);
-        JPH::Vec3 pEnd(end);
-        
-        JPH::Vec3 dir = pEnd - pBegin;
-        float length = dir.Length();
-        if (length < 1e-4f) return;
-        dir /= length;
+        float volumeSign = e0.Dot(e1.Cross(e2));
 
-        JPH::Vec3 up = (std::abs(dir.GetY()) > 0.99f) ? JPH::Vec3(0.0f, 0.0f, 1.0f) : JPH::Vec3(0.0f, 1.0f, 0.0f);
-        JPH::Vec3 U = dir.Cross(up).Normalized();
-        JPH::Vec3 V = dir.Cross(U);
+        // Возвращаем строгое и чистое сравнение с нулем
+        if (volumeSign > 0.0f)
+        {
+            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::AddPhysicalTriangle(meshData, p0, p2, p1);
+        }
+        else
+        {
+            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::AddPhysicalTriangle(meshData, p0, p1, p2);
+        }
+    }
 
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-        std::uniform_real_distribution<float> dis(0.0f, 2.0f * PI);
+    void MeshBuilder::CreateMeshData(
+        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
+        const MaxDoF::GameCommon::LevelGraphs::PureLevelGraph& graph)
+    {
+        using namespace MaxDoF::GameCommon::LevelGraphs;
 
-        float randomAngleBegin = dis(gen);
-        float randomAngleEnd   = dis(gen);
+        // Вектора не очищаем (оставляем кумулятивность)
 
-        std::array<JPH::Vec3, 3> verticesBegin = GenerateTriangleVertices(pBegin, U, V, randomAngleBegin, radius);
-        std::array<JPH::Vec3, 3> verticesEnd   = GenerateTriangleVertices(pEnd, U, V, randomAngleEnd, radius);
+        for(const auto& node : graph.nodes)
+        {
+            // =========================================================================
+            // ЭТАП 1: СБОРКА СЛОЖНОЙ ОБЪЕМНОЙ ГЕОМЕТРИИ (СТЕНЫ ТРУБ)
+            // =========================================================================
+            if(node.type == NodeType::PipeTunnel)
+            {
+                if(node.interfaceIds.size() < 2)
+                    MaxDoF_LOG_AND_ABORT("bad data")
 
-        ConnectTriangles(meshData, verticesBegin, verticesEnd);
+                // Извлекаем два интерфейса трубы напрямую
+                const auto& interface0 = graph.interfaces[node.interfaceIds[0].interfaceId];
+                const auto& interface1 = graph.interfaces[node.interfaceIds[1].interfaceId];
+
+                // Натягиваем 6 боковых прямоугольников-складок
+                ConnectTriangles(meshData, interface0.vertices, interface1.vertices);
+            }
+            // Для тетраэдра на этом этапе ничего делать не нужно — у него нет боковых складок,
+            // его геометрия полностью состоит из плоских граней-интерфейсов!
+
+            // =========================================================================
+            // ЭТАП 2: УНИВЕРСАЛЬНАЯ СБОРКА ЗАГЛУШЕК ДЛЯ АБСОЛЮТНО ВСЕХ УЗЛОВ ГРАФА
+            // =========================================================================
+            // Проходим по всем узлам еще раз и заставляем каждый из них честно
+            // проверить свои интерфейсы на наличие глухих тупиков
+            for(const auto& orientedInterface : node.interfaceIds)
+            {
+                const auto& face = graph.interfaces[orientedInterface.interfaceId];
+
+                // Если грань официально ведет в монолитный камень — строим заглушку!
+                if(face.nodeB == cNodeSolidRock)
+                {
+                    MeshBuilder::UVVertex p0{ face.vertices[0], 0.0f, 0.0f };
+                    MeshBuilder::UVVertex p1{ face.vertices[1], 1.0f, 0.0f };
+                    MeshBuilder::UVVertex p2{ face.vertices[2], 0.5f, 1.0f };
+
+                    // Единое пуленепробиваемое правило для труб, тетраэдров и комнат:
+                    if(orientedInterface.inverted)
+                    {
+                        AddPhysicalTriangle(meshData, p0, p2, p1);
+                    }
+                    else
+                    {
+                        AddPhysicalTriangle(meshData, p0, p1, p2);
+                    }
+                }
+            }
+        }
     }
 }
