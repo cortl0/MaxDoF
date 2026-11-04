@@ -117,9 +117,8 @@ namespace MaxDoF::GameCommon::Scenes
         mShip = new GameClient::Ships::Ship(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), mWorldManager.getGraphics(), shipEntity);
 #endif
 
-        GameCommon::LevelMeshes::MeshBuilder meshBuilder;
         GameCommon::LevelMeshes::MeshData meshData;
-        meshBuilder.BuildMeshData(meshData);
+        GameCommon::LevelMeshes::MeshBuilder::CreateMeshData(meshData);
         mWorldManager.createMesh(meshData);
     }
 
