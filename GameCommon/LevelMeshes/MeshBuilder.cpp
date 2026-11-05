@@ -15,7 +15,7 @@
 
 namespace MaxDoF::GameCommon::LevelMeshes
 {
-    void MeshBuilder::AddNonPlanarQuad(MaxDoF::GameCommon::LevelMeshes::MeshData& meshData, bool reverseDiagonal,
+    void MeshBuilder::AddNonPlanarQuad(MaxDoF::GameCommon::Types3d::MeshData& meshData, bool reverseDiagonal,
         const UVVertex& a, const UVVertex& b, const UVVertex& c, const UVVertex& d)
     {
         if(reverseDiagonal)
@@ -31,7 +31,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
     }
 
     void MeshBuilder::AddPipeWall(
-        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData, bool reverseDiagonals,
+        MaxDoF::GameCommon::Types3d::MeshData& meshData, bool reverseDiagonals,
         const std::array<UVVertex, 3>& a, const std::array<UVVertex, 3>& b)
     {
         AddNonPlanarQuad(meshData, reverseDiagonals, a[1], a[0], b[0], b[1]);
@@ -39,12 +39,12 @@ namespace MaxDoF::GameCommon::LevelMeshes
         AddNonPlanarQuad(meshData, reverseDiagonals, a[0], a[2], b[2], b[0]);
     }
 
-    void MeshBuilder::AddTriangle(GameCommon::LevelMeshes::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2)
+    void MeshBuilder::AddTriangle(GameCommon::Types3d::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2)
     {
         std::array<UVVertex, 3> pts = { p0, p1, p2 };
         for (int i = 0; i < 3; ++i)
         {
-            MaxDoF::GameCommon::LevelMeshes::Vertex v;
+            MaxDoF::GameCommon::Types3d::MeshData::Vertex v;
             v.x = pts[i].pos.GetX();
             v.y = pts[i].pos.GetY();
             v.z = pts[i].pos.GetZ();
@@ -57,7 +57,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
         }
     }
 
-    void MeshBuilder::ConnectTriangles(MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
+    void MeshBuilder::ConnectTriangles(MaxDoF::GameCommon::Types3d::MeshData& meshData,
         const Types3d::TriangleVertices& verticesBegin, const Types3d::TriangleVertices& verticesEnd)
     {
         // 1. Комбинаторный поиск пар по кратчайшему расстоянию
@@ -187,7 +187,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
     }
 */
     void MeshBuilder::CreateMeshData(
-        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
+        MaxDoF::GameCommon::Types3d::MeshData& meshData,
         const MaxDoF::GameCommon::LevelGraphs::PureLevelGraph& graph)
     {
         using namespace MaxDoF::GameCommon::LevelGraphs;

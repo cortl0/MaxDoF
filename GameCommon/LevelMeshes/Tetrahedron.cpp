@@ -8,12 +8,11 @@
 namespace MaxDoF::GameCommon::LevelGraphs
 {
     Tetrahedron::Tetrahedron()
-    // const JPH::RVec3& pos, const JPH::Quat& ori
     {
-        SetVetricesAndInterfacesBySphereRadius(0.5);
+        SetVetricesAndInterfaces(0.5);
     }
 
-    void Tetrahedron::SetVetricesAndInterfacesBySphereRadius(double tetrahedronSphereRadius)
+    void Tetrahedron::SetVetricesAndInterfaces(double tetrahedronSphereRadius)
     {
         constexpr double sqrt3 = 1.7320508;
         constexpr double sqrt6 = 2.4494897;

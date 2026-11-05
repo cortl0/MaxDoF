@@ -14,15 +14,20 @@
 
 namespace MaxDoF::GameCommon::LevelGraphs
 {
+    using NodeKey = uint32_t;
+    using TriangleInterfaceKey = uint32_t;
     // =========================================================================
     // СИСТЕМНЫЕ КОНСТАНТЫ СВЯЗЕЙ ДЛЯ ГРАНЕЙ
     // =========================================================================
 
     // За границей интерфейса находится глухая, монолитная порода астероида (камень)
-    constexpr uint32_t cNodeSolidRock = -1;
+    constexpr NodeKey cNodeSolidRock = -1;
 
     // За границей интерфейса находится открытый космос (сквозной шлюз наружу)
-    constexpr uint32_t cNodeOpenSpace = -2;
+    constexpr NodeKey cNodeAsteroidSurface = -2;
+
+    // За границей интерфейса находится открытый космос (сквозной шлюз наружу)
+    constexpr NodeKey cNodeOpenSpace = -3;
 
     // =========================================================================
     // ПЕРЕЧИСЛЕНИЕ ТИПОВ ОБЪЕМНЫХ ФИГУР
@@ -38,18 +43,18 @@ namespace MaxDoF::GameCommon::LevelGraphs
     // =========================================================================
     struct TriangleInterface
     {
-        uint32_t id;
+        TriangleInterfaceKey id;
         Types3d::TriangleVertices vertices;
 
         // Математическое направление ребра: ИЗ внешнего пространства ВНУТРЬ узла nodeA.
         // Нормаль этого треугольника по умолчанию смотрит внутрь nodeA.
-        uint32_t nodeA = cNodeSolidRock;
-        uint32_t nodeB = cNodeSolidRock;
+        NodeKey nodeA = cNodeSolidRock;
+        NodeKey nodeB = cNodeSolidRock;
     };
 
     struct OrientedInterface
     {
-        uint32_t interfaceId;
+        TriangleInterfaceKey interfaceId;
 
         // false — прямой обход вершин (как заложено в faceLayout)
         // true — инвертированный обход вершин (зеркальный разворот)
@@ -61,7 +66,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
     // =========================================================================
     struct VolumeNode
     {
-        uint32_t id;
+        NodeKey id;
         NodeType type;
 
         // Список ID плоских треугольников-стыков (TriangleInterface), которыми этот объём ограничен.
@@ -69,9 +74,6 @@ namespace MaxDoF::GameCommon::LevelGraphs
         // Для Tetrahedron — строго 4 интерфейса (как открытых, так и глухих).
         // Единый вектор ориентированных стыков-интерфейсов для любых фигур
         std::vector<OrientedInterface> interfaceIds;
-
-        // Дополнительный геометрический параметр (например, масштаб или радиус описанной сферы)
-        float sizeParameter = 1.732f;
     };
 
     // =========================================================================

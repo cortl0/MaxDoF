@@ -163,7 +163,7 @@ namespace MaxDoF::GameClient::World
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createMesh(const GameCommon::LevelMeshes::MeshData& meshData)
+    Ogre::SceneNode* Graphics::createMesh(const GameCommon::Types3d::MeshData& meshData)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, meshData);

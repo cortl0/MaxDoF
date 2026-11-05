@@ -60,7 +60,7 @@ namespace MaxDoF::GameCommon::World
         return settings;
     }
 
-    JPH::BodyID Physics::createMesh(const LevelMeshes::MeshData &meshData)
+    JPH::BodyID Physics::createMesh(const Types3d::MeshData &meshData)
     {
         if (meshData.vertices.empty() || meshData.indices.empty())
         {

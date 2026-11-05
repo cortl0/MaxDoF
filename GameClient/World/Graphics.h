@@ -8,7 +8,7 @@
 #include <GraphicsSystem.h>
 
 #include "GameClient/TextOverleyManager.h"
-#include "GameCommon/LevelMeshes/MeshData.h"
+#include "GameCommon/Types/Types3d.h"
 #include "GameCommon/Types/Poses.h"
 namespace MaxDoF::GameClient::World
 {
@@ -33,7 +33,7 @@ namespace MaxDoF::GameClient::World
         void changeTexture(Ogre::Item*, const Ogre::String& newTextureFileName);
         void changeUniqueTexture(Ogre::Item*, const Ogre::String& newTextureFileName, const Ogre::String& uniqueMaterialName);
         Ogre::SceneNode* createCube(const GameCommon::Types::GraphPose&, const Ogre::Vector3& halfSize, Ogre::SceneNode* parent = nullptr);
-        Ogre::SceneNode* createMesh(const GameCommon::LevelMeshes::MeshData& meshData);
+        Ogre::SceneNode* createMesh(const GameCommon::Types3d::MeshData& meshData);
         Ogre::SceneNode* createPointLight(Ogre::Vector3 position);
         Ogre::SceneNode* createShape( const Ogre::String& meshName, const GameCommon::Types::GraphPose&, Ogre::SceneNode* parent = nullptr);
         Ogre::SceneNode* createSphere(const GameCommon::Types::GraphPose&, float radius, Ogre::SceneNode* parent = nullptr);

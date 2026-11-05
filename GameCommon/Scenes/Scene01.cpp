@@ -121,7 +121,7 @@ namespace MaxDoF::GameCommon::Scenes
         mShip = new GameClient::Ships::Ship(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), mWorldManager.getGraphics(), shipEntity);
 #endif
 
-        GameCommon::LevelMeshes::MeshData meshData;
+        GameCommon::Types3d::MeshData meshData;
         MaxDoF::GameCommon::LevelGraphs::PureLevelGraph levelGraph;
 
         switch (1)

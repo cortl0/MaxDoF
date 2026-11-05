@@ -11,16 +11,15 @@ namespace MaxDoF::GameCommon::LevelGraphs
 {
     class Tetrahedron
     {
-        Types3d::TetrahedronVertices vertices;
-        Types3d::Interfaces interfaces;
+        Types3d::Tetrahedron::Vertices vertices;
+        Types3d::Tetrahedron::TrianglesVerticesIndices interfaces;
 
     public:
         Tetrahedron();
-        //const JPH::RVec3& pos, const JPH::Quat& ori
-        const Types3d::Interfaces& GetInterfaces(){ return interfaces; }
-        const Types3d::TetrahedronVertices& GetVertices(){ return vertices; }
-        void SetInterfaces(const Types3d::Interfaces& interfaces){ this->interfaces = interfaces; }
-        void SetVertices(const Types3d::TetrahedronVertices& vertices){ this->vertices = vertices; }
-        void SetVetricesAndInterfacesBySphereRadius(double tetrahedronSphereRadius);
+        const Types3d::Tetrahedron::TrianglesVerticesIndices& GetInterfaces(){ return interfaces; }
+        const Types3d::Tetrahedron::Vertices& GetVertices(){ return vertices; }
+        void SetInterfaces(const Types3d::Tetrahedron::TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
+        void SetVertices(const Types3d::Tetrahedron::Vertices& vertices){ this->vertices = vertices; }
+        void SetVetricesAndInterfaces(double tetrahedronSphereRadius);
     };
 }

@@ -16,23 +16,19 @@ namespace MaxDoF::GameCommon::LevelGraphs
     {
         using namespace MaxDoF::GameCommon::LevelGraphs;
 
-        graph.nodes.clear();
-        graph.interfaces.clear();
-
         // 1. РАДИУС НАШЕЙ ЕДИНСТВЕННОЙ КОМНАТЫ
         const float cArenaRadius = 50.0f;
 
         Tetrahedron tetrahedron;
-        tetrahedron.SetVetricesAndInterfacesBySphereRadius(cArenaRadius);
+        tetrahedron.SetVetricesAndInterfaces(cArenaRadius);
 
         // 4 уникальные опорные точки — ВЕРШИНА СЗАДИ (+Z), ОСНОВАНИЕ ВПЕРЕДИ (-Z)
         auto arenaSharedVertices = tetrahedron.GetVertices();
 
         // 2. СОЗДАЕМ ОДИН ОБЪЕМНЫЙ УЗЕЛ-ТЕТРАЭДР
         VolumeNode arenaNode;
-        arenaNode.id = static_cast<uint32_t>(graph.nodes.size());
+        arenaNode.id = static_cast<NodeKey>(graph.nodes.size());
         arenaNode.type = NodeType::Tetrahedron;
-        arenaNode.sizeParameter = cArenaRadius;
 
         // Индексы вершин для сборки 4-х граней тетраэдра
         // Обход (Winding) гарантирует нормали строго ВНУТРЬ этой единственной комнаты
@@ -44,7 +40,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
             const auto& indices = faceLayout[i];
 
             TriangleInterface face;
-            face.id = static_cast<uint32_t>(graph.interfaces.size());
+            face.id = static_cast<TriangleInterfaceKey>(graph.interfaces.size());
             face.nodeA = arenaNode.id;
             face.nodeB = cNodeSolidRock;
 

@@ -14,6 +14,7 @@
 #include <OgreMeshManager2.h>
 
 #include "GameCommon/Utils/SystemUtils.h"
+#include "GameCommon/Types/Types3d.h"
 
 namespace MaxDoF::GameClient::Utils
 {
@@ -150,7 +151,7 @@ namespace MaxDoF::GameClient::Utils
         sceneManager->destroyManualObject(manual);
     }
 
-    void createMeshFromMeshData(Ogre::SceneManager* sceneManager, const Ogre::String& meshName, const MaxDoF::GameCommon::LevelMeshes::MeshData& meshData)
+    void createMeshFromMeshData(Ogre::SceneManager* sceneManager, const Ogre::String& meshName, const MaxDoF::GameCommon::Types3d::MeshData& meshData)
     {
         if (Ogre::MeshManager::getSingleton().resourceExists(meshName))
         {
@@ -171,7 +172,7 @@ namespace MaxDoF::GameClient::Utils
         manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST);
 
         // Счетчик добавленных графических вершин
-        uint32_t vertexCounter = 0;
+        GameCommon::Types3d::VerticesIndexKey vertexCounter = 0;
 
         // Идем строго тройками индексов (обрабатываем каждый треугольник отдельно)
         for (size_t i = 0; i < meshData.indices.size(); i += 3)

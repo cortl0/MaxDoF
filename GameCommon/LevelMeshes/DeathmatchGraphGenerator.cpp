@@ -14,39 +14,28 @@ namespace MaxDoF::GameCommon::LevelGraphs
     {
         using namespace MaxDoF::GameCommon::LevelGraphs;
 
-        graph.nodes.clear();
-        graph.interfaces.clear();
-
         // 1. РАДИУС НАШЕЙ ЕДИНСТВЕННОЙ КОМНАТЫ
         const float cArenaRadius = 50.0f;
 
         Tetrahedron tetrahedron;
-        tetrahedron.SetVetricesAndInterfacesBySphereRadius(cArenaRadius);
+        tetrahedron.SetVetricesAndInterfaces(cArenaRadius);
 
         // 1. КОНСТАНТЫ СТРОГОЙ ГЕОМЕТРИИ
-        const float cPipeLength = 50.0f;      
-        const float cFixedRotation = 0.0f;//3.1415926535f / 6.0f; // 30 градусов
-
-        const float sqrt3 = 1.7320508f;
-        const float sqrt6 = 2.4494897f;
-
-        const float edgeLength = (4.0f / sqrt6) * cArenaRadius;
-        const float gateSize = edgeLength / sqrt3;
+        const float cPipeLength = 50.0f;
 
         // 4 уникальные опорные точки залы (Верхушка купола сзади)
         auto arenaSharedVertices = tetrahedron.GetVertices();
 
         // 2. СОЗДАЕМ ЦЕНТРАЛЬНЫЙ УЗЕЛ-АРЕНУ
         VolumeNode arenaNode;
-        arenaNode.id = static_cast<uint32_t>(graph.nodes.size());
+        arenaNode.id = static_cast<NodeKey>(graph.nodes.size());
         arenaNode.type = NodeType::Tetrahedron;
-        arenaNode.sizeParameter = cArenaRadius;
 
         
         auto faceLayout = tetrahedron.GetInterfaces();
 
         // ID нашей единственной трубы
-        const uint32_t targetPipeId = 1;
+        const NodeKey targetPipeId = 1;
 
         // =========================================================================
         // ГЕНЕРИРУЕМ ИНТЕРФЕЙСЫ ЦЕНТРАЛЬНОГО ЗАЛА
@@ -56,7 +45,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
             const auto& indices = faceLayout[i];
             
             TriangleInterface face;
-            face.id = static_cast<uint32_t>(graph.interfaces.size());
+            face.id = static_cast<TriangleInterfaceKey>(graph.interfaces.size());
             face.nodeA = arenaNode.id;
 
             // Хирургическое разделение тупика и коридора
@@ -89,7 +78,6 @@ namespace MaxDoF::GameCommon::LevelGraphs
         VolumeNode pipeNode;
         pipeNode.id = targetPipeId;
         pipeNode.type = NodeType::PipeTunnel;
-        pipeNode.sizeParameter = gateSize;
 
         // Извлекаем интерфейс переднего щита (он был сгенерирован последним, под индексом 3)
         auto innerInterface = graph.interfaces[3];
@@ -100,21 +88,12 @@ namespace MaxDoF::GameCommon::LevelGraphs
         // Направление трубы — строго вперед вдоль отрицательного Z (вектор взгляда)
         JPH::Vec3 pipeDir(0.0f, 0.0f, -1.0f);
 
-        // Базис плоскости сечения (X-вправо, Y-вверх)
-        JPH::Vec3 U(1.0f, 0.0f, 0.0f);
-        JPH::Vec3 V(0.0f, 1.0f, 0.0f);
-
-        // ИСПРАВЛЕНО: Честное покомпонентное извлечение вершин треугольника по индексам 0, 1, 2
-        auto faceCenter = (innerInterface.vertices[0] + innerInterface.vertices[1] + innerInterface.vertices[2]) / 3.0;
-        
-        // Позиция внешнего шлюза трубы в глубоком космосе (на 10 метров дальше по оси -Z)
-        auto exitCenter = faceCenter + pipeDir * cPipeLength;
 
         // --- ВНЕШНИЙ ШЛЮЗ ТРУБЫ (Выход в космос, глухой торец) ---
         TriangleInterface outerInterface;
-        outerInterface.id = static_cast<uint32_t>(graph.interfaces.size());
+        outerInterface.id = static_cast<TriangleInterfaceKey>(graph.interfaces.size());
         outerInterface.nodeA = pipeNode.id;
-        outerInterface.nodeB = cNodeOpenSpace;
+        outerInterface.nodeB = cNodeAsteroidSurface;
 
         // Генерируем вершины внешнего торца скрученными на 30 градусов
         //outerInterface.vertices = GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(exitCenter, U, V, cFixedRotation, gateSize);
