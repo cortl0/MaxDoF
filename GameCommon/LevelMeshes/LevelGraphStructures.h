@@ -8,8 +8,9 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Vec3.h>
 #include <vector>
-#include <array>
 #include <cstdint>
+
+#include "GameCommon/Types/Types3d.h"
 
 namespace MaxDoF::GameCommon::LevelGraphs
 {
@@ -38,7 +39,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
     struct TriangleInterface
     {
         uint32_t id;
-        std::array<JPH::Vec3, 3> vertices;
+        Types3d::TriangleVertices vertices;
 
         // Математическое направление ребра: ИЗ внешнего пространства ВНУТРЬ узла nodeA.
         // Нормаль этого треугольника по умолчанию смотрит внутрь nodeA.

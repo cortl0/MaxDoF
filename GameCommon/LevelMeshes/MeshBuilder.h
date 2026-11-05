@@ -10,13 +10,14 @@
 
 #include "GameCommon/LevelMeshes/LevelGraphStructures.h"
 #include "GameCommon/LevelMeshes/MeshData.h"
+#include "GameCommon/Types/Types3d.h"
 
 namespace MaxDoF::GameCommon::LevelMeshes
 {
     class MeshBuilder
     {
         struct UVVertex {
-            JPH::Vec3 pos;
+            JPH::RVec3 pos;
             float u, v;
         };
 
@@ -27,7 +28,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
             const std::array<UVVertex, 3> &verticesBegin, const std::array<UVVertex, 3> &verticesEnd);
         static void AddTriangle(GameCommon::LevelMeshes::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2);
         static void ConnectTriangles(MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
-            const std::array<JPH::Vec3, 3>& verticesBegin, const std::array<JPH::Vec3, 3>& verticesEnd);
+            const Types3d::TriangleVertices& verticesBegin, const Types3d::TriangleVertices& verticesEnd);
         /**
          * @brief Главная функция трансляции графа в полигональный меш уровня.
          *
@@ -42,10 +43,10 @@ namespace MaxDoF::GameCommon::LevelMeshes
             const GameCommon::LevelGraphs::PureLevelGraph& graph
         );
         // static void AddOrientedWallTriangle(MaxDoF::GameCommon::LevelMeshes::MeshData &meshData, const UVVertex &p0, const UVVertex &p1, const UVVertex &p2, const JPH::Vec3 &localPipeCenter);
-        static std::array<JPH::Vec3, 3> GenerateTriangleVertices(
-            const JPH::Vec3 &position,
-            const JPH::Vec3 &U,
-            const JPH::Vec3 &V,
+        static Types3d::TriangleVertices GenerateTriangleVertices(
+            const JPH::RVec3 &position,
+            const JPH::RVec3 &U,
+            const JPH::RVec3 &V,
             float angleOffset,
             float radius);
     };

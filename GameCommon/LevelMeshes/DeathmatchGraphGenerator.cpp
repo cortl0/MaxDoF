@@ -6,7 +6,7 @@
 #include "DeathmatchGraphGenerator.h"
 #include "GameCommon/LevelMeshes/MeshBuilder.h"
 #include "MeshBuilder.h"
-#include <cmath>
+#include "Tetrahedron.h"
 
 namespace MaxDoF::GameCommon::LevelGraphs
 {
@@ -17,10 +17,15 @@ namespace MaxDoF::GameCommon::LevelGraphs
         graph.nodes.clear();
         graph.interfaces.clear();
 
+        // 1. РАДИУС НАШЕЙ ЕДИНСТВЕННОЙ КОМНАТЫ
+        const float cArenaRadius = 50.0f;
+
+        Tetrahedron tetrahedron;
+        tetrahedron.SetVetricesAndInterfacesBySphereRadius(cArenaRadius);
+
         // 1. КОНСТАНТЫ СТРОГОЙ ГЕОМЕТРИИ
-        const float cArenaRadius = 50.0f;     
         const float cPipeLength = 50.0f;      
-        const float cFixedRotation = -3.1415926535f / 3.0f; // 30 градусов
+        const float cFixedRotation = 0.0f;//3.1415926535f / 6.0f; // 30 градусов
 
         const float sqrt3 = 1.7320508f;
         const float sqrt6 = 2.4494897f;
@@ -28,18 +33,8 @@ namespace MaxDoF::GameCommon::LevelGraphs
         const float edgeLength = (4.0f / sqrt6) * cArenaRadius;
         const float gateSize = edgeLength / sqrt3;
 
-        const float zBack = cArenaRadius;            
-        const float zFront = -cArenaRadius / 3.0f;    
-        const float yTop = gateSize;                  
-        const float yBottom = -gateSize / 2.0f;       
-
         // 4 уникальные опорные точки залы (Верхушка купола сзади)
-        std::array<JPH::Vec3, 4> arenaSharedVertices = {{
-            JPH::Vec3(0.0f, 0.0f, zBack),                     // Вершина 0 (Сзади, +Z)
-            JPH::Vec3(0.0f, yTop, zFront),                    // Вершина 1 (Вперед-вверх)
-            JPH::Vec3(-edgeLength / 2.0f, yBottom, zFront),   // Вершина 2 (Вперед-влево-вниз)
-            JPH::Vec3(edgeLength / 2.0f, yBottom, zFront)     // Вершина 3 (Вперед-вправо-вниз)
-        }};
+        auto arenaSharedVertices = tetrahedron.GetVertices();
 
         // 2. СОЗДАЕМ ЦЕНТРАЛЬНЫЙ УЗЕЛ-АРЕНУ
         VolumeNode arenaNode;
@@ -47,12 +42,8 @@ namespace MaxDoF::GameCommon::LevelGraphs
         arenaNode.type = NodeType::Tetrahedron;
         arenaNode.sizeParameter = cArenaRadius;
 
-        std::array<std::array<int, 3>, 4> faceLayout = {{
-            {0, 2, 1}, // Грань 0 (Левая стена)
-            {0, 1, 3}, // Грань 1 (Правая стена)
-            {0, 3, 2}, // Грань 2 (Нижняя стена/Пол)
-            {1, 2, 3}  // Грань 3 (Передний треугольный щит прямо перед глазами на -Z)
-        }};
+        
+        auto faceLayout = tetrahedron.GetInterfaces();
 
         // ID нашей единственной трубы
         const uint32_t targetPipeId = 1;
@@ -101,7 +92,10 @@ namespace MaxDoF::GameCommon::LevelGraphs
         pipeNode.sizeParameter = gateSize;
 
         // Извлекаем интерфейс переднего щита (он был сгенерирован последним, под индексом 3)
-        const auto& innerInterface = graph.interfaces[3];
+        auto innerInterface = graph.interfaces[3];
+        // auto tempI = innerInterface.vertices[1];
+        // innerInterface.vertices[1] = innerInterface.vertices[2];
+        // innerInterface.vertices[2] = tempI;
 
         // Направление трубы — строго вперед вдоль отрицательного Z (вектор взгляда)
         JPH::Vec3 pipeDir(0.0f, 0.0f, -1.0f);
@@ -111,10 +105,10 @@ namespace MaxDoF::GameCommon::LevelGraphs
         JPH::Vec3 V(0.0f, 1.0f, 0.0f);
 
         // ИСПРАВЛЕНО: Честное покомпонентное извлечение вершин треугольника по индексам 0, 1, 2
-        JPH::Vec3 faceCenter = (innerInterface.vertices[0] + innerInterface.vertices[1] + innerInterface.vertices[2]) / 3.0f;
+        auto faceCenter = (innerInterface.vertices[0] + innerInterface.vertices[1] + innerInterface.vertices[2]) / 3.0;
         
         // Позиция внешнего шлюза трубы в глубоком космосе (на 10 метров дальше по оси -Z)
-        JPH::Vec3 exitCenter = faceCenter + pipeDir * cPipeLength;
+        auto exitCenter = faceCenter + pipeDir * cPipeLength;
 
         // --- ВНЕШНИЙ ШЛЮЗ ТРУБЫ (Выход в космос, глухой торец) ---
         TriangleInterface outerInterface;
@@ -123,7 +117,14 @@ namespace MaxDoF::GameCommon::LevelGraphs
         outerInterface.nodeB = cNodeOpenSpace;
 
         // Генерируем вершины внешнего торца скрученными на 30 градусов
-        outerInterface.vertices = GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(exitCenter, U, V, cFixedRotation, gateSize);
+        //outerInterface.vertices = GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(exitCenter, U, V, cFixedRotation, gateSize);
+        outerInterface.vertices = innerInterface.vertices;
+        outerInterface.vertices[0] += pipeDir * cPipeLength;
+        outerInterface.vertices[1] += pipeDir * cPipeLength;
+        outerInterface.vertices[2] += pipeDir * cPipeLength;
+        // auto tempO = outerInterface.vertices[1];
+        // outerInterface.vertices[1] = outerInterface.vertices[2];
+        // outerInterface.vertices[2] = tempO;
         graph.interfaces.push_back(outerInterface);
 
         // СВЯЗЫВАЕМ ТОРЦЫ С НАШИМ КОРИДОРОМ:
@@ -131,7 +132,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
         pipeNode.interfaceIds.push_back({ innerInterface.id, false });
         
         // 2. Выход в космос (outerInterface): изначально смотрит наружу -> inverted = true (1), разворачиваем внутрь!
-        pipeNode.interfaceIds.push_back({ outerInterface.id, true });
+        pipeNode.interfaceIds.push_back({ outerInterface.id, false });
 
         // Пушим трубу в граф уровня
         graph.nodes.push_back(pipeNode);

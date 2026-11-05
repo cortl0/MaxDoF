@@ -8,6 +8,7 @@
 #include "GameCommon/LevelMeshes/MeshBuilder.h"
 #include "MeshBuilder.h"
 #include "TetrahedronGraphGenerator.h"
+#include "Tetrahedron.h"
 
 namespace MaxDoF::GameCommon::LevelGraphs
 {
@@ -21,29 +22,11 @@ namespace MaxDoF::GameCommon::LevelGraphs
         // 1. РАДИУС НАШЕЙ ЕДИНСТВЕННОЙ КОМНАТЫ
         const float cArenaRadius = 50.0f;
 
-        const float sqrt3 = 1.7320508f;
-        const float sqrt6 = 2.4494897f;
-
-        // Истинная длина ребра правильного тетраэдра при заданном радиусе описанной сферы
-        const float edgeLength = (4.0f / sqrt6) * cArenaRadius;
-        // Радиус описанной окружности грани (размер прохода трубы)
-        const float gateSize = edgeLength / sqrt3;
-
-        // Расчет пространственного положения плоскостей для Z-ориентированного тетраэдра
-        const float zBack = cArenaRadius;            // Одиночная вершина сзади (в плюсе по Z)
-        const float zFront = -cArenaRadius / 3.0f;    // Плоскость основания впереди (в минусе по Z)
-
-        // Высоты для правильного треугольника основания на фронтальной плоскости XY
-        const float yTop = gateSize;                  // Верхняя точка основания (смотрит вверх по Y)
-        const float yBottom = -gateSize / 2.0f;       // Нижняя линия основания
+        Tetrahedron tetrahedron;
+        tetrahedron.SetVetricesAndInterfacesBySphereRadius(cArenaRadius);
 
         // 4 уникальные опорные точки — ВЕРШИНА СЗАДИ (+Z), ОСНОВАНИЕ ВПЕРЕДИ (-Z)
-        std::array<JPH::Vec3, 4> arenaSharedVertices = {{
-            JPH::Vec3(0.0f, 0.0f, zBack),                     // Вершина 0 (Сзади, на оси +Z)
-            JPH::Vec3(0.0f, yTop, zFront),                    // Вершина 1 (Вперед-вверх)
-            JPH::Vec3(-edgeLength / 2.0f, yBottom, zFront),   // Вершина 2 (Вперед-влево-вниз)
-            JPH::Vec3(edgeLength / 2.0f, yBottom, zFront)     // Вершина 3 (Вперед-вправо-вниз)
-        }};
+        auto arenaSharedVertices = tetrahedron.GetVertices();
 
         // 2. СОЗДАЕМ ОДИН ОБЪЕМНЫЙ УЗЕЛ-ТЕТРАЭДР
         VolumeNode arenaNode;
@@ -53,12 +36,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
 
         // Индексы вершин для сборки 4-х граней тетраэдра
         // Обход (Winding) гарантирует нормали строго ВНУТРЬ этой единственной комнаты
-        std::array<std::array<int, 3>, 4> faceLayout = {{
-            {0, 2, 1}, // Грань 0 (Левая стена)
-            {0, 1, 3}, // Грань 1 (Правая стена)
-            {0, 3, 2}, // Грань 2 (Нижняя стена)
-            {1, 2, 3}  // Грань 3 (Переднияя стена перед глазами)
-        }};
+        auto faceLayout = tetrahedron.GetInterfaces();
 
         // Генерируем 4 абсолютно глухие грани-интерфейсы
         for (int i = 0; i < 4; ++i)

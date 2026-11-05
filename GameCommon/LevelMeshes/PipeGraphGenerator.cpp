@@ -23,12 +23,12 @@ namespace MaxDoF::GameCommon::LevelGraphs
         const float cFixedRotation = 3.1415926535f / 6.0f; // Угол скручивания 30 градусов (PI / 6)
 
         // Позиции торцов: труба центрирована, идет из Z = 5.0м (сзади) в Z = -5.0м (вперед, вглубь экрана)
-        JPH::Vec3 pBegin(0.0f, 0.0f, -cPipeLength / 2.0f);
-        JPH::Vec3 pEnd(0.0f, 0.0f, cPipeLength / 2.0f);
+        JPH::RVec3 pBegin(0.0f, 0.0f, -cPipeLength / 2.0f);
+        JPH::RVec3 pEnd(0.0f, 0.0f, cPipeLength / 2.0f);
 
         // Стабильный базис плоскости сечения трубы (X-вправо, Y-вверх)
-        JPH::Vec3 U(1.0f, 0.0f, 0.0f);
-        JPH::Vec3 V(0.0f, 1.0f, 0.0f);
+        JPH::RVec3 U(1.0f, 0.0f, 0.0f);
+        JPH::RVec3 V(0.0f, 1.0f, 0.0f);
 
         // 2. СОЗДАЕМ ОДИН ОБЪЕМНЫЙ УЗЕЛ-ТРУБУ
         VolumeNode pipeNode;
@@ -60,9 +60,9 @@ namespace MaxDoF::GameCommon::LevelGraphs
         // По нашему правилу "наоборот": так как труба сама породила оба этих ребра,
         // для неё оба интерфейса сонаправлены с ней (нормали смотрят внутрь трубы).
         // Поэтому для ОБОИХ интерфейсов ставим флаг inverted = true!
-        bool inverted = true;
+        bool inverted = false;
         pipeNode.interfaceIds.push_back({ innerInterface.id, inverted });
-        inverted = false;
+        inverted = true;
         pipeNode.interfaceIds.push_back({ outerInterface.id, inverted });
 
         // Пушим готовую изолированную трубу в список узлов уровня

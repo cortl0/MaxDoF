@@ -57,10 +57,8 @@ namespace MaxDoF::GameCommon::LevelMeshes
         }
     }
 
-    void MeshBuilder::ConnectTriangles(
-        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
-        const std::array<JPH::Vec3, 3>& verticesBegin,
-        const std::array<JPH::Vec3, 3>& verticesEnd)
+    void MeshBuilder::ConnectTriangles(MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
+        const Types3d::TriangleVertices& verticesBegin, const Types3d::TriangleVertices& verticesEnd)
     {
         // 1. Комбинаторный поиск пар по кратчайшему расстоянию
         const std::array<std::array<int, 3>, 6> permutations = {{
@@ -96,7 +94,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
         std::array<UVVertex, 3> b;
         for (int i = 0; i < 3; ++i)
         {
-            int targetIdx = bestPermutation[i];
+            int targetIdx = i;//bestPermutation[i];
             b[i].pos = verticesEnd[targetIdx];
             b[i].u   = static_cast<float>(i) / 3.0f;
             b[i].v   = 1.0f;
@@ -149,11 +147,11 @@ namespace MaxDoF::GameCommon::LevelMeshes
     }
 
     // 3. Генерация вершин торца (без изменений)
-    std::array<JPH::Vec3, 3> MeshBuilder::GenerateTriangleVertices(
-        const JPH::Vec3& position, const JPH::Vec3& U, const JPH::Vec3& V, float angleOffset, float radius)
+    Types3d::TriangleVertices MeshBuilder::GenerateTriangleVertices(
+        const JPH::RVec3& position, const JPH::RVec3& U, const JPH::RVec3& V, float angleOffset, float radius)
     {
         const float PI = 3.1415926535f;
-        std::array<JPH::Vec3, 3> vertices;
+        Types3d::TriangleVertices vertices;
         for (int i = 0; i < 3; ++i) {
             float angle = (120.0f * i * PI / 180.0f) + angleOffset;
             float x2d = radius * std::cos(angle);
@@ -211,6 +209,38 @@ namespace MaxDoF::GameCommon::LevelMeshes
                 const auto& interface1 = graph.interfaces[node.interfaceIds[1].interfaceId];
 
                 // Натягиваем 6 боковых прямоугольников-складок
+
+
+                FILE *file = fopen("output.txt", "w");
+    
+    if (file != NULL) {
+        // Записываем данные в файл вместо консоли
+        fprintf(file, "x: %f\n", (double)interface0.vertices[0].GetX());
+        fprintf(file, "y: %f\n", (double)interface0.vertices[0].GetY());
+        fprintf(file, "z: %f\n\n", (double)interface0.vertices[0].GetZ());
+        fprintf(file, "x: %f\n", (double)interface0.vertices[1].GetX());
+        fprintf(file, "y: %f\n", (double)interface0.vertices[1].GetY());
+        fprintf(file, "z: %f\n\n", (double)interface0.vertices[1].GetZ());
+        fprintf(file, "x: %f\n", (double)interface0.vertices[2].GetX());
+        fprintf(file, "y: %f\n", (double)interface0.vertices[2].GetY());
+        fprintf(file, "z: %f\n", (double)interface0.vertices[2].GetZ());
+        fprintf(file, "aaaaaaaaa\n");
+        fprintf(file, "x: %f\n", (double)interface1.vertices[0].GetX());
+        fprintf(file, "y: %f\n", (double)interface1.vertices[0].GetY());
+        fprintf(file, "z: %f\n\n", (double)interface1.vertices[0].GetZ());
+        fprintf(file, "x: %f\n", (double)interface1.vertices[1].GetX());
+        fprintf(file, "y: %f\n", (double)interface1.vertices[1].GetY());
+        fprintf(file, "z: %f\n\n", (double)interface1.vertices[1].GetZ());
+        fprintf(file, "x: %f\n", (double)interface1.vertices[2].GetX());
+        fprintf(file, "y: %f\n", (double)interface1.vertices[2].GetY());
+        fprintf(file, "z: %f\n", (double)interface1.vertices[2].GetZ());
+        
+        // Обязательно закрываем файл
+        fclose(file);
+    } else {
+        printf("Ошибка открытия файла!\n");
+    }
+                // std::abort();
                 ConnectTriangles(meshData, interface0.vertices, interface1.vertices);
             }
             // Для тетраэдра на этом этапе ничего делать не нужно — у него нет боковых складок,
