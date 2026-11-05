@@ -18,13 +18,13 @@ namespace MaxDoF::GameCommon::LevelGraphs
         graph.interfaces.clear();
 
         // 1. КОНСТАНТЫ СТРОГОЙ ГЕОМЕТРИИ ТРУБЫ
-        const float cPipeRadius = 1.732f;     // Радиус сечения туннеля для 1м корабля
-        const float cPipeLength = 10.0f;      // Длина трубы (строго >= 1.0м по закону 1 метра)
+        const float cPipeRadius = 1.732f*2;     // Радиус сечения туннеля для 1м корабля
+        const float cPipeLength = 50.0f;      // Длина трубы (строго >= 1.0м по закону 1 метра)
         const float cFixedRotation = 3.1415926535f / 6.0f; // Угол скручивания 30 градусов (PI / 6)
 
         // Позиции торцов: труба центрирована, идет из Z = 5.0м (сзади) в Z = -5.0м (вперед, вглубь экрана)
-        JPH::Vec3 pBegin(0.0f, 0.0f, cPipeLength / 2.0f);
-        JPH::Vec3 pEnd(0.0f, 0.0f, -cPipeLength / 2.0f);
+        JPH::Vec3 pBegin(0.0f, 0.0f, -cPipeLength / 2.0f);
+        JPH::Vec3 pEnd(0.0f, 0.0f, cPipeLength / 2.0f);
 
         // Стабильный базис плоскости сечения трубы (X-вправо, Y-вверх)
         JPH::Vec3 U(1.0f, 0.0f, 0.0f);

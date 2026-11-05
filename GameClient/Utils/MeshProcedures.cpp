@@ -4,6 +4,9 @@
 // See LICENSE file in the project root for full license information
 #include "GameClient/Utils/MeshProcedures.h"
 
+#include <Jolt/Jolt.h>
+#include <Jolt/Math/Vec3.h>
+
 #include <OgreSceneManager.h>
 #include <OgreManualObject2.h>
 #include <OgreMesh2.h>
@@ -160,20 +163,51 @@ namespace MaxDoF::GameClient::Utils
         }
 
         Ogre::ManualObject* manual = sceneManager->createManualObject();
-        manual->estimateVertexCount(meshData.vertices.size());
+        
+        // По нашему Flat-алгоритму количество вершин в ManualObject станет 
+        // строго равно количеству индексов, так как каждый треугольник получает свои уникальные вершины!
+        manual->estimateVertexCount(meshData.indices.size());
         manual->estimateIndexCount(meshData.indices.size());
         manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST);
 
-        for (const auto& v : meshData.vertices)
-        {
-            manual->position(v.x, v.y, v.z);
-            manual->normal(v.nx, v.ny, v.nz);
-            manual->textureCoord(v.u, v.v);
-        }
+        // Счетчик добавленных графических вершин
+        uint32_t vertexCounter = 0;
 
-        for (size_t i = 0; i < meshData.indices.size(); ++i)
+        // Идем строго тройками индексов (обрабатываем каждый треугольник отдельно)
+        for (size_t i = 0; i < meshData.indices.size(); i += 3)
         {
-            manual->index(meshData.indices[i]);
+            // 1. Извлекаем исходные данные вершин треугольника из MeshData
+            const auto& v0 = meshData.vertices[meshData.indices[i]];
+            const auto& v1 = meshData.vertices[meshData.indices[i + 1]];
+            const auto& v2 = meshData.vertices[meshData.indices[i + 2]];
+
+            // 2. Строим Jolt-векторы позиций
+            JPH::Vec3 p0(v0.x, v0.y, v0.z);
+            JPH::Vec3 p1(v1.x, v1.y, v1.z);
+            JPH::Vec3 p2(v2.x, v2.y, v2.z);
+
+            // 3. МАТЕМАТИЧЕСКИЙ РАСЧЕТ ЧЕСТНОЙ FLAT-НОРМАЛИ ТРЕУГОЛЬНИКА (КАК В ФИЗИКЕ)
+            JPH::Vec3 edge1 = p1 - p0;
+            JPH::Vec3 edge2 = p2 - p0;
+            JPH::Vec3 flatNormal = edge1.Cross(edge2).Normalized();
+
+            // 4. ЗАПИСЫВАЕМ ВЕРШИНУ 0
+            manual->position(v0.x, v0.y, v0.z);
+            manual->normal(flatNormal.GetX(), flatNormal.GetY(), flatNormal.GetZ()); // Роботизированная нормаль
+            manual->textureCoord(v0.u, v0.v);
+            manual->index(vertexCounter++);
+
+            // 5. ЗАПИСЫВАЕМ ВЕРШИНУ 1
+            manual->position(v1.x, v1.y, v1.z);
+            manual->normal(flatNormal.GetX(), flatNormal.GetY(), flatNormal.GetZ());
+            manual->textureCoord(v1.u, v1.v);
+            manual->index(vertexCounter++);
+
+            // 6. ЗАПИСЫВАЕМ ВЕРШИНУ 2
+            manual->position(v2.x, v2.y, v2.z);
+            manual->normal(flatNormal.GetX(), flatNormal.GetY(), flatNormal.GetZ());
+            manual->textureCoord(v2.u, v2.v);
+            manual->index(vertexCounter++);
         }
 
         manual->end();

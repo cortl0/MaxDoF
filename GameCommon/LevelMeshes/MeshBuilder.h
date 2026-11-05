@@ -20,19 +20,14 @@ namespace MaxDoF::GameCommon::LevelMeshes
             float u, v;
         };
 
-        static void AddPhysicalTriangle(
-            MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
-            const UVVertex& p0,
-            const UVVertex& p1,
-            const UVVertex& p2
-        );
-
     public:
-        static void ConnectTriangles(
-            MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
-            const std::array<JPH::Vec3, 3>& verticesBegin,
-            const std::array<JPH::Vec3, 3>& verticesEnd
-        );
+        static void AddNonPlanarQuad(MaxDoF::GameCommon::LevelMeshes::MeshData &meshData, bool reverseDiagonal,
+            const UVVertex &a, const UVVertex &b, const UVVertex &c, const UVVertex &d);
+        static void AddPipeWall(MaxDoF::GameCommon::LevelMeshes::MeshData &meshData, bool reverseDiagonals,
+            const std::array<UVVertex, 3> &verticesBegin, const std::array<UVVertex, 3> &verticesEnd);
+        static void AddTriangle(GameCommon::LevelMeshes::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2);
+        static void ConnectTriangles(MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
+            const std::array<JPH::Vec3, 3>& verticesBegin, const std::array<JPH::Vec3, 3>& verticesEnd);
         /**
          * @brief Главная функция трансляции графа в полигональный меш уровня.
          *
@@ -46,7 +41,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
             GameCommon::LevelMeshes::MeshData& meshData,
             const GameCommon::LevelGraphs::PureLevelGraph& graph
         );
-        static void AddOrientedWallTriangle(MaxDoF::GameCommon::LevelMeshes::MeshData &meshData, const UVVertex &p0, const UVVertex &p1, const UVVertex &p2, const JPH::Vec3 &localPipeCenter);
+        // static void AddOrientedWallTriangle(MaxDoF::GameCommon::LevelMeshes::MeshData &meshData, const UVVertex &p0, const UVVertex &p1, const UVVertex &p2, const JPH::Vec3 &localPipeCenter);
         static std::array<JPH::Vec3, 3> GenerateTriangleVertices(
             const JPH::Vec3 &position,
             const JPH::Vec3 &U,

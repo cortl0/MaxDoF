@@ -15,40 +15,46 @@
 
 namespace MaxDoF::GameCommon::LevelMeshes
 {
-    // 1. Вспомогательная функция для сборки одного треугольника (без изменений)
-    void MeshBuilder::AddPhysicalTriangle(
-        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
-        const UVVertex& p0,
-        const UVVertex& p1,
-        const UVVertex& p2)
+    void MeshBuilder::AddNonPlanarQuad(MaxDoF::GameCommon::LevelMeshes::MeshData& meshData, bool reverseDiagonal,
+        const UVVertex& a, const UVVertex& b, const UVVertex& c, const UVVertex& d)
     {
-        JPH::Vec3 edge1 = p1.pos - p0.pos;
-        JPH::Vec3 edge2 = p2.pos - p0.pos;
-        JPH::Vec3 normal = edge1.Cross(edge2).Normalized();
+        if(reverseDiagonal)
+        {
+            AddTriangle(meshData, a, b, d);
+            AddTriangle(meshData, b, c, d);
+        }
+        else
+        {
+            AddTriangle(meshData, a, b, c);
+            AddTriangle(meshData, a, c, d);
+        }
+    }
 
-        uint32_t currentBase = static_cast<uint32_t>(meshData.vertices.size());
+    void MeshBuilder::AddPipeWall(
+        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData, bool reverseDiagonals,
+        const std::array<UVVertex, 3>& a, const std::array<UVVertex, 3>& b)
+    {
+        AddNonPlanarQuad(meshData, reverseDiagonals, a[1], a[0], b[0], b[1]);
+        AddNonPlanarQuad(meshData, reverseDiagonals, a[2], a[1], b[1], b[2]);
+        AddNonPlanarQuad(meshData, reverseDiagonals, a[0], a[2], b[2], b[0]);
+    }
+
+    void MeshBuilder::AddTriangle(GameCommon::LevelMeshes::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2)
+    {
         std::array<UVVertex, 3> pts = { p0, p1, p2 };
-
         for (int i = 0; i < 3; ++i)
         {
             MaxDoF::GameCommon::LevelMeshes::Vertex v;
             v.x = pts[i].pos.GetX();
             v.y = pts[i].pos.GetY();
             v.z = pts[i].pos.GetZ();
-
 #ifdef MAXDOF_CLIENT_BUILD
-            v.nx = normal.GetX();
-            v.ny = normal.GetY();
-            v.nz = normal.GetZ();
             v.u  = pts[i].u;
             v.v  = pts[i].v;
 #endif
             meshData.vertices.push_back(v);
+            meshData.indices.push_back(meshData.vertices.size() - 1);
         }
-
-        meshData.indices.push_back(currentBase + 0);
-        meshData.indices.push_back(currentBase + 1);
-        meshData.indices.push_back(currentBase + 2);
     }
 
     void MeshBuilder::ConnectTriangles(
@@ -95,11 +101,10 @@ namespace MaxDoF::GameCommon::LevelMeshes
             b[i].u   = static_cast<float>(i) / 3.0f;
             b[i].v   = 1.0f;
         }
-
+/*
         UVVertex a_last = a[0]; a_last.u = 1.0f;
         UVVertex b_last = b[0]; b_last.u = 1.0f;
-
-        // 3. Выбор диагонали по знаку ориентированного объема складки
+        3. Выбор диагонали по знаку ориентированного объема складки
         JPH::Vec3 v0 = a[0].pos;
         JPH::Vec3 v1 = a[1].pos;
         JPH::Vec3 v2 = b[0].pos;
@@ -112,8 +117,8 @@ namespace MaxDoF::GameCommon::LevelMeshes
         float volumeSign = volEdge1.Dot(volEdge2.Cross(volEdge3));
         bool useAlternativeDiagonal = (volumeSign < 0.0f);
 
-        // --- СИСТЕМНЫЙ ТЕСТ ВЫВЕРНУТОСТИ КОЛЬЦА ЧЕРЕЗ ОБЪЕМ ---
-        // Считаем объем первого тетраэдра складки (a0, b0, a1) относительно центра пролета
+        --- СИСТЕМНЫЙ ТЕСТ ВЫВЕРНУТОСТИ КОЛЬЦА ЧЕРЕЗ ОБЪЕМ ---
+        Считаем объем первого тетраэдра складки (a0, b0, a1) относительно центра пролета
         JPH::Vec3 centerBegin = (verticesBegin[0] + verticesBegin[1] + verticesBegin[2]) / 3.0f;
         JPH::Vec3 centerEnd   = (verticesEnd[0] + verticesEnd[1] + verticesEnd[2]) / 3.0f;
         JPH::Vec3 localPipeCenter = (centerBegin + centerEnd) * 0.5f;
@@ -122,64 +127,25 @@ namespace MaxDoF::GameCommon::LevelMeshes
         JPH::Vec3 e1 = b[0].pos - localPipeCenter;
         JPH::Vec3 e2 = a[1].pos - localPipeCenter;
 
-        // Если нормали изначально пошли наружу (> 0), взводим флаг инверсии для всего кольца
+        Если нормали изначально пошли наружу (> 0), взводим флаг инверсии для всего кольца
         bool invertRing = (e0.Dot(e1.Cross(e2)) > 0.0f);
 
-        // 4. ЧЕСТНАЯ ГЕОМЕТРИЧЕСКАЯ СБОРКА СТЕН (ЖЕСТКИЙ ПАССИВНЫЙ CCW/CW КОНТРОЛЬ)
-        if (useAlternativeDiagonal)
-        {
-            // Отрицательные углы
-            if (invertRing)
-            {
-                AddPhysicalTriangle(meshData, a[0], b[1], b[0]);
-                AddPhysicalTriangle(meshData, a[0], a[1], b[1]);
+        4. ЧЕСТНАЯ ГЕОМЕТРИЧЕСКАЯ СБОРКА СТЕН (ЖЕСТКИЙ ПАССИВНЫЙ CCW/CW КОНТРОЛЬ)
+        useAlternativeDiagonal = true;
 
-                AddPhysicalTriangle(meshData, a[1], b[2], b[1]);
-                AddPhysicalTriangle(meshData, a[1], a[2], b[2]);
 
-                AddPhysicalTriangle(meshData, a[2], b_last, b[2]);
-                AddPhysicalTriangle(meshData, a[2], a_last, b_last);
-            }
-            else
-            {
-                AddPhysicalTriangle(meshData, a[0], b[0], b[1]);
-                AddPhysicalTriangle(meshData, a[0], b[1], a[1]);
+                a.u = 1.0f;
+        a.v = 1.0f;
+        b.u = 0.0f;
+        b.v = 1.0f;
+        c.u = 0.0f;
+        c.v = 0.0f;
+        d.u = 1.0f;
+        d.v = 0.0f;
 
-                AddPhysicalTriangle(meshData, a[1], b[1], b[2]);
-                AddPhysicalTriangle(meshData, a[1], b[2], a[2]);
 
-                AddPhysicalTriangle(meshData, a[2], b[2], b_last);
-                AddPhysicalTriangle(meshData, a[2], b_last, a_last);
-            }
-        }
-        else
-        {
-            // Положительные углы
-            if (invertRing)
-            {
-                // Инвертированный системный обход для всех 6 граней: UV-координаты шва защищены!
-                AddPhysicalTriangle(meshData, a[0], a[1], b[0]);
-                AddPhysicalTriangle(meshData, b[0], a[1], b[1]);
-
-                AddPhysicalTriangle(meshData, a[1], a[2], b[1]);
-                AddPhysicalTriangle(meshData, b[1], a[2], b[2]);
-
-                AddPhysicalTriangle(meshData, a[2], a_last, b[2]);
-                AddPhysicalTriangle(meshData, b[2], a_last, b_last);
-            }
-            else
-            {
-                // Прямой системный обход
-                AddPhysicalTriangle(meshData, a[0], b[0], a[1]);
-                AddPhysicalTriangle(meshData, b[0], b[1], a[1]);
-
-                AddPhysicalTriangle(meshData, a[1], b[1], a[2]);
-                AddPhysicalTriangle(meshData, b[1], b[2], a[2]);
-
-                AddPhysicalTriangle(meshData, a[1], b[2], a_last);
-                AddPhysicalTriangle(meshData, b[2], b_last, a_last);
-            }
-        }
+*/
+        AddPipeWall(meshData, false, a, b);
     }
 
     // 3. Генерация вершин торца (без изменений)
@@ -196,7 +162,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
         }
         return vertices;
     }
-
+/*
     // Локальная утилита контроля вывернутости индивидуальной боковой стены
     void MeshBuilder::AddOrientedWallTriangle(
         MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
@@ -214,14 +180,14 @@ namespace MaxDoF::GameCommon::LevelMeshes
         // Возвращаем строгое и чистое сравнение с нулем
         if (volumeSign > 0.0f)
         {
-            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::AddPhysicalTriangle(meshData, p0, p2, p1);
+            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::AddTriangle(meshData, p0, p2, p1);
         }
         else
         {
-            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::AddPhysicalTriangle(meshData, p0, p1, p2);
+            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::AddTriangle(meshData, p0, p1, p2);
         }
     }
-
+*/
     void MeshBuilder::CreateMeshData(
         MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
         const MaxDoF::GameCommon::LevelGraphs::PureLevelGraph& graph)
@@ -269,11 +235,11 @@ namespace MaxDoF::GameCommon::LevelMeshes
                     // Единое пуленепробиваемое правило для труб, тетраэдров и комнат:
                     if(orientedInterface.inverted)
                     {
-                        AddPhysicalTriangle(meshData, p0, p2, p1);
+                        AddTriangle(meshData, p0, p2, p1);
                     }
                     else
                     {
-                        AddPhysicalTriangle(meshData, p0, p1, p2);
+                        AddTriangle(meshData, p0, p1, p2);
                     }
                 }
             }

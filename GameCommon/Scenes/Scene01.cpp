@@ -6,6 +6,7 @@
 #include "GameCommon/Scenes/Scene01.h"
 
 #include "GameCommon/LevelMeshes/MeshBuilder.h"
+#include "GameCommon/LevelMeshes/DeathmatchGraphGenerator.h"
 #include "GameCommon/LevelMeshes/PipeGraphGenerator.h"
 #include "GameCommon/LevelMeshes/TetrahedronGraphGenerator.h"
 
@@ -121,26 +122,25 @@ namespace MaxDoF::GameCommon::Scenes
 #endif
 
         GameCommon::LevelMeshes::MeshData meshData;
+        MaxDoF::GameCommon::LevelGraphs::PureLevelGraph levelGraph;
 
-        if(1)
+        switch (1)
         {
-            // 1. Создаем пустой контейнер для графа
-            MaxDoF::GameCommon::LevelGraphs::PureLevelGraph levelGraph;
-            // 2. Генерируем идеальную симметричную Deathmatch-станцию (36 полигонов внутреннего мира)
+        case 0:
             MaxDoF::GameCommon::LevelGraphs::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
-            // 4. Наш новый метод за один проход превращает граф в готовый меш с нормалями и UV
-            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
-        }
-        else
-        {        // 1. Создаем пустой контейнер для графа
-            MaxDoF::GameCommon::LevelGraphs::PureLevelGraph levelGraph;
-            // 2. Генерируем идеальную симметричную Deathmatch-станцию (36 полигонов внутреннего мира)
+            break;
+        case 1:
             MaxDoF::GameCommon::LevelGraphs::PipeGraphGenerator::GenerateGraph(levelGraph);
-            // 4. Наш новый метод за один проход превращает граф в готовый меш с нормалями и UV
-            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
+            break;
+        case 2:
+            MaxDoF::GameCommon::LevelGraphs::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
+            break;
+        
+        default:
+            break;
         }
 
-        // 5. Отдаем готовый буфер в игровой мир (для рендера и запекания коллизий Jolt)
+        MaxDoF::GameCommon::LevelMeshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
         mWorldManager.createMesh(meshData);
     }
 

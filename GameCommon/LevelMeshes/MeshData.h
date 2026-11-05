@@ -14,7 +14,6 @@ namespace MaxDoF::GameCommon::LevelMeshes
     {
         float x, y, z;
 #ifdef MAXDOF_CLIENT_BUILD
-        float nx, ny, nz;
         float u, v;
 #endif
     };
