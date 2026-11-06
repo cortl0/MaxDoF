@@ -5,21 +5,27 @@
 
 #pragma once
 
-#include "GameCommon/Types/Types3d.h"
+#include "GameCommon/Types/LevelGraphStructures.h"
 
 namespace MaxDoF::GameCommon::LevelGraphs
 {
     class Tetrahedron
     {
-        Types3d::Tetrahedron::Vertices vertices;
-        Types3d::Tetrahedron::TrianglesVerticesIndices interfaces;
+    public:
+        using Vertices = std::array<JPH::RVec3, 4>;
+        using TrianglesVerticesIndices = std::array<Types3d::TriangleVerticesIndices, 4>;
+
+    private:
+        Vertices vertices;
+        TrianglesVerticesIndices interfaces;
 
     public:
         Tetrahedron();
-        const Types3d::Tetrahedron::TrianglesVerticesIndices& GetInterfaces(){ return interfaces; }
-        const Types3d::Tetrahedron::Vertices& GetVertices(){ return vertices; }
-        void SetInterfaces(const Types3d::Tetrahedron::TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
-        void SetVertices(const Types3d::Tetrahedron::Vertices& vertices){ this->vertices = vertices; }
+        const TrianglesVerticesIndices& GetInterfaces(){ return interfaces; }
+        const Vertices& GetVertices(){ return vertices; }
+        void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
+        void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
         void SetVetricesAndInterfaces(double tetrahedronSphereRadius);
+        void FillGraph(Types::LevelGraphs::PureLevelGraph&);
     };
 }

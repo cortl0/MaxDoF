@@ -11,7 +11,7 @@
 
 namespace MaxDoF::GameCommon::LevelGraphs
 {
-    void PipeGraphGenerator::GenerateGraph(MaxDoF::GameCommon::LevelGraphs::PureLevelGraph& graph)
+    void PipeGraphGenerator::GenerateGraph(GameCommon::Types::LevelGraphs::PureLevelGraph& graph)
     {
         using namespace MaxDoF::GameCommon::LevelGraphs;
 
@@ -25,41 +25,6 @@ namespace MaxDoF::GameCommon::LevelGraphs
 
         Pipe pipe;
         pipe.SetVetricesAndInterfaces(pBegin, pEnd, cPipeRadius);
-
-        // 2. СОЗДАЕМ ОДИН ОБЪЕМНЫЙ УЗЕЛ-ТРУБУ
-        VolumeNode pipeNode;
-        pipeNode.id = static_cast<NodeKey>(graph.nodes.size());
-        pipeNode.type = NodeType::PipeTunnel;
-
-        // --- ВХОДНОЙ ТОРЕЦ (Глухой интерфейс на Z = +5.0м) ---
-        TriangleInterface firstInterface;
-        firstInterface.id = static_cast<TriangleInterfaceKey>(graph.interfaces.size());
-        firstInterface.nodeA = pipeNode.id;       // Труба является родителем
-        firstInterface.nodeB = cNodeSolidRock;   // Заглушка, глухой камень
-
-        const auto& vertices = pipe.GetVertices();
-        // Генерируем вершины начального треугольника (базовый угол 0.0f)
-        firstInterface.vertices = vertices.front();
-        graph.interfaces.push_back(firstInterface);
-
-        TriangleInterface secondInterface;
-        secondInterface.id = static_cast<TriangleInterfaceKey>(graph.interfaces.size());
-        secondInterface.nodeA = pipeNode.id;       // Труба является родителем
-        secondInterface.nodeB = cNodeSolidRock;   // Заглушка, глухой камень
-
-        secondInterface.vertices = vertices.back();
-        graph.interfaces.push_back(secondInterface);
-
-        // Связываем интерфейсы с трубой.
-        // По нашему правилу "наоборот": так как труба сама породила оба этих ребра,
-        // для неё оба интерфейса сонаправлены с ней (нормали смотрят внутрь трубы).
-        // Поэтому для ОБОИХ интерфейсов ставим флаг inverted = true!
-        bool inverted = false;
-        pipeNode.interfaceIds.push_back({ firstInterface.id, inverted });
-        inverted = true;
-        pipeNode.interfaceIds.push_back({ secondInterface.id, inverted });
-
-        // Пушим готовую изолированную трубу в список узлов уровня
-        graph.nodes.push_back(pipeNode);
+        pipe.FillGraph(graph);
     }
 }

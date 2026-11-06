@@ -9,7 +9,6 @@ namespace MaxDoF::GameCommon::LevelGraphs
 {
     Tetrahedron::Tetrahedron()
     {
-        SetVetricesAndInterfaces(0.5);
     }
 
     void Tetrahedron::SetVetricesAndInterfaces(double tetrahedronSphereRadius)
@@ -44,5 +43,37 @@ namespace MaxDoF::GameCommon::LevelGraphs
             {0, 3, 2}, // Грань 2 Нижняя
             {1, 2, 3}  // Грань 3 Переднияя
         }};
+    }
+
+    void Tetrahedron::FillGraph(Types::LevelGraphs::PureLevelGraph& graph)
+    {
+        const auto baseVertexIndex = graph.vertices.size();
+        const auto baseInterfaceIndex = graph.interfaces.size();
+
+        for(const auto& vertice : vertices)
+            graph.vertices.push_back(vertice);
+
+        for(const auto& interface : interfaces)
+            graph.interfaces.push_back(Types::LevelGraphs::TriangleInterface{
+                .id = graph.interfaces.size(),
+                .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex},
+                .nodeA = graph.nodes.size(),
+                .nodeB = Types::LevelGraphs::cNodeSolidRock
+            });
+
+        graph.nodes.push_back(
+            Types::LevelGraphs::VolumeNode
+            {
+                .id = graph.nodes.size(),
+                .type = Types::LevelGraphs::NodeType::Tetrahedron,
+                .interfaceIds = Types::LevelGraphs::VolumeNode::OrientedInterfaces
+                {
+                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 0, .inverted = false},
+                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 1, .inverted = false},
+                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 2, .inverted = false},
+                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 3, .inverted = false}
+                }
+            }
+        );
     }
 }

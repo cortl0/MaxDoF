@@ -122,18 +122,18 @@ namespace MaxDoF::GameCommon::Scenes
 #endif
 
         GameCommon::Types3d::MeshData meshData;
-        MaxDoF::GameCommon::LevelGraphs::PureLevelGraph levelGraph;
+        GameCommon::Types::LevelGraphs::PureLevelGraph levelGraph;
 
-        switch (1)
+        switch (2)
         {
         case 0:
-            MaxDoF::GameCommon::LevelGraphs::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
+            GameCommon::LevelGraphs::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
             break;
         case 1:
-            MaxDoF::GameCommon::LevelGraphs::PipeGraphGenerator::GenerateGraph(levelGraph);
+            GameCommon::LevelGraphs::PipeGraphGenerator::GenerateGraph(levelGraph);
             break;
         case 2:
-            MaxDoF::GameCommon::LevelGraphs::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
+            GameCommon::LevelGraphs::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
             break;
         
         default:

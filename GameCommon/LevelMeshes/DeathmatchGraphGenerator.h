@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "LevelGraphStructures.h" 
+#include "GameCommon/Types/LevelGraphStructures.h"
 
 namespace MaxDoF::GameCommon::LevelGraphs
 {
@@ -26,6 +26,6 @@ namespace MaxDoF::GameCommon::LevelGraphs
          * 
          * @param graph Ссылка на структуру графа уровня для записи.
          */
-        static void GenerateGraph(MaxDoF::GameCommon::LevelGraphs::PureLevelGraph& graph);
+        static void GenerateGraph(GameCommon::Types::LevelGraphs::PureLevelGraph& graph);
     };
 }

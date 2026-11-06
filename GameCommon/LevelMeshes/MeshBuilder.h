@@ -8,8 +8,7 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Vec3.h>
 
-#include "GameCommon/LevelMeshes/LevelGraphStructures.h"
-#include "GameCommon/Types/Types3d.h"
+#include "GameCommon/Types/LevelGraphStructures.h"
 
 namespace MaxDoF::GameCommon::LevelMeshes
 {
@@ -21,13 +20,16 @@ namespace MaxDoF::GameCommon::LevelMeshes
         };
 
     public:
-        static void AddNonPlanarQuad(MaxDoF::GameCommon::Types3d::MeshData &meshData, bool reverseDiagonal,
+        static void AddNonPlanarQuad(GameCommon::Types3d::MeshData &meshData, bool reverseDiagonal,
             const UVVertex &a, const UVVertex &b, const UVVertex &c, const UVVertex &d);
-        static void AddPipeWall(MaxDoF::GameCommon::Types3d::MeshData &meshData, bool reverseDiagonals,
+        static void AddPipeWall(GameCommon::Types3d::MeshData &meshData, bool reverseDiagonals,
             const std::array<UVVertex, 3> &verticesBegin, const std::array<UVVertex, 3> &verticesEnd);
         static void AddTriangle(GameCommon::Types3d::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2);
-        static void ConnectTriangles(MaxDoF::GameCommon::Types3d::MeshData& meshData,
-            const Types3d::TriangleVertices& verticesBegin, const Types3d::TriangleVertices& verticesEnd);
+        static void ConnectTriangles(GameCommon::Types3d::MeshData& meshData,
+            const Types::LevelGraphs::PureLevelGraph& graph,
+            const Types::LevelGraphs::VolumeNode& pipeNode,
+            const Types::LevelGraphs::TriangleInterface& TriangleInterface,
+            const Types3d::TriangleVertices& verticesEnd);
         /**
          * @brief Главная функция трансляции графа в полигональный меш уровня.
          *
@@ -39,7 +41,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
          */
         static void CreateMeshData(
             GameCommon::Types3d::MeshData& meshData,
-            const GameCommon::LevelGraphs::PureLevelGraph& graph
+            const GameCommon::Types::LevelGraphs::PureLevelGraph& graph
         );
         // static void AddOrientedWallTriangle(MaxDoF::GameCommon::LevelMeshes::MeshData &meshData, const UVVertex &p0, const UVVertex &p1, const UVVertex &p2, const JPH::Vec3 &localPipeCenter);
         static Types3d::TriangleVertices GenerateTriangleVertices(

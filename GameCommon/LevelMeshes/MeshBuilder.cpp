@@ -15,7 +15,7 @@
 
 namespace MaxDoF::GameCommon::LevelMeshes
 {
-    void MeshBuilder::AddNonPlanarQuad(MaxDoF::GameCommon::Types3d::MeshData& meshData, bool reverseDiagonal,
+    void MeshBuilder::AddNonPlanarQuad(GameCommon::Types3d::MeshData& meshData, bool reverseDiagonal,
         const UVVertex& a, const UVVertex& b, const UVVertex& c, const UVVertex& d)
     {
         if(reverseDiagonal)
@@ -31,7 +31,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
     }
 
     void MeshBuilder::AddPipeWall(
-        MaxDoF::GameCommon::Types3d::MeshData& meshData, bool reverseDiagonals,
+        GameCommon::Types3d::MeshData& meshData, bool reverseDiagonals,
         const std::array<UVVertex, 3>& a, const std::array<UVVertex, 3>& b)
     {
         AddNonPlanarQuad(meshData, reverseDiagonals, a[1], a[0], b[0], b[1]);
@@ -58,37 +58,46 @@ namespace MaxDoF::GameCommon::LevelMeshes
     }
 
     void MeshBuilder::ConnectTriangles(MaxDoF::GameCommon::Types3d::MeshData& meshData,
-        const Types3d::TriangleVertices& verticesBegin, const Types3d::TriangleVertices& verticesEnd)
+        const Types::LevelGraphs::PureLevelGraph& graph,
+        const Types::LevelGraphs::VolumeNode& pipeNode,
+        const Types::LevelGraphs::TriangleInterface& TriangleInterface,
+        const Types3d::TriangleVertices& verticesEnd)
     {
-        // 1. Комбинаторный поиск пар по кратчайшему расстоянию
-        const std::array<std::array<int, 3>, 6> permutations = {{
-            {0, 1, 2}, {0, 2, 1},
-            {1, 0, 2}, {1, 2, 0},
-            {2, 0, 1}, {2, 1, 0}
-        }};
+        // // 1. Комбинаторный поиск пар по кратчайшему расстоянию
+        // const std::array<std::array<int, 3>, 6> permutations = {{
+        //     {0, 1, 2}, {0, 2, 1},
+        //     {1, 0, 2}, {1, 2, 0},
+        //     {2, 0, 1}, {2, 1, 0}
+        // }};
 
-        float minTotalDistance = FLT_MAX;
-        std::array<int, 3> bestPermutation = {0, 1, 2};
+        // float minTotalDistance = FLT_MAX;
+        // std::array<int, 3> bestPermutation = {0, 1, 2};
+        const auto& interface = graph.interfaces[TriangleInterface.id];
+        // for (const auto& p : permutations) {
+        //     float dist0 = (interface.vertices[0] - verticesEnd[p[0]]).Length();
+        //     float dist1 = (interface.vertices[1] - verticesEnd[p[1]]).Length();
+        //     float dist2 = (interface.vertices[2] - verticesEnd[p[2]]).Length();
 
-        for (const auto& p : permutations) {
-            float dist0 = (verticesBegin[0] - verticesEnd[p[0]]).Length();
-            float dist1 = (verticesBegin[1] - verticesEnd[p[1]]).Length();
-            float dist2 = (verticesBegin[2] - verticesEnd[p[2]]).Length();
-
-            float currentSum = dist0 + dist1 + dist2;
-            if (currentSum < minTotalDistance) {
-                minTotalDistance = currentSum;
-                bestPermutation = p;
-            }
-        }
+        //     float currentSum = dist0 + dist1 + dist2;
+        //     if (currentSum < minTotalDistance) {
+        //         minTotalDistance = currentSum;
+        //         bestPermutation = p;
+        //     }
+        // }
 
         // 2. Подготовка базовых UV-вершин
         std::array<UVVertex, 3> a;
         for (int i = 0; i < 3; ++i)
         {
-            a[i].pos = verticesBegin[i];
+            a[i].pos = graph.vertices[interface.verticesIndices[i]];
             a[i].u   = static_cast<float>(i) / 3.0f;
             a[i].v   = 0.0f;
+        }
+        if(pipeNode.interfaceIds.front().inverted)
+        {
+            auto temp = a[1].pos;
+            a[1].pos = a[2].pos;
+            a[2].pos = temp;
         }
 
         std::array<UVVertex, 3> b;
@@ -98,6 +107,12 @@ namespace MaxDoF::GameCommon::LevelMeshes
             b[i].pos = verticesEnd[targetIdx];
             b[i].u   = static_cast<float>(i) / 3.0f;
             b[i].v   = 1.0f;
+        }
+        if(pipeNode.interfaceIds.back().inverted)
+        {
+            auto temp = b[1].pos;
+            b[1].pos = b[2].pos;
+            b[2].pos = temp;
         }
 /*
         UVVertex a_last = a[0]; a_last.u = 1.0f;
@@ -187,10 +202,10 @@ namespace MaxDoF::GameCommon::LevelMeshes
     }
 */
     void MeshBuilder::CreateMeshData(
-        MaxDoF::GameCommon::Types3d::MeshData& meshData,
-        const MaxDoF::GameCommon::LevelGraphs::PureLevelGraph& graph)
+        GameCommon::Types3d::MeshData& meshData,
+        const GameCommon::Types::LevelGraphs::PureLevelGraph& graph)
     {
-        using namespace MaxDoF::GameCommon::LevelGraphs;
+        using namespace GameCommon::Types::LevelGraphs;
 
         // Вектора не очищаем (оставляем кумулятивность)
 
@@ -210,7 +225,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
 
                 // Натягиваем 6 боковых прямоугольников-складок
 
-
+/*
                 FILE *file = fopen("output.txt", "w");
     
     if (file != NULL) {
@@ -241,7 +256,14 @@ namespace MaxDoF::GameCommon::LevelMeshes
         printf("Ошибка открытия файла!\n");
     }
                 // std::abort();
-                ConnectTriangles(meshData, interface0.vertices, interface1.vertices);
+*/
+                ConnectTriangles(meshData, graph, node, interface0,
+                    {
+                        graph.vertices[interface1.verticesIndices[0]],
+                        graph.vertices[interface1.verticesIndices[1]],
+                        graph.vertices[interface1.verticesIndices[2]]
+                    }
+                );
             }
             // Для тетраэдра на этом этапе ничего делать не нужно — у него нет боковых складок,
             // его геометрия полностью состоит из плоских граней-интерфейсов!
@@ -258,9 +280,9 @@ namespace MaxDoF::GameCommon::LevelMeshes
                 // Если грань официально ведет в монолитный камень — строим заглушку!
                 if(face.nodeB == cNodeSolidRock)
                 {
-                    MeshBuilder::UVVertex p0{ face.vertices[0], 0.0f, 0.0f };
-                    MeshBuilder::UVVertex p1{ face.vertices[1], 1.0f, 0.0f };
-                    MeshBuilder::UVVertex p2{ face.vertices[2], 0.5f, 1.0f };
+                    MeshBuilder::UVVertex p0{ graph.vertices[face.verticesIndices[0]], 0.0f, 0.0f };
+                    MeshBuilder::UVVertex p1{ graph.vertices[face.verticesIndices[1]], 1.0f, 0.0f };
+                    MeshBuilder::UVVertex p2{ graph.vertices[face.verticesIndices[2]], 0.5f, 1.0f };
 
                     // Единое пуленепробиваемое правило для труб, тетраэдров и комнат:
                     if(orientedInterface.inverted)

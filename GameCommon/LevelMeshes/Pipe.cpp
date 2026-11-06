@@ -22,15 +22,63 @@ namespace MaxDoF::GameCommon::LevelGraphs
         JPH::RVec3 V(0.0f, 1.0f, 0.0f);
 
         vertices = {{
-           GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),   // Вершина 2 (Вперед-влево-вниз)
-           GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)     // Вершина 3 (Вперед-вправо-вниз)
+           GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
+           GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
         }};
 
-        // interfaces = {{
-        //     {0, 2, 1}, // Грань 0 Левая
-        //     {0, 1, 3}, // Грань 1 Правая
-        //     {0, 3, 2}, // Грань 2 Нижняя
-        //     {1, 2, 3}  // Грань 3 Переднияя
+        interfaces = {{
+            {0, 1, 2}, // Вход
+            {3, 4, 5}  // Выход
+        }};
+    }
+
+    void Pipe::SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph& graph, Types::LevelGraphs::TriangleInterface fitst, JPH::RVec3 length, double radius)
+    {
+        const float cFixedRotation = 3.1415926535f / 6.0f;
+
+        // Стабильный базис плоскости сечения трубы (X-вправо, Y-вверх)
+        JPH::RVec3 U(1.0f, 0.0f, 0.0f);
+        JPH::RVec3 V(0.0f, 1.0f, 0.0f);
+
+        // vertices = {{
+        //     graph.vertices fitst.vertices,
+        //     fitst.vertices[0] + length, fitst.vertices[1] + length, fitst.vertices[2] + length
         // }};
+
+        // interfaces = {{
+        //     {0, 1, 2}, // Вход
+        //     {3, 4, 5}  // Выход
+        // }};
+    }
+
+    void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph)
+    {
+        const auto baseVertexIndex = graph.vertices.size();
+        const auto baseInterfaceIndex = graph.interfaces.size();
+
+        for(const auto& innerVertices : vertices)
+            for(const auto& vertice : innerVertices)
+                graph.vertices.push_back(vertice);
+
+        for(const auto& interface : interfaces)
+            graph.interfaces.push_back(Types::LevelGraphs::TriangleInterface{
+                .id = graph.interfaces.size(),
+                .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex},
+                .nodeA = graph.nodes.size(),
+                .nodeB = Types::LevelGraphs::cNodeSolidRock
+            });
+
+        graph.nodes.push_back(
+            Types::LevelGraphs::VolumeNode
+            {
+                .id = graph.nodes.size(),
+                .type = Types::LevelGraphs::NodeType::PipeTunnel,
+                .interfaceIds = Types::LevelGraphs::VolumeNode::OrientedInterfaces
+                {
+                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 0, .inverted = false},
+                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 1, .inverted = false}
+                }
+            }
+        );
     }
 }

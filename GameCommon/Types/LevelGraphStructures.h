@@ -12,10 +12,11 @@
 
 #include "GameCommon/Types/Types3d.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::GameCommon::Types::LevelGraphs
 {
-    using NodeKey = uint32_t;
-    using TriangleInterfaceKey = uint32_t;
+    using NodeKey = std::size_t;
+    using TriangleInterfaceKey = std::size_t;
+    using Vertices = std::vector<Types3d::Vertex>;
     // =========================================================================
     // СИСТЕМНЫЕ КОНСТАНТЫ СВЯЗЕЙ ДЛЯ ГРАНЕЙ
     // =========================================================================
@@ -44,7 +45,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
     struct TriangleInterface
     {
         TriangleInterfaceKey id;
-        Types3d::TriangleVertices vertices;
+        Types3d::TriangleVerticesIndices verticesIndices;
 
         // Математическое направление ребра: ИЗ внешнего пространства ВНУТРЬ узла nodeA.
         // Нормаль этого треугольника по умолчанию смотрит внутрь nodeA.
@@ -66,6 +67,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
     // =========================================================================
     struct VolumeNode
     {
+        using OrientedInterfaces = std::vector<OrientedInterface>;
         NodeKey id;
         NodeType type;
 
@@ -73,7 +75,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
         // Для PipeTunnel — строго до 2-х интерфейсов (вход и выход).
         // Для Tetrahedron — строго 4 интерфейса (как открытых, так и глухих).
         // Единый вектор ориентированных стыков-интерфейсов для любых фигур
-        std::vector<OrientedInterface> interfaceIds;
+        OrientedInterfaces interfaceIds;
     };
 
     // =========================================================================
@@ -81,7 +83,8 @@ namespace MaxDoF::GameCommon::LevelGraphs
     // =========================================================================
     struct PureLevelGraph
     {
-        std::vector<VolumeNode>        nodes;      // Все материальные комнаты, коридоры и тупики
+        std::vector<VolumeNode> nodes; // Все материальные комнаты, коридоры и тупики
         std::vector<TriangleInterface> interfaces; // Все плоские швы, стены и порталы между ними
+        Vertices vertices;  // Сквозной массив точек графа. Все сущности должны ссылаться на него и не иметь своихточек.
     };
 }

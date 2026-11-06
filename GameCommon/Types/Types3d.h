@@ -11,21 +11,10 @@
 
 namespace MaxDoF::GameCommon::Types3d
 {
-    using VerticesIndexKey = uint32_t;
+    using Vertex = JPH::RVec3;
+    using TriangleVertices = std::array<Vertex, 3>;
+    using VerticesIndexKey = std::size_t;
     using TriangleVerticesIndices = std::array<VerticesIndexKey, 3>;
-    using TriangleVertices = std::array<JPH::RVec3, 3>;
-
-    namespace Pipe
-    {
-        using Vertices = std::array<TriangleVertices, 2>;
-        using TrianglesVerticesIndices = std::array<TriangleVerticesIndices, 2>;
-    }
-
-    namespace Tetrahedron
-    {
-        using Vertices = std::array<JPH::RVec3, 4>;
-        using TrianglesVerticesIndices = std::array<TriangleVerticesIndices, 4>;
-    }
 
     struct MeshData
     {

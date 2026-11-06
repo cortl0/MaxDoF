@@ -6,20 +6,28 @@
 #pragma once
 
 #include "GameCommon/Types/Types3d.h"
+#include "GameCommon/Types/LevelGraphStructures.h"
 
 namespace MaxDoF::GameCommon::LevelGraphs
 {
     class Pipe
     {
-        Types3d::Pipe::Vertices vertices;
-        Types3d::Pipe::TrianglesVerticesIndices interfaces;
+    public:
+        using Vertices = std::array<Types3d::TriangleVertices, 2>;
+        using TrianglesVerticesIndices = std::array<Types3d::TriangleVerticesIndices, 2>;
+
+    private:
+        Vertices vertices;
+        TrianglesVerticesIndices interfaces;
 
     public:
         Pipe();
-        const Types3d::Pipe::TrianglesVerticesIndices& GetInterfaces(){ return interfaces; }
-        const Types3d::Pipe::Vertices& GetVertices(){ return vertices; }
-        void SetInterfaces(const Types3d::Pipe::TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
-        void SetVertices(const Types3d::Pipe::Vertices& vertices){ this->vertices = vertices; }
+        const TrianglesVerticesIndices& GetInterfaces(){ return interfaces; }
+        const Vertices& GetVertices(){ return vertices; }
+        void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
+        void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
         void SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, double radius);
+        void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface fitst, JPH::RVec3 length, double radius);
+        void FillGraph(Types::LevelGraphs::PureLevelGraph&);
     };
 }
