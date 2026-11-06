@@ -13,34 +13,40 @@ namespace MaxDoF::GameCommon::LevelGraphs
 {
     void DeathmatchGraphGenerator::GenerateGraph(GameCommon::Types::LevelGraphs::PureLevelGraph& graph)
     {
-        using namespace MaxDoF::GameCommon::LevelGraphs;
-
-        // 1. РАДИУС НАШЕЙ ЕДИНСТВЕННОЙ КОМНАТЫ
         const float cArenaRadius = 50.0f;
 
         Tetrahedron tetrahedron;
         tetrahedron.SetVetricesAndInterfaces(cArenaRadius);
+
         tetrahedron.FillGraph(graph,
             {
-                Types::LevelGraphs::InterfaceType::SolidRock,
-                Types::LevelGraphs::InterfaceType::SolidRock,
-                Types::LevelGraphs::InterfaceType::SolidRock,
+                Types::LevelGraphs::InterfaceType::UnDefined,
+                Types::LevelGraphs::InterfaceType::UnDefined,
+                Types::LevelGraphs::InterfaceType::UnDefined,
                 Types::LevelGraphs::InterfaceType::UnDefined
             });
-        auto& tetrahedronGraph = graph.nodes.back();
-        tetrahedronGraph.orientedInterfaces.back().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
-        graph.interfaces[tetrahedronGraph.orientedInterfaces.back().interfaceId].nodeB =
-            static_cast<Types::LevelGraphs::NodeKey>(Types::LevelGraphs::InterfaceType::UnDefined);
 
-        Pipe pipe;
-        pipe.SetVetricesAndInterfaces(graph, graph.interfaces[tetrahedronGraph.orientedInterfaces.back().interfaceId],
-            JPH::RVec3 {0.0f, 0.0f, -cArenaRadius / 2.0f}, cArenaRadius);
-        pipe.FillGraph(graph, {false, true}, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::SolidRock});
+        const auto& tetrahedronIndex = graph.nodes.size() - 1;
 
-        auto& pipeGraph = graph.nodes.back();
-        pipeGraph.inverted = true;
-        pipeGraph.orientedInterfaces.back().inverted = false;
+        for (size_t i = 0; i < 4; ++i)
+        {
+            graph.interfaces[graph.nodes[tetrahedronIndex].orientedInterfaces[i].interfaceId].nodeB =
+                static_cast<Types::LevelGraphs::NodeKey>(Types::LevelGraphs::InterfaceType::UnDefined);
 
-        pipeGraph.orientedInterfaces.front().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
+            Pipe pipe;
+            pipe.SetVetricesAndInterfaces(
+                graph, 
+                graph.interfaces[graph.nodes[tetrahedronIndex].orientedInterfaces[i].interfaceId],
+                cArenaRadius, 
+                cArenaRadius
+            );
+
+            pipe.FillGraph(graph, {false, true}, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::SolidRock});
+
+            auto& pipeGraph = graph.nodes.back();
+            pipeGraph.inverted = true;
+            pipeGraph.orientedInterfaces.back().inverted = false;
+            pipeGraph.orientedInterfaces.front().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
+        }
     }
 }

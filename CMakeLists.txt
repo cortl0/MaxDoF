@@ -5,7 +5,7 @@
 
 cmake_minimum_required( VERSION 3.5.1 )
 
-project(MaxDoF VERSION 0.1.0)
+project(MaxDoF VERSION 0.2.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

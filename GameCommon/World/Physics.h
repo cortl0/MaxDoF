@@ -25,9 +25,9 @@ namespace MaxDoF::GameCommon::World
         void setBodyInterface(JPH::BodyInterface* bodyInterface) { mBodyInterface = bodyInterface; }
         JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
         void initialize(unsigned int maxBodies = 1024);
-        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic);
-        JPH::BodyID createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic);
+        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool оnCCD);
+        JPH::BodyID createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool оnCCD);
         JPH::BodyID createMesh(const Types3d::MeshData&);
-        JPH::BodyID createSphere(const Types::PhysPose& pose, float radius, float mass);
+        JPH::BodyID createSphere(const Types::PhysPose& pose, float radius, float mass, bool оnCCD);
     };
 }

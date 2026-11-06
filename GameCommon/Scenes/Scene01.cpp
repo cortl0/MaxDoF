@@ -97,19 +97,21 @@ namespace MaxDoF::GameCommon::Scenes
 #ifdef MAXDOF_CLIENT_BUILD
         // createStaticLights();
 #endif
-/*
-        for(int i = -5; i < 5; ++i)
-            for(int j = -5; j < 5; ++j)
-                for(int k = -5; k < 5; ++k)
+        int size = 2;
+        double offset = 30.0;
+
+        for(int i = -size; i <= size; ++i)
+            for(int j = -size; j <= size; ++j)
+                for(int k = -size; k <= size; ++k)
                     {
                         Types::PhysPose pose
                         {
-                            .position = JPH::RVec3( i * 1.1f, j * 1.1f, -20.0f - k * 1.1f ),
+                            .position = JPH::RVec3( i * 1.1f, j * 1.1f, -offset - k * 1.1f ),
                             .orientation = JPH::Quat::sIdentity()
                         };
                         mWorldManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
                     }
-*/
+
         Types::PhysPose pose
         {
             .position = JPH::RVec3( 0.0f, 0.0f, -12.0f ),
@@ -145,6 +147,6 @@ namespace MaxDoF::GameCommon::Scenes
 
     Types::Entity& Scene01::createShipEntity()
     {
-        return mWorldManager.createSphere(Types::cDefaultPhysPose, 0.5f, 1000.0f);
+        return mWorldManager.createSphere(Types::cDefaultPhysPose, 0.5f, 1000.0f, true);
     }
 }

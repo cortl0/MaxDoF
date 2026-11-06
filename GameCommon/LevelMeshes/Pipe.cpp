@@ -17,13 +17,12 @@ namespace MaxDoF::GameCommon::LevelGraphs
     {
         const float cFixedRotation = 3.1415926535f / 6.0f;
 
-        // Стабильный базис плоскости сечения трубы (X-вправо, Y-вверх)
         JPH::RVec3 U(1.0f, 0.0f, 0.0f);
         JPH::RVec3 V(0.0f, 1.0f, 0.0f);
 
         vertices = {
-           GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
-           GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
+            GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
+            GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
         };
 
         interfaces = {{
@@ -32,11 +31,16 @@ namespace MaxDoF::GameCommon::LevelGraphs
         }};
     }
 
-    void Pipe::SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph& graph, Types::LevelGraphs::TriangleInterface first, JPH::RVec3 length, double radius)
+    void Pipe::SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph& graph, Types::LevelGraphs::TriangleInterface first, double length, double radius)
     {
-        // Стабильный базис плоскости сечения трубы (X-вправо, Y-вверх)
         JPH::RVec3 U(1.0f, 0.0f, 0.0f);
         JPH::RVec3 V(0.0f, 1.0f, 0.0f);
+
+        const auto& p0 = graph.vertices[first.verticesIndices[0]];
+        const auto& p1 = graph.vertices[first.verticesIndices[1]];
+        const auto& p2 = graph.vertices[first.verticesIndices[2]];
+
+        auto offset = -(p1 - p0).Cross(p2 - p1).Normalized() * length;
 
         vertices = {
             Types3d::TriangleVertices
@@ -47,9 +51,9 @@ namespace MaxDoF::GameCommon::LevelGraphs
             },
             Types3d::TriangleVertices
             {
-                graph.vertices[first.verticesIndices[0]] + length,
-                graph.vertices[first.verticesIndices[1]] + length,
-                graph.vertices[first.verticesIndices[2]] + length
+                graph.vertices[first.verticesIndices[0]] + offset,
+                graph.vertices[first.verticesIndices[1]] + offset,
+                graph.vertices[first.verticesIndices[2]] + offset
             }
         };
 

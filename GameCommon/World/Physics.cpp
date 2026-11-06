@@ -22,7 +22,7 @@ namespace MaxDoF::GameCommon::World
     {
     }
 
-    JPH::BodyID Physics::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::PhysPose& pose, float mass, bool dynamic)
+    JPH::BodyID Physics::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool оnCCD)
     {
         JPH::BodyCreationSettings bodySettings(
             shapeResult.Get(),
@@ -38,13 +38,16 @@ namespace MaxDoF::GameCommon::World
         bodySettings.mLinearDamping = 0.0f;
         bodySettings.mAngularDamping = 0.0f;
 
+        if(оnCCD)
+            bodySettings.mMotionQuality = JPH::EMotionQuality::LinearCast;
+
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic)
+    JPH::BodyID Physics::createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool оnCCD)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
-        return setBodySettings(shapeSettings.Create(), pose, mass, dynamic);
+        return setBodySettings(shapeSettings.Create(), pose, mass, dynamic, оnCCD);
     }
 
     JPH::BodyCreationSettings CreateMeshBodySettings(JPH::ShapeRefC mapShape)
@@ -102,9 +105,9 @@ namespace MaxDoF::GameCommon::World
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createSphere(const Types::PhysPose& pose, float radius, float mass)
+    JPH::BodyID Physics::createSphere(const Types::PhysPose& pose, float radius, float mass, bool оnCCD)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
-        return setBodySettings(shapeSettings.Create(), pose, mass, true);
+        return setBodySettings(shapeSettings.Create(), pose, mass, true, оnCCD);
     }
 }

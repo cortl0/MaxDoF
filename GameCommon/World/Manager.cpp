@@ -126,13 +126,13 @@ namespace MaxDoF::GameCommon::World
         return entity;
     }
 
-    Types::Entity& Manager::createCube(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic)
+    Types::Entity& Manager::createCube(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool оnCCD)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
             mGraphics.createCube(MaxDoF::GameClient::Utils::PhysPoseToGraphPose(pose), MaxDoF::GameClient::Utils::JphVec3ToOgreVector3(halfSize)),
 #endif
-            mPhysics.createBox(pose, halfSize, mass, dynamic));
+            mPhysics.createBox(pose, halfSize, mass, dynamic, оnCCD));
     }
 
     Types::Entity& Manager::createMesh(const GameCommon::Types3d::MeshData& meshData)
@@ -144,12 +144,12 @@ namespace MaxDoF::GameCommon::World
             mPhysics.createMesh(meshData));
     }
 
-    Types::Entity& Manager::createSphere(const Types::PhysPose& pose, float radius, float mass)
+    Types::Entity& Manager::createSphere(const Types::PhysPose& pose, float radius, float mass, bool оnCCD)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
             mGraphics.createSphere( MaxDoF::GameClient::Utils::PhysPoseToGraphPose( pose ), radius ),
 #endif
-            mPhysics.createSphere( pose, radius, mass ));
+            mPhysics.createSphere(pose, radius, mass, оnCCD));
     }
 }
