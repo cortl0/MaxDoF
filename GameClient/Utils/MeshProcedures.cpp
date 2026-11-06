@@ -164,8 +164,8 @@ namespace MaxDoF::GameClient::Utils
         }
 
         Ogre::ManualObject* manual = sceneManager->createManualObject();
-        
-        // По нашему Flat-алгоритму количество вершин в ManualObject станет 
+
+        // По нашему Flat-алгоритму количество вершин в ManualObject станет
         // строго равно количеству индексов, так как каждый треугольник получает свои уникальные вершины!
         manual->estimateVertexCount(meshData.indices.size());
         manual->estimateIndexCount(meshData.indices.size());

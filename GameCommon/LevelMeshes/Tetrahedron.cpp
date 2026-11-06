@@ -30,12 +30,12 @@ namespace MaxDoF::GameCommon::LevelGraphs
         const double yTop = gateSize;                  // Верхняя точка основания (смотрит вверх по Y)
         const double yBottom = -gateSize / 2.0;       // Нижняя линия основания
 
-        vertices = {{
+        vertices = {
             JPH::RVec3(0.0f, 0.0f, zBack),                     // Вершина 0 (Сзади, на оси +Z)
             JPH::RVec3(0.0f, yTop, zFront),                    // Вершина 1 (Вперед-вверх)
             JPH::RVec3(-edgeLength / 2.0f, yBottom, zFront),   // Вершина 2 (Вперед-влево-вниз)
             JPH::RVec3(edgeLength / 2.0f, yBottom, zFront)     // Вершина 3 (Вперед-вправо-вниз)
-        }};
+        };
 
         interfaces = {{
             {0, 2, 1}, // Грань 0 Левая
@@ -45,7 +45,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
         }};
     }
 
-    void Tetrahedron::FillGraph(Types::LevelGraphs::PureLevelGraph& graph)
+    void Tetrahedron::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<Types::LevelGraphs::InterfaceType, 4> interfaceTypes)
     {
         const auto baseVertexIndex = graph.vertices.size();
         const auto baseInterfaceIndex = graph.interfaces.size();
@@ -58,20 +58,41 @@ namespace MaxDoF::GameCommon::LevelGraphs
                 .id = graph.interfaces.size(),
                 .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex},
                 .nodeA = graph.nodes.size(),
-                .nodeB = Types::LevelGraphs::cNodeSolidRock
-            });
+                .nodeB = static_cast<Types::LevelGraphs::NodeKey>(Types::LevelGraphs::InterfaceType::SolidRock)
+            }
+        );
 
         graph.nodes.push_back(
             Types::LevelGraphs::VolumeNode
             {
                 .id = graph.nodes.size(),
                 .type = Types::LevelGraphs::NodeType::Tetrahedron,
-                .interfaceIds = Types::LevelGraphs::VolumeNode::OrientedInterfaces
+                .orientedInterfaces = Types::LevelGraphs::VolumeNode::OrientedInterfaces
                 {
-                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 0, .inverted = false},
-                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 1, .inverted = false},
-                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 2, .inverted = false},
-                    Types::LevelGraphs::OrientedInterface{.interfaceId = baseInterfaceIndex + 3, .inverted = false}
+                    Types::LevelGraphs::OrientedInterface
+                    {
+                        .interfaceId = baseInterfaceIndex + 0,
+                        .interfaceType = interfaceTypes[0],
+                        .inverted = false
+                    },
+                    Types::LevelGraphs::OrientedInterface
+                    {
+                        .interfaceId = baseInterfaceIndex + 1,
+                        .interfaceType = interfaceTypes[1],
+                        .inverted = false
+                    },
+                    Types::LevelGraphs::OrientedInterface
+                    {
+                        .interfaceId = baseInterfaceIndex + 2,
+                        .interfaceType = interfaceTypes[2],
+                        .inverted = false
+                    },
+                    Types::LevelGraphs::OrientedInterface
+                    {
+                        .interfaceId = baseInterfaceIndex + 3,
+                        .interfaceType = interfaceTypes[3],
+                        .inverted = false
+                    }
                 }
             }
         );

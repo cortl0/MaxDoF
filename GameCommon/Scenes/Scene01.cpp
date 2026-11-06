@@ -135,7 +135,6 @@ namespace MaxDoF::GameCommon::Scenes
         case 2:
             GameCommon::LevelGraphs::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
             break;
-        
         default:
             break;
         }

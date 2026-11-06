@@ -28,6 +28,6 @@ namespace MaxDoF::GameCommon::LevelGraphs
         void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
         void SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, double radius);
         void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface fitst, JPH::RVec3 length, double radius);
-        void FillGraph(Types::LevelGraphs::PureLevelGraph&);
+        void FillGraph(Types::LevelGraphs::PureLevelGraph&, std::array<bool, 2> invertInterfaces, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes);
     };
 }

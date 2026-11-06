@@ -93,7 +93,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
             a[i].u   = static_cast<float>(i) / 3.0f;
             a[i].v   = 0.0f;
         }
-        if(pipeNode.interfaceIds.front().inverted)
+        if(pipeNode.inverted)//pipeNode.orientedInterfacesIds.front().inverted
         {
             auto temp = a[1].pos;
             a[1].pos = a[2].pos;
@@ -108,7 +108,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
             b[i].u   = static_cast<float>(i) / 3.0f;
             b[i].v   = 1.0f;
         }
-        if(pipeNode.interfaceIds.back().inverted)
+        if(pipeNode.inverted)//pipeNode.orientedInterfacesIds.back().inverted
         {
             auto temp = b[1].pos;
             b[1].pos = b[2].pos;
@@ -155,8 +155,6 @@ namespace MaxDoF::GameCommon::LevelMeshes
         c.v = 0.0f;
         d.u = 1.0f;
         d.v = 0.0f;
-
-
 */
         AddPipeWall(meshData, false, a, b);
     }
@@ -167,7 +165,8 @@ namespace MaxDoF::GameCommon::LevelMeshes
     {
         const float PI = 3.1415926535f;
         Types3d::TriangleVertices vertices;
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i)
+        {
             float angle = (120.0f * i * PI / 180.0f) + angleOffset;
             float x2d = radius * std::cos(angle);
             float y2d = radius * std::sin(angle);
@@ -207,8 +206,6 @@ namespace MaxDoF::GameCommon::LevelMeshes
     {
         using namespace GameCommon::Types::LevelGraphs;
 
-        // Вектора не очищаем (оставляем кумулятивность)
-
         for(const auto& node : graph.nodes)
         {
             // =========================================================================
@@ -216,18 +213,15 @@ namespace MaxDoF::GameCommon::LevelMeshes
             // =========================================================================
             if(node.type == NodeType::PipeTunnel)
             {
-                if(node.interfaceIds.size() < 2)
+                if(node.orientedInterfaces.size() < 2)
                     MaxDoF_LOG_AND_ABORT("bad data")
 
                 // Извлекаем два интерфейса трубы напрямую
-                const auto& interface0 = graph.interfaces[node.interfaceIds[0].interfaceId];
-                const auto& interface1 = graph.interfaces[node.interfaceIds[1].interfaceId];
-
-                // Натягиваем 6 боковых прямоугольников-складок
+                const auto& interface0 = graph.interfaces[node.orientedInterfaces[0].interfaceId];
+                const auto& interface1 = graph.interfaces[node.orientedInterfaces[1].interfaceId];
 
 /*
                 FILE *file = fopen("output.txt", "w");
-    
     if (file != NULL) {
         // Записываем данные в файл вместо консоли
         fprintf(file, "x: %f\n", (double)interface0.vertices[0].GetX());
@@ -249,7 +243,6 @@ namespace MaxDoF::GameCommon::LevelMeshes
         fprintf(file, "x: %f\n", (double)interface1.vertices[2].GetX());
         fprintf(file, "y: %f\n", (double)interface1.vertices[2].GetY());
         fprintf(file, "z: %f\n", (double)interface1.vertices[2].GetZ());
-        
         // Обязательно закрываем файл
         fclose(file);
     } else {
@@ -257,6 +250,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
     }
                 // std::abort();
 */
+                // Натягиваем 6 боковых прямоугольников-складок
                 ConnectTriangles(meshData, graph, node, interface0,
                     {
                         graph.vertices[interface1.verticesIndices[0]],
@@ -273,12 +267,12 @@ namespace MaxDoF::GameCommon::LevelMeshes
             // =========================================================================
             // Проходим по всем узлам еще раз и заставляем каждый из них честно
             // проверить свои интерфейсы на наличие глухих тупиков
-            for(const auto& orientedInterface : node.interfaceIds)
+            for(const auto& orientedInterface : node.orientedInterfaces)
             {
                 const auto& face = graph.interfaces[orientedInterface.interfaceId];
-
                 // Если грань официально ведет в монолитный камень — строим заглушку!
-                if(face.nodeB == cNodeSolidRock)
+                // if(face.nodeB == static_cast<NodeKey>(Types::LevelGraphs::InterfaceType::SolidRock))
+                if(orientedInterface.interfaceType == static_cast<Types::LevelGraphs::InterfaceType>(Types::LevelGraphs::InterfaceType::SolidRock))
                 {
                     MeshBuilder::UVVertex p0{ graph.vertices[face.verticesIndices[0]], 0.0f, 0.0f };
                     MeshBuilder::UVVertex p1{ graph.vertices[face.verticesIndices[1]], 1.0f, 0.0f };

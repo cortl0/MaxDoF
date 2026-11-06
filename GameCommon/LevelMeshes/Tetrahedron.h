@@ -26,6 +26,6 @@ namespace MaxDoF::GameCommon::LevelGraphs
         void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
         void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
         void SetVetricesAndInterfaces(double tetrahedronSphereRadius);
-        void FillGraph(Types::LevelGraphs::PureLevelGraph&);
+        void FillGraph(Types::LevelGraphs::PureLevelGraph&, std::array<Types::LevelGraphs::InterfaceType, 4> interfaceTypes);
     };
 }

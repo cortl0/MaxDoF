@@ -21,6 +21,13 @@ namespace MaxDoF::GameCommon::LevelGraphs
 
         Tetrahedron tetrahedron;
         tetrahedron.SetVetricesAndInterfaces(cArenaRadius);
-        tetrahedron.FillGraph(graph);
+        tetrahedron.FillGraph(graph,
+            {
+                Types::LevelGraphs::InterfaceType::SolidRock,
+                Types::LevelGraphs::InterfaceType::SolidRock,
+                Types::LevelGraphs::InterfaceType::SolidRock,
+                Types::LevelGraphs::InterfaceType::SolidRock
+            }
+        );
     }
 }

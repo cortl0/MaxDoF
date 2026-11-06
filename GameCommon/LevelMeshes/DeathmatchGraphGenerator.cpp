@@ -20,108 +20,27 @@ namespace MaxDoF::GameCommon::LevelGraphs
 
         Tetrahedron tetrahedron;
         tetrahedron.SetVetricesAndInterfaces(cArenaRadius);
-        tetrahedron.FillGraph(graph);
-/*
-
-        // 1. КОНСТАНТЫ СТРОГОЙ ГЕОМЕТРИИ
-        const double cPipeLength = 50.0f;
-
-        // 4 уникальные опорные точки залы (Верхушка купола сзади)
-        auto arenaSharedVertices = tetrahedron.GetVertices();
-
-        // 2. СОЗДАЕМ ЦЕНТРАЛЬНЫЙ УЗЕЛ-АРЕНУ
-        Types::LevelGraphs::VolumeNode arenaNode;
-        arenaNode.id = static_cast<Types::LevelGraphs::NodeKey>(graph.nodes.size());
-        arenaNode.type = Types::LevelGraphs::NodeType::Tetrahedron;
-
-        
-        // auto faceLayout = tetrahedron.GetInterfaces();
-
-        // ID нашей единственной трубы
-        const NodeKey targetPipeId = 1;
-        // =========================================================================
-        // ГЕНЕРИРУЕМ ИНТЕРФЕЙСЫ ЦЕНТРАЛЬНОГО ЗАЛА
-        // =========================================================================
-        for (int i = 0; i < 4; ++i)
-        {
-            const auto& indices = faceLayout[i];
-            
-            Types::LevelGraphs::TriangleInterface face;
-            face.id = static_cast<Types::LevelGraphs::TriangleInterfaceKey>(graph.interfaces.size());
-            face.nodeA = arenaNode.id;
-
-            // Хирургическое разделение тупика и коридора
-            if (i < 3)
+        tetrahedron.FillGraph(graph,
             {
-                face.nodeB = Types::LevelGraphs::cNodeSolidRock; // Глухой камень
-            }
-            else
-            {
-                face.nodeB = targetPipeId;   // Соединение с трубой
-            }
+                Types::LevelGraphs::InterfaceType::SolidRock,
+                Types::LevelGraphs::InterfaceType::SolidRock,
+                Types::LevelGraphs::InterfaceType::SolidRock,
+                Types::LevelGraphs::InterfaceType::UnDefined
+            });
+        auto& tetrahedronGraph = graph.nodes.back();
+        tetrahedronGraph.orientedInterfaces.back().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
+        graph.interfaces[tetrahedronGraph.orientedInterfaces.back().interfaceId].nodeB =
+            static_cast<Types::LevelGraphs::NodeKey>(Types::LevelGraphs::InterfaceType::UnDefined);
 
-            // ИСПРАВЛЕНО: Честный покомпонентный перенос вершин по индексам 0, 1, 2
-            face.vertices[0] = arenaSharedVertices[indices[0]];
-            face.vertices[1] = arenaSharedVertices[indices[1]];
-            face.vertices[2] = arenaSharedVertices[indices[2]];
-            
-            graph.interfaces.push_back(face);
+        Pipe pipe;
+        pipe.SetVetricesAndInterfaces(graph, graph.interfaces[tetrahedronGraph.orientedInterfaces.back().interfaceId],
+            JPH::RVec3 {0.0f, 0.0f, -cArenaRadius / 2.0f}, cArenaRadius);
+        pipe.FillGraph(graph, {false, true}, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::SolidRock});
 
-            // Тетраэдр изначально правый — инверсия заглушек не нужна
-            const bool arenaInverted = false;
-            arenaNode.interfaceIds.push_back({ face.id, arenaInverted });
-        }
+        auto& pipeGraph = graph.nodes.back();
+        pipeGraph.inverted = true;
+        pipeGraph.orientedInterfaces.back().inverted = false;
 
-        // Пушим готовую залу в граф
-        // graph.nodes.push_back(arenaNode);
-        // =========================================================================
-        // 3. ГЕНЕРИРУЕМ ЕДИНСТВЕННЫЙ УЗЕЛ-ТРУБУ НА ОСИ -Z
-        // =========================================================================
-        Types::LevelGraphs::VolumeNode pipeNode;
-        pipeNode.id = targetPipeId;
-        pipeNode.type = Types::LevelGraphs::NodeType::PipeTunnel;
-
-        // Извлекаем интерфейс переднего щита (он был сгенерирован последним, под индексом 3)
-        auto innerInterface = graph.interfaces[3];
-        // auto tempI = innerInterface.vertices[1];
-        // innerInterface.vertices[1] = innerInterface.vertices[2];
-        // innerInterface.vertices[2] = tempI;
-
-        // Направление трубы — строго вперед вдоль отрицательного Z (вектор взгляда)
-        JPH::Vec3 pipeDir(0.0f, 0.0f, -1.0f);
-
-        // --- ВНЕШНИЙ ШЛЮЗ ТРУБЫ (Выход в космос, глухой торец) ---
-        TriangleInterface outerInterface;
-        outerInterface.id = graph.interfaces.size();
-        outerInterface.nodeA = pipeNode.id;
-        outerInterface.nodeB = cNodeAsteroidSurface;
-
-        // Генерируем вершины внешнего торца скрученными на 30 градусов
-        //outerInterface.vertices = GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(exitCenter, U, V, cFixedRotation, gateSize);
-
-
-
-        outerInterface.vertices = vertices.back();
-
-
-
-        outerInterface.vertices[0] += pipeDir * cPipeLength;
-        outerInterface.vertices[1] += pipeDir * cPipeLength;
-        outerInterface.vertices[2] += pipeDir * cPipeLength;
-        // auto tempO = outerInterface.vertices[1];
-        // outerInterface.vertices[1] = outerInterface.vertices[2];
-        // outerInterface.vertices[2] = tempO;
-        graph.interfaces.push_back(outerInterface);
-
-        // СВЯЗЫВАЕМ ТОРЦЫ С НАШИМ КОРИДОРОМ:
-        // 1. Стык с залой (innerInterface): заходит со встречной фазой -> inverted = false (0)
-        pipeNode.interfaceIds.push_back({ innerInterface.id, true });
-        
-        // 2. Выход в космос (outerInterface): изначально смотрит наружу -> inverted = true (1), разворачиваем внутрь!
-        pipeNode.interfaceIds.push_back({ outerInterface.id, true });
-
-        // Пушим трубу в граф уровня
-        graph.nodes.push_back(pipeNode);
-*/
+        pipeGraph.orientedInterfaces.front().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
     }
 }

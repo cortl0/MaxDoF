@@ -21,14 +21,13 @@ namespace MaxDoF::GameCommon::Types::LevelGraphs
     // СИСТЕМНЫЕ КОНСТАНТЫ СВЯЗЕЙ ДЛЯ ГРАНЕЙ
     // =========================================================================
 
-    // За границей интерфейса находится глухая, монолитная порода астероида (камень)
-    constexpr NodeKey cNodeSolidRock = -1;
-
-    // За границей интерфейса находится открытый космос (сквозной шлюз наружу)
-    constexpr NodeKey cNodeAsteroidSurface = -2;
-
-    // За границей интерфейса находится открытый космос (сквозной шлюз наружу)
-    constexpr NodeKey cNodeOpenSpace = -3;
+    enum class InterfaceType : NodeKey
+    {
+        SolidRock =       std::numeric_limits<NodeKey>::max() - 1, // За границей интерфейса находится глухая, монолитная порода астероида (камень)
+        AsteroidSurface = std::numeric_limits<NodeKey>::max() - 2, // За границей интерфейса находится открытый космос (сквозной шлюз наружу)
+        OpenSpace =       std::numeric_limits<NodeKey>::max() - 3, // За границей интерфейса находится открытый космос (сквозной шлюз наружу)
+        UnDefined =       std::numeric_limits<NodeKey>::max() - 4  // Неопределено
+    };
 
     // =========================================================================
     // ПЕРЕЧИСЛЕНИЕ ТИПОВ ОБЪЕМНЫХ ФИГУР
@@ -49,17 +48,18 @@ namespace MaxDoF::GameCommon::Types::LevelGraphs
 
         // Математическое направление ребра: ИЗ внешнего пространства ВНУТРЬ узла nodeA.
         // Нормаль этого треугольника по умолчанию смотрит внутрь nodeA.
-        NodeKey nodeA = cNodeSolidRock;
-        NodeKey nodeB = cNodeSolidRock;
+        NodeKey nodeA = static_cast<NodeKey>(Types::LevelGraphs::InterfaceType::UnDefined);
+        NodeKey nodeB = static_cast<NodeKey>(Types::LevelGraphs::InterfaceType::UnDefined);
     };
 
     struct OrientedInterface
     {
         TriangleInterfaceKey interfaceId;
+        InterfaceType interfaceType{InterfaceType::UnDefined};
 
         // false — прямой обход вершин (как заложено в faceLayout)
         // true — инвертированный обход вершин (зеркальный разворот)
-        bool inverted;
+        bool inverted{false};
     };
 
     // =========================================================================
@@ -75,7 +75,8 @@ namespace MaxDoF::GameCommon::Types::LevelGraphs
         // Для PipeTunnel — строго до 2-х интерфейсов (вход и выход).
         // Для Tetrahedron — строго 4 интерфейса (как открытых, так и глухих).
         // Единый вектор ориентированных стыков-интерфейсов для любых фигур
-        OrientedInterfaces interfaceIds;
+        OrientedInterfaces orientedInterfaces;
+        bool inverted{false};
     };
 
     // =========================================================================
@@ -85,6 +86,6 @@ namespace MaxDoF::GameCommon::Types::LevelGraphs
     {
         std::vector<VolumeNode> nodes; // Все материальные комнаты, коридоры и тупики
         std::vector<TriangleInterface> interfaces; // Все плоские швы, стены и порталы между ними
-        Vertices vertices;  // Сквозной массив точек графа. Все сущности должны ссылаться на него и не иметь своихточек.
+        Vertices vertices; // Сквозной массив точек графа. Все сущности должны ссылаться на него и не иметь своихточек.
     };
 }
