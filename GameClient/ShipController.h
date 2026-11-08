@@ -11,7 +11,7 @@
 #include <OgreVector3.h>
 #include <OgreSceneNode.h>
 
-#include "GameCommon/Types/Entity.h"
+#include "GameClient/Ships/Ship.h"
 #include "GameCommon/Types/Telemetry.h"
 
 // Добавляем опережающие объявления Jolt, чтобы не перегружать заголовок
@@ -24,7 +24,7 @@ namespace MaxDoF::GameClient
 {
     class ShipController
     {
-        GameCommon::Types::Entity mShipEntity;
+        GameClient::Ships::Ship& mShip;
         JPH::BodyInterface*   mBodyInterface{ nullptr };
 
         const float           mSensitivityPitch{ 1.0f };
@@ -45,11 +45,12 @@ namespace MaxDoF::GameClient
         {
             float mouse_dx{0.0f};
             float mouse_dy{0.0f};
+            bool leftMouseButtonPressed{false};
             bool rightMouseButtonPressed{false};
             Ogre::Vector3 moveDir{Ogre::Vector3::ZERO};
         };
 
-        ShipController(const GameCommon::Types::Entity& shipEntity, JPH::BodyInterface* bodyInterface);
+        ShipController(GameClient::Ships::Ship&, JPH::BodyInterface* bodyInterface);
         GameCommon::Types::Telemetry getTelemetry(float timeDelta);
         bool update( float timeSinceLast, const ControllerData& mControllerData );
     };

@@ -10,16 +10,18 @@
 namespace MaxDoF::GameClient::Ships
 {
     Ship::Ship(
+        GameCommon::World::Manager& worldManager,
 #ifdef MAXDOF_CLIENT_BUILD
-        Ogre::SceneManager* sceneMgr, GameClient::World::Graphics& graphics,
+        GameClient::World::Graphics& graphics,
 #endif
-        const GameCommon::Types::Entity& shipEntity)
+        const GameCommon::Types::Entity& entity)
+        : mWorldManager(worldManager)
 #ifdef MAXDOF_CLIENT_BUILD
-        : mSceneMgr(sceneMgr)
-        , mDashboard(mSceneMgr, shipEntity.graphNode, Ogre::Vector3(0.0f, -0.1f, -0.3f), graphics)// Ogre::Vector3(0.0f, -0.1f, -0.3f))
+        , mDashboard(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), entity.graphNode, Ogre::Vector3(0.0f, -0.1f, -0.3f), graphics)
 #endif
-        , mEntity(shipEntity)
+        , mEntity(entity)
     {
+        auto* mSceneMgr = mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager();
         lightNode = mEntity.graphNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         // lightNode->setPosition(Ogre::Vector3(0.0f, 0.0f, -0.4f));
         light = mSceneMgr->createLight();
@@ -33,8 +35,9 @@ namespace MaxDoF::GameClient::Ships
 
     Ship::~Ship()
     {
-        mSceneMgr->destroyLight(light);
-        mSceneMgr->destroySceneNode(lightNode);
+        auto* sceneManager = mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager();
+        sceneManager->destroyLight(light);
+        sceneManager->destroySceneNode(lightNode);
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
@@ -53,5 +56,60 @@ namespace MaxDoF::GameClient::Ships
     void Ship::update(float timeSinceLastFrame, const GameCommon::Types::Telemetry& telemetry)
     {
         mDashboard.update(telemetry);
+    }
+
+    void Ship::CreateBullet(float timeSinceLast, bool needCreate)
+    {
+        const float bulletMass{1.0f};
+        static float fireCooldown = 0.0f;
+        fireCooldown -= timeSinceLast;
+
+        if(!needCreate)
+        {
+            if (fireCooldown <= 0.0f)
+                fireCooldown = 0.0f;
+
+            return;
+        }
+
+        if (fireCooldown <= 0.0f)
+        {
+            fireCooldown = 0.15f; 
+
+            JPH::BodyInterface* bodyInterface = mWorldManager.getBodyInterface();
+
+            JPH::RVec3 shipPos = bodyInterface->GetPosition(mEntity.physId);
+            JPH::Quat shipRot = bodyInterface->GetRotation(mEntity.physId);
+            JPH::Vec3 shipVelocity = bodyInterface->GetLinearVelocity(mEntity.physId);
+
+            JPH::Vec3 localForward = -JPH::Vec3::sAxisZ();
+            JPH::Vec3 globalForwardDirection = shipRot * localForward;
+
+            MaxDoF::GameCommon::Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * 1.5f, shipRot};
+
+            auto& bullet = mWorldManager.createSphere(projectilePose, 0.1f, bulletMass, true);
+            JPH::Vec3 projectileImpulse = shipVelocity + (globalForwardDirection * bulletMass * 100.0f);
+            bodyInterface->AddImpulse(bullet.physId, projectileImpulse);
+
+            {
+                JPH::BodyLockWrite lock(mWorldManager.getPhysicsSystem()->GetBodyLockInterface(), mEntity.physId);
+                if (lock.Succeeded()) 
+                {
+                    JPH::Body &body = lock.GetBody();
+                    
+                    if (body.IsDynamic())
+                    {
+                        JPH::MotionProperties* motionProperties = body.GetMotionProperties();
+                        auto mass = motionProperties->GetInverseMass();
+                        mass = 1.0f / mass;
+                        mass -= bulletMass;
+                        mass = 1.0f / mass;
+                        motionProperties->ScaleToMass(1.0f / mass);
+                    }
+                }
+            }
+
+            bodyInterface->AddImpulse(mEntity.physId, -projectileImpulse);
+        }
     }
 }

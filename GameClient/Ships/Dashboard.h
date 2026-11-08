@@ -17,7 +17,7 @@ namespace MaxDoF::GameClient::Ships
     class Dashboard {
         Ogre::SceneManager* mSceneMgr;
         GameClient::World::Graphics& mGraphics;
-        Ogre::SceneNode* mDashboardNode; // Корневой узел панели
+        Ogre::SceneNode* mDashboardNode;
 
         struct Element
         {

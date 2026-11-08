@@ -35,13 +35,6 @@ namespace MaxDoF::GameCommon::World
         }
     }
 
-#ifdef MAXDOF_CLIENT_BUILD
-    MaxDoF::GameClient::World::Graphics& Manager::getGraphics()
-    {
-        return mGraphics;
-    }
-#endif
-
     void Manager::initialize(unsigned int maxBodies)
     {
         JPH::RegisterDefaultAllocator();

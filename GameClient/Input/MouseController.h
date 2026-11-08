@@ -23,6 +23,7 @@ namespace MaxDoF::GameClient::Input
 
         float getRelativeX() const { return mRelativeX; }
         float getRelativeY() const { return mRelativeY; }
+        bool isLeftButtonPressed() const;
         bool isRightButtonPressed() const;
     };
 }  // namespace MaxDoF::GameClient::Input

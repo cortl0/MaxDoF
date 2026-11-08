@@ -14,9 +14,8 @@
 #include "GameClient/World/Graphics.h"
 #endif
 
-#include "GameClient/Ships/Ship.h"
-
 #include "GameCommon/World/Physics.h"
+
 namespace JPH
 {
     class TempAllocatorImpl;
@@ -78,8 +77,9 @@ namespace MaxDoF::GameCommon::World
         ~Manager();
 
 #ifdef MAXDOF_CLIENT_BUILD
-        MaxDoF::GameClient::World::Graphics& getGraphics();
+        MaxDoF::GameClient::World::Graphics& getGraphics(){ return mGraphics; }
 #endif
+        JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysicsSystem; }
         void initialize(unsigned int maxBodies = 1024);
         Types::Entity& createEntity(
 #ifdef MAXDOF_CLIENT_BUILD

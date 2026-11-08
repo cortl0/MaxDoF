@@ -32,6 +32,7 @@ namespace MaxDoF::GameClient::Input
         {
             outData.mouse_dx = mouse->getRelativeX();
             outData.mouse_dy = mouse->getRelativeY();
+            outData.leftMouseButtonPressed = mouse->isLeftButtonPressed();
             outData.rightMouseButtonPressed = mouse->isRightButtonPressed();
         }
 

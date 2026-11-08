@@ -103,14 +103,14 @@ namespace MaxDoF::GameCommon::Scenes
         for(int i = -size; i <= size; ++i)
             for(int j = -size; j <= size; ++j)
                 for(int k = -size; k <= size; ++k)
+                {
+                    Types::PhysPose pose
                     {
-                        Types::PhysPose pose
-                        {
-                            .position = JPH::RVec3( i * 1.1f, j * 1.1f, -offset - k * 1.1f ),
-                            .orientation = JPH::Quat::sIdentity()
-                        };
-                        mWorldManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
-                    }
+                        .position = JPH::RVec3( i * 1.1f, j * 1.1f, -offset - k * 1.1f ),
+                        .orientation = JPH::Quat::sIdentity()
+                    };
+                    mWorldManager.createCube(pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
+                }
 
         Types::PhysPose pose
         {
@@ -120,7 +120,7 @@ namespace MaxDoF::GameCommon::Scenes
         mWorldManager.createSphere(pose, 0.5f, 1000.0f);
         auto& shipEntity = createShipEntity();
 #ifdef MAXDOF_CLIENT_BUILD
-        mShip = new GameClient::Ships::Ship(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), mWorldManager.getGraphics(), shipEntity);
+        mShip = new GameClient::Ships::Ship(mWorldManager, mWorldManager.getGraphics(), shipEntity);
 #endif
 
         GameCommon::Types3d::MeshData meshData;

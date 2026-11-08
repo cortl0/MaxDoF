@@ -12,12 +12,13 @@
 
 #include "GameCommon/Types/Entity.h"
 #include "GameCommon/Types/Telemetry.h"
+#include "GameCommon/World/Manager.h"
 
 namespace MaxDoF::GameClient::Ships
 {
     class Ship {
+        GameCommon::World::Manager& mWorldManager;
 #ifdef MAXDOF_CLIENT_BUILD
-        Ogre::SceneManager* mSceneMgr;
         GameClient::Ships::Dashboard mDashboard;
         Ogre::SceneNode* lightNode;
         Ogre::Light* light;
@@ -26,16 +27,17 @@ namespace MaxDoF::GameClient::Ships
 
     public:
         Ship(
+            GameCommon::World::Manager&,
 #ifdef MAXDOF_CLIENT_BUILD
-            Ogre::SceneManager*,
             GameClient::World::Graphics&,
 #endif
-            const GameCommon::Types::Entity& shipEntity);
+            const GameCommon::Types::Entity&);
         ~Ship();
 #ifdef MAXDOF_CLIENT_BUILD
         void connectCameraToShip(Ogre::Camera*);
 #endif
         const GameCommon::Types::Entity& getEntity() const { return mEntity; }
         void update(float timeSinceLastFrame, const GameCommon::Types::Telemetry&);
+        void CreateBullet(float timeSinceLast, bool needCreate);
     };
 }

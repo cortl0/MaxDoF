@@ -25,6 +25,13 @@ namespace MaxDoF::GameClient::Input
         mRelativeY = 0.0f;
     }
 
+    bool MouseController::isLeftButtonPressed() const
+    {
+        int mouseX, mouseY;
+        uint32_t mouseState = SDL_GetMouseState(&mouseX, &mouseY);
+        return (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
+    }
+
     bool MouseController::isRightButtonPressed() const
     {
         int mouseX, mouseY;

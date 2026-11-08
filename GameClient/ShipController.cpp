@@ -13,8 +13,8 @@
 
 namespace MaxDoF::GameClient
 {
-    ShipController::ShipController(const GameCommon::Types::Entity& shipEntity, JPH::BodyInterface* bodyInterface) :
-        mShipEntity(shipEntity),
+    ShipController::ShipController(GameClient::Ships::Ship& ship, JPH::BodyInterface* bodyInterface) :
+        mShip(ship),
         mBodyInterface(bodyInterface),
         mThrustPower(10000.0f),
         mUseSceneNode(true)
@@ -23,8 +23,9 @@ namespace MaxDoF::GameClient
 
     GameCommon::Types::Telemetry ShipController::ShipController::getTelemetry(float timeDelta)
     {
-        JPH::Vec3 position = JPH::Vec3(mBodyInterface->GetPosition(mShipEntity.physId));
-        JPH::Quat orientation = mBodyInterface->GetRotation(mShipEntity.physId);
+        const auto& shipEntity = mShip.getEntity();
+        JPH::Vec3 position = JPH::Vec3(mBodyInterface->GetPosition(shipEntity.physId));
+        JPH::Quat orientation = mBodyInterface->GetRotation(shipEntity.physId);
         JPH::Vec3 floatDirection = orientation * -JPH::Vec3::sAxisZ();
         JPH::RVec3 direction(floatDirection);
         JPH::Vec3 angularVelocity = GameCommon::Utils::getLocalAngularVelocities(mShipPreviousOrientation, orientation, timeDelta);
@@ -62,7 +63,8 @@ namespace MaxDoF::GameClient
 
     bool ShipController::update( float timeSinceLast, const ControllerData& mControllerData )
     {
-        if(!mShipEntity.graphNode || !mBodyInterface || mShipEntity.physId.IsInvalid())
+        const auto& shipEntity = mShip.getEntity();
+        if(!shipEntity.graphNode || !mBodyInterface || shipEntity.physId.IsInvalid())
             return false;
 
         bool result{false};
@@ -70,6 +72,7 @@ namespace MaxDoF::GameClient
         // ================= 1. ФИЗИЧЕСКОЕ ВРАЩЕНИЕ (МЫШЬ) =================
         float mCameraYaw = -mControllerData.mouse_dx;
         float mCameraPitch = -mControllerData.mouse_dy;
+        mShip.CreateBullet(timeSinceLast, mControllerData.leftMouseButtonPressed);
 
         if( mCameraYaw != 0.0f || mCameraPitch != 0.0f )
         {
@@ -83,13 +86,13 @@ namespace MaxDoF::GameClient
                 const JPH::Vec3 local_torque(0.0f, 0.0f, mCameraRoll * ControlPower); // Момент вокруг оси Y
 
                 // 2. Получаем текущую ориентацию (вращение) тела в мировом пространстве
-                JPH::Quat body_rotation = mBodyInterface->GetRotation(mShipEntity.physId);
+                JPH::Quat body_rotation = mBodyInterface->GetRotation(shipEntity.physId);
 
                 // 3. Переводим локальный вектор в глобальный (умножаем кватернион на вектор)
                 JPH::Vec3 global_torque = body_rotation * local_torque;
 
                 // Передаем момент по BodyID. Третий параметр автоматически будит тело, если оно спало.
-                mBodyInterface->AddTorque(mShipEntity.physId, global_torque, JPH::EActivation::Activate);
+                mBodyInterface->AddTorque(shipEntity.physId, global_torque, JPH::EActivation::Activate);
             }
             else
             {
@@ -99,19 +102,19 @@ namespace MaxDoF::GameClient
                 const JPH::Vec3 local_torque(mCameraPitch * ControlPower, mCameraYaw * ControlPower, 0.0f); // Момент вокруг оси Y
 
                 // 2. Получаем текущую ориентацию (вращение) тела в мировом пространстве
-                JPH::Quat body_rotation = mBodyInterface->GetRotation(mShipEntity.physId);
+                JPH::Quat body_rotation = mBodyInterface->GetRotation(shipEntity.physId);
 
                 // 3. Переводим локальный вектор в глобальный (умножаем кватернион на вектор)
                 JPH::Vec3 global_torque = body_rotation * local_torque;
 
                 // Передаем момент по BodyID. Третий параметр автоматически будит тело, если оно спало.
-                mBodyInterface->AddTorque(mShipEntity.physId, global_torque, JPH::EActivation::Activate);
+                mBodyInterface->AddTorque(shipEntity.physId, global_torque, JPH::EActivation::Activate);
             }
 
             // МГНОВЕННАЯ СИНХРОНИЗАЦИЯ НОВОГО ВРАЩЕНИЯ В JOLT:
-            Ogre::Quaternion ogreQuat = mShipEntity.graphNode->getOrientation();
+            Ogre::Quaternion ogreQuat = shipEntity.graphNode->getOrientation();
             JPH::Quat joltQuat( ogreQuat.x, ogreQuat.y, ogreQuat.z, ogreQuat.w );
-            mBodyInterface->SetRotation(mShipEntity.physId, joltQuat, JPH::EActivation::Activate);
+            mBodyInterface->SetRotation(shipEntity.physId, joltQuat, JPH::EActivation::Activate);
 
             result = true;
         }
@@ -124,7 +127,7 @@ namespace MaxDoF::GameClient
 
             // Переводим локальный вектор тяги двигателей (например, W - движение вперед)
             // в мировые координаты на основе текущего вращения корабля в Ogre
-            Ogre::Vector3 globalThrustDirection = mShipEntity.graphNode->getOrientation() * localThrust;
+            Ogre::Vector3 globalThrustDirection = shipEntity.graphNode->getOrientation() * localThrust;
 
             JPH::Vec3 joltForce(
                 globalThrustDirection.x * mThrustPower,
@@ -132,7 +135,7 @@ namespace MaxDoF::GameClient
                 globalThrustDirection.z * mThrustPower
             );
 
-            mBodyInterface->AddForce(mShipEntity.physId, joltForce);
+            mBodyInterface->AddForce(shipEntity.physId, joltForce);
             result = true;
         }
 
