@@ -25,6 +25,6 @@ namespace MaxDoF::Common::LevelGraphs
 
         Pipe pipe;
         pipe.SetVetricesAndInterfaces(pBegin, pEnd, cPipeRadius);
-        pipe.FillGraph(graph, {false, true}, {Types::LevelGraphs::InterfaceType::SolidRock, Types::LevelGraphs::InterfaceType::SolidRock});
+        pipe.FillGraph(graph, {false, true}, true, {Types::LevelGraphs::InterfaceType::SolidRock, Types::LevelGraphs::InterfaceType::SolidRock});
     }
 }

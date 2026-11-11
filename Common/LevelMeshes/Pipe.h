@@ -34,6 +34,6 @@
         void SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, double radius);
         void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface fitst, double length, double radius);
         void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface first, Types::LevelGraphs::TriangleInterface second);
-        void FillGraph(Types::LevelGraphs::PureLevelGraph &, std::array<bool, 2> invertInterfaces, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes);
+        void FillGraph(Types::LevelGraphs::PureLevelGraph &, std::array<bool, 2> invertInterfaces, bool invert, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes);
     };
 }

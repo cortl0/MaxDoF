@@ -54,57 +54,102 @@ namespace MaxDoF::Common::LevelMeshes
             meshData.indices.push_back(meshData.vertices.size() - 1);
         }
     }
-
+    
     void MeshBuilder::AddAntiprism(MaxDoF::Common::Types3d::MeshData& meshData,
-    const Types::LevelGraphs::PureLevelGraph& graph,
-    const Types::LevelGraphs::VolumeNode& pipeNode,
-    const Types::LevelGraphs::TriangleInterface& begin,
-    const Types::LevelGraphs::TriangleInterface& end)
+        const Types::LevelGraphs::PureLevelGraph& graph,
+        const Types::LevelGraphs::VolumeNode& pipeNode,
+        const Types::LevelGraphs::TriangleInterface& begin,
+        const Types::LevelGraphs::TriangleInterface& end)
     {
         const auto& interface = graph.interfaces[begin.id];
         const auto& interfaceEnd = graph.interfaces[end.id];
 
         // 1. Заполняем позиции вершин для обоих торцов
-        std::array<UVVertex, 3> a, b;
+        std::array<JPH::DVec3, 3> posA, rawPosB;
 
         for (int i = 0; i < 3; ++i)
         {
-            a[i].pos = graph.vertices[interface.verticesIndices[i]];
-            b[i].pos = graph.vertices[interfaceEnd.verticesIndices[i]];
+            posA[i] = graph.vertices[interface.verticesIndices[i]];
+            rawPosB[i] = graph.vertices[interfaceEnd.verticesIndices[i]];
         }
 
-        if (pipeNode.inverted)
+    if (pipeNode.inverted)
+    {
+        std::swap(posA.at(1), posA.at(2));
+        std::swap(rawPosB.at(1), rawPosB.at(2));
+    }
+
+        // 2. Выравниваем торцы по минимальному расстоянию (убираем скручивание 120°/240°)
+        int bestShift = 0;
+        double minTotalDist = 1e30;
+        for (int shift = 0; shift < 3; ++shift)
         {
-            auto tempA = a[1].pos;
-            a[1].pos = a[2].pos;
-            a[2].pos = tempA;
-
-            auto tempB = b[1].pos;
-            b[1].pos = b[2].pos;
-            b[2].pos = tempB;
+            double distSum = 0.0;
+            for (int i = 0; i < 3; ++i)
+            {
+                distSum += (rawPosB[(i + shift) % 3] - posA[i]).Length();
+            }
+            if (distSum < minTotalDist)
+            {
+                minTotalDist = distSum;
+                bestShift = shift;
+            }
         }
 
-        // 2. Вычисляем реальные размеры в метрах (1.0f в координатах = 1 метр)
-        // Расстояние по окружности для каждой вершины (учитывает даже разносторонние треугольники)
-        float u0 = 0.0f;
-        float u1 = (a[1].pos - a[0].pos).Length();
-        float u2 = u1 + (a[2].pos - a[1].pos).Length();
+        std::array<JPH::DVec3, 3> posB;
+        for (int i = 0; i < 3; ++i)
+        {
+            posB[i] = rawPosB[(i + bestShift) % 3];
+        }
 
-        // Длина сегмента антипризмы между центрами торцов
-        auto centerA = (a[0].pos + a[1].pos + a[2].pos) / 3.0f;
-        auto centerB = (b[0].pos + b[1].pos + b[2].pos) / 3.0f;
-        float segmentLength = (centerB - centerA).Length();
+        // 3. Строим каждую из 3 боковых сторон со своей локальной 2D-разверткой 1:1 в метрах
+        for (int i = 0; i < 3; ++i)
+        {
+            int next = (i + 1) % 3;
 
-        // 3. Назначаем UV-координаты в метрах (1 метр = 1.0 UV)
-        a[0].u = u0; a[0].v = 0.0f;
-        a[1].u = u1; a[1].v = 0.0f;
-        a[2].u = u2; a[2].v = 0.0f;
+            const auto& a0 = posA[i];
+            const auto& a1 = posA[next];
+            const auto& b0 = posB[i];
+            const auto& b1 = posB[next];
 
-        b[0].u = u0; b[0].v = segmentLength;
-        b[1].u = u1; b[1].v = segmentLength;
-        b[2].u = u2; b[2].v = segmentLength;
+            // Локальная ось U идет строго вдоль нижнего ребра стороны (a0 -> a1)
+            JPH::DVec3 edgeU = a1 - a0;
+            double lenU = edgeU.Length();
+            JPH::DVec3 axisU = (lenU > 0.0001) ? (edgeU / lenU) : edgeU;
 
-        AddAntiprism(meshData, false, a, b);
+            // Вектор подъема вдоль боковой стороны
+            JPH::DVec3 edgeUp = b0 - a0;
+
+            // Нормаль боковой грани и перпендикулярная ось V строго в плоскости этой грани
+            JPH::DVec3 normal = edgeU.Cross(edgeUp);
+            double normLen = normal.Length();
+            if (normLen > 0.0001)
+                normal = normal / normLen;
+
+            JPH::DVec3 axisV = normal.Cross(axisU);
+
+            // Проецируем все 4 угла боковой стороны на её локальные оси U и V с явным кастом в float
+            UVVertex va0{ a0, 0.0f, 0.0f };
+            UVVertex va1{ a1, static_cast<float>(lenU), 0.0f };
+
+            JPH::DVec3 diffB0 = b0 - a0;
+            UVVertex vb0{
+                b0,
+                static_cast<float>(diffB0.Dot(axisU)),
+                static_cast<float>(diffB0.Dot(axisV))
+            };
+
+            JPH::DVec3 diffB1 = b1 - a0;
+            UVVertex vb1{
+                b1,
+                static_cast<float>(diffB1.Dot(axisU)),
+                static_cast<float>(diffB1.Dot(axisV))
+            };
+
+            // Добавляем 2 треугольника текущей стороны
+            AddTriangle(meshData, va0, va1, vb1);
+            AddTriangle(meshData, va0, vb1, vb0);
+        }
     }
 
     // 3. Генерация вершин торца (без изменений)

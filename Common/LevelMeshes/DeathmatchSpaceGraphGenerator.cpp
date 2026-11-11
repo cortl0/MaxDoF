@@ -51,12 +51,12 @@ namespace MaxDoF::Common::LevelGraphs
                 graph.interfaces[graph.nodes[tetrahedronIndexSecond].orientedInterfaces[i].interfaceId]
             );
 
-            pipe.FillGraph(graph, {false, true}, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::UnDefined});
+            pipe.FillGraph(graph, {false, true}, true, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::UnDefined});
 
-            auto& pipeGraph = graph.nodes.back();
-            pipeGraph.inverted = true;
-            pipeGraph.orientedInterfaces.back().inverted = false;
-            pipeGraph.orientedInterfaces.front().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
+            // auto& pipeGraph = graph.nodes.back();
+            // pipeGraph.inverted = true;
+            // pipeGraph.orientedInterfaces.back().inverted = false;
+            // pipeGraph.orientedInterfaces.front().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
         }
     }
 }

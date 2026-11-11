@@ -69,7 +69,8 @@ namespace MaxDoF::Common::LevelGraphs
         };
     }
 
-    void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<bool, 2> invertInterfaces, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes)
+    void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<bool, 2> invertInterfaces, bool invert,
+        std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes)
     {
         const auto baseVertexIndex = graph.vertices.size();
         const auto baseInterfaceIndex = graph.interfaces.size();
@@ -105,7 +106,8 @@ namespace MaxDoF::Common::LevelGraphs
                         .interfaceType = interfaceTypes.back(),
                         .inverted = invertInterfaces.back()
                     }
-                }
+                },
+                .inverted = invert
             }
         );
     }

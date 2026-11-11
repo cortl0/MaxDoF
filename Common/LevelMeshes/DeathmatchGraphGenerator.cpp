@@ -39,12 +39,7 @@ namespace MaxDoF::Common::LevelGraphs
                 cArenaRadius
             );
 
-            pipe.FillGraph(graph, {false, true}, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::SolidRock});
-
-            auto& pipeGraph = graph.nodes.back();
-            pipeGraph.inverted = true;
-            pipeGraph.orientedInterfaces.back().inverted = false;
-            pipeGraph.orientedInterfaces.front().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
+            pipe.FillGraph(graph, {true, false}, false, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::SolidRock});
         }
     }
 }
