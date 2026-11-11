@@ -3,11 +3,11 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/GameLogic/BattleLogic.h"
+#include "Common/GameLogic/BattleLogic.h"
 
-namespace MaxDoF::GameCommon::GameLogic
+namespace MaxDoF::Common::GameLogic
 {
-    BattleLogic::BattleLogic(GameCommon::World::Manager& worldManager) : mWorldManager(worldManager)
+    BattleLogic::BattleLogic(Common::World::Manager& worldManager) : mWorldManager(worldManager)
     {
     }
 

@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "GameCommon/Types/Types3d.h"
-#include "GameCommon/Types/LevelGraphStructures.h"
+#include "Common/Types/Types3d.h"
+#include "Common/Types/LevelGraphStructures.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::Common::LevelGraphs
 {
     class Pipe
     {

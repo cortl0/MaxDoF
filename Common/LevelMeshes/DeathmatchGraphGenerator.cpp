@@ -4,14 +4,14 @@
 // See LICENSE file in the project root for full license information
 
 #include "DeathmatchGraphGenerator.h"
-#include "GameCommon/LevelMeshes/MeshBuilder.h"
+#include "Common/LevelMeshes/MeshBuilder.h"
 #include "MeshBuilder.h"
 #include "Pipe.h"
 #include "Tetrahedron.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::Common::LevelGraphs
 {
-    void DeathmatchGraphGenerator::GenerateGraph(GameCommon::Types::LevelGraphs::PureLevelGraph& graph)
+    void DeathmatchGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph)
     {
         const float cArenaRadius = 50.0f;
 

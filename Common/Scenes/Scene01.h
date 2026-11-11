@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "GameCommon/Scenes/Scene.h"
+#include "Common/Scenes/Scene.h"
 
-namespace MaxDoF::GameCommon::Scenes
+namespace MaxDoF::Common::Scenes
 {
     class Scene01 : public Scene
     {

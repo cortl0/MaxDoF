@@ -7,12 +7,12 @@
 
 #include "version.h"
 
-#include "GameServer/MdfServer.h"
+#include "Server/MdfServer.h"
 
 int main()
 {
     std::cout << "MaxDoF Server Version: " << MaxDoF_VERSION_STRING << std::endl;
-    MaxDoF::GameServer::MdfServer mMdfServer;
+    MaxDoF::Server::MdfServer mMdfServer;
 #ifdef MAXDOF_CLIENT_BUILD
     std::cout << "Hello, World!" << std::endl;
 #endif

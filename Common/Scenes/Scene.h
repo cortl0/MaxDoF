@@ -5,22 +5,22 @@
 
 #pragma once
 
-#include "GameClient/Ships/Ship.h"
-#include "GameCommon/World/Manager.h"
+#include "Game/Ships/Ship.h"
+#include "Common/World/Manager.h"
 
-namespace MaxDoF::GameCommon::Scenes
+namespace MaxDoF::Common::Scenes
 {
     class Scene
     {
     protected:
         World::Manager& mWorldManager;
-        GameClient::Ships::Ship* mShip;
+        Game::Ships::Ship* mShip;
 
     public:
         Scene(World::Manager&);
         virtual ~Scene();
         virtual void createScene() = 0;
         virtual Types::Entity& createShipEntity() = 0;
-        GameClient::Ships::Ship& getShip() { return *mShip; }
+        Game::Ships::Ship& getShip() { return *mShip; }
     };
 }

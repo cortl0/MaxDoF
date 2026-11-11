@@ -3,19 +3,19 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/World/Manager.h"
+#include "Common/World/Manager.h"
 
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
 
 #ifdef MAXDOF_CLIENT_BUILD
-#include "GameClient/Utils/Converters.h"
+#include "Game/Utils/Converters.h"
 #endif
 
-#include "GameCommon/Utils/SystemUtils.h"
+#include "Common/Utils/SystemUtils.h"
 
-namespace MaxDoF::GameCommon::World
+namespace MaxDoF::Common::World
 {
     Manager::Manager()
 #ifdef MAXDOF_CLIENT_BUILD
@@ -98,7 +98,7 @@ namespace MaxDoF::GameCommon::World
             entity.graphNode->setPosition(localPos.GetX(), localPos.GetY(), localPos.GetZ());
             entity.graphNode->setOrientation(Ogre::Quaternion(rotation.GetW(), rotation.GetX(), rotation.GetY(), rotation.GetZ()));
         }
-        mGraphics.setPositionOfGlobalStaticNode(GameClient::Utils::JphRVec3ToOgreVector3(-shipPosition));
+        mGraphics.setPositionOfGlobalStaticNode(Game::Utils::JphRVec3ToOgreVector3(-shipPosition));
 #endif
     }
 
@@ -135,12 +135,12 @@ namespace MaxDoF::GameCommon::World
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
-            mGraphics.createCube(MaxDoF::GameClient::Utils::PhysPoseToGraphPose(pose), MaxDoF::GameClient::Utils::JphVec3ToOgreVector3(halfSize)),
+            mGraphics.createCube(MaxDoF::Game::Utils::PhysPoseToGraphPose(pose), MaxDoF::Game::Utils::JphVec3ToOgreVector3(halfSize)),
 #endif
             mPhysics.createBox(userData, pose, halfSize, mass, dynamic, onCCD));
     }
 
-    Types::Entity& Manager::createMesh(const GameCommon::Types3d::MeshData& meshData)
+    Types::Entity& Manager::createMesh(const Common::Types3d::MeshData& meshData)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
@@ -153,7 +153,7 @@ namespace MaxDoF::GameCommon::World
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
-            mGraphics.createSphere( MaxDoF::GameClient::Utils::PhysPoseToGraphPose( pose ), radius ),
+            mGraphics.createSphere( MaxDoF::Game::Utils::PhysPoseToGraphPose( pose ), radius ),
 #endif
             mPhysics.createSphere(userData, pose, radius, mass, onCCD));
     }

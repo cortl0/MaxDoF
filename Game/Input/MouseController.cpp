@@ -3,9 +3,9 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/Input/MouseController.h"
+#include "Game/Input/MouseController.h"
 
-namespace MaxDoF::GameClient::Input
+namespace MaxDoF::Game::Input
 {
     MouseController::MouseController() :
         mRelativeX( 0.0f ),
@@ -38,4 +38,4 @@ namespace MaxDoF::GameClient::Input
         uint32_t mouseState = SDL_GetMouseState(&mouseX, &mouseY);
         return (mouseState & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
     }
-}  // namespace MaxDoF::GameClient::Input
+}  // namespace MaxDoF::Game::Input

@@ -3,13 +3,13 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/Ships/Dashboard.h"
+#include "Game/Ships/Dashboard.h"
 
 #include <Ogre.h>
 
-namespace MaxDoF::GameClient::Ships
+namespace MaxDoF::Game::Ships
 {
-    Dashboard::Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position, GameClient::World::Graphics& graphics)
+    Dashboard::Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position, Game::World::Graphics& graphics)
         : mSceneMgr(sceneMgr)
         , mGraphics(graphics)
     {
@@ -17,28 +17,28 @@ namespace MaxDoF::GameClient::Ships
         mDashboardNode->setPosition(position);
         mDashboardNode->pitch(-Ogre::Radian(position.y / position.z));
 
-        deskCube.node = mGraphics.createCube(MaxDoF::GameCommon::Types::GraphPose{
+        deskCube.node = mGraphics.createCube(MaxDoF::Common::Types::GraphPose{
             .position = {0.0f, 0.0f, 0.0f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
         deskCube.node->setScale(0.05f, 0.03f, 0.001f);
         //deskCube.entity->setCastShadows(false);
 
-        gyroscopeCube.node = mGraphics.createCube(MaxDoF::GameCommon::Types::GraphPose{
+        gyroscopeCube.node = mGraphics.createCube(MaxDoF::Common::Types::GraphPose{
             .position = {0.0f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
         gyroscopeCube.node->setScale(0.01f, 0.01f, 0.01f);
         //gyroscopeCube.entity->setCastShadows(false);
 
-        angularVelocityCube.node = mGraphics.createSphere(MaxDoF::GameCommon::Types::GraphPose{
+        angularVelocityCube.node = mGraphics.createSphere(MaxDoF::Common::Types::GraphPose{
             .position = {-0.015f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, 0.5f, mDashboardNode);
         angularVelocityCube.node->setScale(0.01f, 0.01f, 0.01f);
         //angularVelocityCube.entity->setCastShadows(false);
 
-        velocityCube.node = mGraphics.createSphere(MaxDoF::GameCommon::Types::GraphPose{
+        velocityCube.node = mGraphics.createSphere(MaxDoF::Common::Types::GraphPose{
             .position = {0.015f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, 0.5f, mDashboardNode);
@@ -92,7 +92,7 @@ namespace MaxDoF::GameClient::Ships
         return finalOri;
     }
 */
-    void Dashboard::update(const GameCommon::Types::Telemetry& telemetry)
+    void Dashboard::update(const Common::Types::Telemetry& telemetry)
     {
         auto shipOrientation = gyroscopeCube.node->getParent()->getParent()->getOrientation();
         auto gyroscopeOrientation = shipOrientation.Inverse();

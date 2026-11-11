@@ -10,9 +10,9 @@
 #include <vector>
 #include <cstdint>
 
-#include "GameCommon/Types/Types3d.h"
+#include "Common/Types/Types3d.h"
 
-namespace MaxDoF::GameCommon::Types::LevelGraphs
+namespace MaxDoF::Common::Types::LevelGraphs
 {
     using NodeKey = std::size_t;
     using TriangleInterfaceKey = std::size_t;

@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/World/Graphics.h"
+#include "Game/World/Graphics.h"
 
 #include <iostream>
 #include <OgreHlmsPbs.h>
@@ -12,9 +12,9 @@
 #include <OgreSceneManager.h>
 #include <OgreTextureGpuManager.h>
 
-#include "GameClient/Utils/MeshProcedures.h"
+#include "Game/Utils/MeshProcedures.h"
 
-namespace MaxDoF::GameClient::World
+namespace MaxDoF::Game::World
 {
     Graphics::Graphics( const Ogre::String &helpDescription ) :
         mTextOverleyManager(helpDescription),
@@ -176,7 +176,7 @@ namespace MaxDoF::GameClient::World
         createMaterials();
         Utils::createProceduralSphereV2(sceneManager, cOrtSphereMeshName, 0.5f, 16, 16);
         Utils::createProceduralCubeV2(sceneManager, cOrtCubeMeshName, 0.5f, 0.5f, 0.5f);
-        //Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, MaxDoF::GameCommon::Types::mMeshData);
+        //Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, MaxDoF::Common::Types::mMeshData);
         printAllMaterials();
 
         // Ogre::Item* item = sceneManager->createItem("cube_d.mesh");
@@ -189,19 +189,19 @@ namespace MaxDoF::GameClient::World
         globalStaticNode = sceneManager->getRootSceneNode()->createChildSceneNode(Ogre::SceneMemoryMgrTypes::SCENE_DYNAMIC);
     }
 
-    Ogre::SceneNode* Graphics::createCube(const GameCommon::Types::GraphPose& pose, const Ogre::Vector3& halfSize, Ogre::SceneNode* parent)
+    Ogre::SceneNode* Graphics::createCube(const Common::Types::GraphPose& pose, const Ogre::Vector3& halfSize, Ogre::SceneNode* parent)
     {
         auto* node = createShape(cOrtCubeMeshName, pose, parent);
         node->setScale(halfSize * 2.0f);
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createMesh(const GameCommon::Types3d::MeshData& meshData)
+    Ogre::SceneNode* Graphics::createMesh(const Common::Types3d::MeshData& meshData)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, meshData);
 
-        return createShape(cAsteroidMeshName, MaxDoF::GameCommon::Types::GraphPose{
+        return createShape(cAsteroidMeshName, MaxDoF::Common::Types::GraphPose{
             .position = Ogre::Vector3::ZERO,
             .orientation = Ogre::Quaternion::IDENTITY
         });
@@ -223,7 +223,7 @@ namespace MaxDoF::GameClient::World
     }
 #endif
 
-    Ogre::SceneNode* Graphics::createShape(const Ogre::String& meshName, const GameCommon::Types::GraphPose& pose, Ogre::SceneNode* parent)
+    Ogre::SceneNode* Graphics::createShape(const Ogre::String& meshName, const Common::Types::GraphPose& pose, Ogre::SceneNode* parent)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         Ogre::SceneNode* node;
@@ -246,7 +246,7 @@ namespace MaxDoF::GameClient::World
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createSphere(const GameCommon::Types::GraphPose& pose, float radius, Ogre::SceneNode* parent)
+    Ogre::SceneNode* Graphics::createSphere(const Common::Types::GraphPose& pose, float radius, Ogre::SceneNode* parent)
     {
         auto* node = createShape(cOrtSphereMeshName, pose, parent);
         node->setScale(Ogre::Vector3::UNIT_SCALE * radius * 2.0f);

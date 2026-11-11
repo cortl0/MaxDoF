@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "GameCommon/Types/LevelGraphStructures.h"
+#include "Common/Types/LevelGraphStructures.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::Common::LevelGraphs
 {
     class TetrahedronGraphGenerator
     {

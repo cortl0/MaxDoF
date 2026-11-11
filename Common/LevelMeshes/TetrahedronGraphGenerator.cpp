@@ -5,16 +5,16 @@
 
 #include "TetrahedronGraphGenerator.h"
 
-#include "GameCommon/LevelMeshes/MeshBuilder.h"
+#include "Common/LevelMeshes/MeshBuilder.h"
 #include "MeshBuilder.h"
 #include "TetrahedronGraphGenerator.h"
 #include "Tetrahedron.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::Common::LevelGraphs
 {
-    void TetrahedronGraphGenerator::GenerateGraph(GameCommon::Types::LevelGraphs::PureLevelGraph& graph)
+    void TetrahedronGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph)
     {
-        using namespace MaxDoF::GameCommon::LevelGraphs;
+        using namespace MaxDoF::Common::LevelGraphs;
 
         // 1. РАДИУС НАШЕЙ ЕДИНСТВЕННОЙ КОМНАТЫ
         const float cArenaRadius = 50.0f;

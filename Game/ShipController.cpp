@@ -3,17 +3,17 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/ShipController.h"
+#include "Game/ShipController.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
 
-#include "GameCommon/Utils/Converters.h"
-#include "GameCommon/Types/Telemetry.h"
+#include "Common/Utils/Converters.h"
+#include "Common/Types/Telemetry.h"
 
-namespace MaxDoF::GameClient
+namespace MaxDoF::Game
 {
-    ShipController::ShipController(GameClient::Ships::Ship& ship, JPH::BodyInterface* bodyInterface) :
+    ShipController::ShipController(Game::Ships::Ship& ship, JPH::BodyInterface* bodyInterface) :
         mShip(ship),
         mBodyInterface(bodyInterface),
         mThrustPower(10000.0f),
@@ -21,38 +21,38 @@ namespace MaxDoF::GameClient
     {
     }
 
-    GameCommon::Types::Telemetry ShipController::ShipController::getTelemetry(float timeDelta)
+    Common::Types::Telemetry ShipController::ShipController::getTelemetry(float timeDelta)
     {
         const auto& shipEntity = mShip.getEntity();
         JPH::Vec3 position = JPH::Vec3(mBodyInterface->GetPosition(shipEntity.physId));
         JPH::Quat orientation = mBodyInterface->GetRotation(shipEntity.physId);
         JPH::Vec3 floatDirection = orientation * -JPH::Vec3::sAxisZ();
         JPH::RVec3 direction(floatDirection);
-        JPH::Vec3 angularVelocity = GameCommon::Utils::getLocalAngularVelocities(mShipPreviousOrientation, orientation, timeDelta);
-        JPH::Vec3 linearVelocity = GameCommon::Utils::getLocalLinearVelocities(mShipPreviousPosition, position, orientation, timeDelta);
+        JPH::Vec3 angularVelocity = Common::Utils::getLocalAngularVelocities(mShipPreviousOrientation, orientation, timeDelta);
+        JPH::Vec3 linearVelocity = Common::Utils::getLocalLinearVelocities(mShipPreviousPosition, position, orientation, timeDelta);
         mShipPreviousPosition = position;
         mShipPreviousOrientation = orientation;
-        return GameCommon::Types::Telemetry
+        return Common::Types::Telemetry
         {
-            .position = GameCommon::Types::Telemetry::Vector
+            .position = Common::Types::Telemetry::Vector
             {
                 .x = position.GetX(),
                 .y = position.GetY(),
                 .z = position.GetZ()
             },
-            .direction = GameCommon::Types::Telemetry::Vector
+            .direction = Common::Types::Telemetry::Vector
             {
                 .x = static_cast<float>(direction.GetX()),
                 .y = static_cast<float>(direction.GetY()),
                 .z = static_cast<float>(direction.GetZ())
             },
-            .localVelocity = GameCommon::Types::Telemetry::Vector
+            .localVelocity = Common::Types::Telemetry::Vector
             {
                 .x = linearVelocity.GetX(),
                 .y = linearVelocity.GetY(),
                 .z = linearVelocity.GetZ()
             },
-            .localAngularVelocity = GameCommon::Types::Telemetry::Vector
+            .localAngularVelocity = Common::Types::Telemetry::Vector
             {
                 .x = angularVelocity.GetX(),
                 .y = angularVelocity.GetY(),

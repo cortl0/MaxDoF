@@ -3,12 +3,12 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_GameClient_Input_ControllerTranslator_H_
-#define MaxDoF_GameClient_Input_ControllerTranslator_H_
+#ifndef MaxDoF_Game_Input_ControllerTranslator_H_
+#define MaxDoF_Game_Input_ControllerTranslator_H_
 
-#include "GameClient/ShipController.h"
+#include "Game/ShipController.h"
 
-namespace MaxDoF::GameClient::Input
+namespace MaxDoF::Game::Input
 {
     class KeyboardController;
     class MouseController;
@@ -21,6 +21,6 @@ namespace MaxDoF::GameClient::Input
             const MouseController* mouse
         );
     };
-}  // namespace MaxDoF::GameClient::Input
+}  // namespace MaxDoF::Game::Input
 
 #endif

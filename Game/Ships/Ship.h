@@ -7,36 +7,36 @@
 
 #ifdef MAXDOF_CLIENT_BUILD
 #include <OgreCamera.h>
-#include "GameClient/Ships/Dashboard.h"
+#include "Game/Ships/Dashboard.h"
 #endif
 
-#include "GameCommon/Types/Telemetry.h"
-#include "GameCommon/World/Manager.h"
+#include "Common/Types/Telemetry.h"
+#include "Common/World/Manager.h"
 
-namespace MaxDoF::GameClient::Ships
+namespace MaxDoF::Game::Ships
 {
     class Ship {
-        GameCommon::World::Manager& mWorldManager;
+        Common::World::Manager& mWorldManager;
 #ifdef MAXDOF_CLIENT_BUILD
-        GameClient::Ships::Dashboard mDashboard;
+        Game::Ships::Dashboard mDashboard;
         Ogre::SceneNode* lightNode;
         Ogre::Light* light;
 #endif
-        GameCommon::Types::Entity mEntity;
+        Common::Types::Entity mEntity;
 
     public:
         Ship(
-            GameCommon::World::Manager&,
+            Common::World::Manager&,
 #ifdef MAXDOF_CLIENT_BUILD
-            GameClient::World::Graphics&,
+            Game::World::Graphics&,
 #endif
-            const GameCommon::Types::Entity&);
+            const Common::Types::Entity&);
         ~Ship();
 #ifdef MAXDOF_CLIENT_BUILD
         void connectCameraToShip(Ogre::Camera*);
 #endif
-        const GameCommon::Types::Entity& getEntity() const { return mEntity; }
-        void update(float timeSinceLastFrame, const GameCommon::Types::Telemetry&);
+        const Common::Types::Entity& getEntity() const { return mEntity; }
+        void update(float timeSinceLastFrame, const Common::Types::Telemetry&);
         void CreateBullet(float timeSinceLast, bool needCreate);
     };
 }

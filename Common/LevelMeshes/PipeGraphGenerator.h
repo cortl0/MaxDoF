@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "GameCommon/Types/LevelGraphStructures.h"
+#include "Common/Types/LevelGraphStructures.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::Common::LevelGraphs
 {
     class PipeGraphGenerator
     {
@@ -23,7 +23,7 @@ namespace MaxDoF::GameCommon::LevelGraphs
          *
          * @param graph Ссылка на структуру графа уровня для записи.
          */
-        static void GenerateGraph(GameCommon::Types::LevelGraphs::PureLevelGraph& graph);
+        static void GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph);
     };
 }
 

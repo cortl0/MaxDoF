@@ -2,7 +2,7 @@
 // https://github/cortl0/MaxDoF
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
-#include "GameClient/Utils/MeshProcedures.h"
+#include "Game/Utils/MeshProcedures.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Vec3.h>
@@ -13,10 +13,10 @@
 #include <OgreMeshManager.h>
 #include <OgreMeshManager2.h>
 
-#include "GameCommon/Utils/SystemUtils.h"
-#include "GameCommon/Types/Types3d.h"
+#include "Common/Utils/SystemUtils.h"
+#include "Common/Types/Types3d.h"
 
-namespace MaxDoF::GameClient::Utils
+namespace MaxDoF::Game::Utils
 {
     bool testName(const Ogre::String &meshName)
     {
@@ -151,7 +151,7 @@ namespace MaxDoF::GameClient::Utils
         sceneManager->destroyManualObject(manual);
     }
 
-    void createMeshFromMeshData(Ogre::SceneManager* sceneManager, const Ogre::String& meshName, const MaxDoF::GameCommon::Types3d::MeshData& meshData)
+    void createMeshFromMeshData(Ogre::SceneManager* sceneManager, const Ogre::String& meshName, const MaxDoF::Common::Types3d::MeshData& meshData)
     {
         if (Ogre::MeshManager::getSingleton().resourceExists(meshName))
         {
@@ -172,7 +172,7 @@ namespace MaxDoF::GameClient::Utils
         manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST);
 
         // Счетчик добавленных графических вершин
-        GameCommon::Types3d::VerticesIndexKey vertexCounter = 0;
+        Common::Types3d::VerticesIndexKey vertexCounter = 0;
 
         // Идем строго тройками индексов (обрабатываем каждый треугольник отдельно)
         for (size_t i = 0; i < meshData.indices.size(); i += 3)

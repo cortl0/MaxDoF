@@ -3,9 +3,9 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/Scenes/Scene.h"
+#include "Common/Scenes/Scene.h"
 
-namespace MaxDoF::GameCommon::Scenes
+namespace MaxDoF::Common::Scenes
 {
     Scene::Scene(World::Manager& worldManager) :
         mWorldManager(worldManager)

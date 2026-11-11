@@ -3,19 +3,19 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/LevelMeshes/MeshBuilder.h"
+#include "Common/LevelMeshes/MeshBuilder.h"
 
 #include <array>
 #include <cstdint>
 #include <random>
 #include <vector>
 
-#include "GameCommon/LevelMeshes/Constants.h"
-#include "GameCommon/Utils/SystemUtils.h"
+#include "Common/LevelMeshes/Constants.h"
+#include "Common/Utils/SystemUtils.h"
 
-namespace MaxDoF::GameCommon::LevelMeshes
+namespace MaxDoF::Common::LevelMeshes
 {
-    void MeshBuilder::AddNonPlanarQuad(GameCommon::Types3d::MeshData& meshData, bool reverseDiagonal,
+    void MeshBuilder::AddNonPlanarQuad(Common::Types3d::MeshData& meshData, bool reverseDiagonal,
         const UVVertex& a, const UVVertex& b, const UVVertex& c, const UVVertex& d)
     {
         if(reverseDiagonal)
@@ -31,7 +31,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
     }
 
     void MeshBuilder::AddPipeWall(
-        GameCommon::Types3d::MeshData& meshData, bool reverseDiagonals,
+        Common::Types3d::MeshData& meshData, bool reverseDiagonals,
         const std::array<UVVertex, 3>& a, const std::array<UVVertex, 3>& b)
     {
         AddNonPlanarQuad(meshData, reverseDiagonals, a[1], a[0], b[0], b[1]);
@@ -39,12 +39,12 @@ namespace MaxDoF::GameCommon::LevelMeshes
         AddNonPlanarQuad(meshData, reverseDiagonals, a[0], a[2], b[2], b[0]);
     }
 
-    void MeshBuilder::AddTriangle(GameCommon::Types3d::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2)
+    void MeshBuilder::AddTriangle(Common::Types3d::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2)
     {
         std::array<UVVertex, 3> pts = { p0, p1, p2 };
         for (int i = 0; i < 3; ++i)
         {
-            MaxDoF::GameCommon::Types3d::MeshData::Vertex v;
+            MaxDoF::Common::Types3d::MeshData::Vertex v;
             v.x = pts[i].pos.GetX();
             v.y = pts[i].pos.GetY();
             v.z = pts[i].pos.GetZ();
@@ -57,7 +57,7 @@ namespace MaxDoF::GameCommon::LevelMeshes
         }
     }
 
-    void MeshBuilder::ConnectTriangles(MaxDoF::GameCommon::Types3d::MeshData& meshData,
+    void MeshBuilder::ConnectTriangles(MaxDoF::Common::Types3d::MeshData& meshData,
         const Types::LevelGraphs::PureLevelGraph& graph,
         const Types::LevelGraphs::VolumeNode& pipeNode,
         const Types::LevelGraphs::TriangleInterface& TriangleInterface,
@@ -177,10 +177,10 @@ namespace MaxDoF::GameCommon::LevelMeshes
 /*
     // Локальная утилита контроля вывернутости индивидуальной боковой стены
     void MeshBuilder::AddOrientedWallTriangle(
-        MaxDoF::GameCommon::LevelMeshes::MeshData& meshData,
-        const MaxDoF::GameCommon::LevelMeshes::MeshBuilder::UVVertex& p0,
-        const MaxDoF::GameCommon::LevelMeshes::MeshBuilder::UVVertex& p1,
-        const MaxDoF::GameCommon::LevelMeshes::MeshBuilder::UVVertex& p2,
+        MaxDoF::Common::LevelMeshes::MeshData& meshData,
+        const MaxDoF::Common::LevelMeshes::MeshBuilder::UVVertex& p0,
+        const MaxDoF::Common::LevelMeshes::MeshBuilder::UVVertex& p1,
+        const MaxDoF::Common::LevelMeshes::MeshBuilder::UVVertex& p2,
         const JPH::Vec3& localPipeCenter)
     {
         JPH::Vec3 e0 = p0.pos - localPipeCenter;
@@ -192,19 +192,19 @@ namespace MaxDoF::GameCommon::LevelMeshes
         // Возвращаем строгое и чистое сравнение с нулем
         if (volumeSign > 0.0f)
         {
-            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::AddTriangle(meshData, p0, p2, p1);
+            MaxDoF::Common::LevelMeshes::MeshBuilder::AddTriangle(meshData, p0, p2, p1);
         }
         else
         {
-            MaxDoF::GameCommon::LevelMeshes::MeshBuilder::AddTriangle(meshData, p0, p1, p2);
+            MaxDoF::Common::LevelMeshes::MeshBuilder::AddTriangle(meshData, p0, p1, p2);
         }
     }
 */
     void MeshBuilder::CreateMeshData(
-        GameCommon::Types3d::MeshData& meshData,
-        const GameCommon::Types::LevelGraphs::PureLevelGraph& graph)
+        Common::Types3d::MeshData& meshData,
+        const Common::Types::LevelGraphs::PureLevelGraph& graph)
     {
-        using namespace GameCommon::Types::LevelGraphs;
+        using namespace Common::Types::LevelGraphs;
 
         for(const auto& node : graph.nodes)
         {

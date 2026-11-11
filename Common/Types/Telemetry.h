@@ -3,10 +3,10 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_GameCommon_Types_Telemetry_H_
-#define MaxDoF_GameCommon_Types_Telemetry_H_
+#ifndef MaxDoF_Common_Types_Telemetry_H_
+#define MaxDoF_Common_Types_Telemetry_H_
 
-namespace MaxDoF::GameCommon::Types
+namespace MaxDoF::Common::Types
 {
     struct Telemetry
     {
@@ -21,6 +21,6 @@ namespace MaxDoF::GameCommon::Types
         Vector localVelocity;
         Vector localAngularVelocity;
     };
-}  // namespace MaxDoF::GameCommon::Types
+}  // namespace MaxDoF::Common::Types
 
 #endif

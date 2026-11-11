@@ -8,16 +8,16 @@
 #include <OgrePrerequisites.h>
 #include <GameState.h>
 
-#include "GameClient/TextOverleyManager.h"
+#include "Game/TextOverleyManager.h"
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/ControllerTranslator.h"
-#include "GameCommon/GameLogic/BattleLogic.h"
-#include "GameClient/ShipController.h"
-#include "GameCommon/Scenes/Scene01.h"
-#include "GameCommon/World/Manager.h"
+#include "Common/GameLogic/BattleLogic.h"
+#include "Game/ShipController.h"
+#include "Common/Scenes/Scene01.h"
+#include "Common/World/Manager.h"
 
-namespace MaxDoF::GameClient
+namespace MaxDoF::Game
 {
     class MdfGame : public Demo::GameState
     {
@@ -30,13 +30,13 @@ namespace MaxDoF::GameClient
         Demo::GraphicsSystem *mGraphicsSystem{ nullptr };
         TextOverleyManager mTextOverleyManager;
         const unsigned int mMaxBodiesLimit{ 2048 };
-        GameCommon::World::Manager mWorldManager;
+        Common::World::Manager mWorldManager;
         std::unique_ptr<ShipController> mShipController;
         Input::ControllerTranslator mInputTranslator;
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;
-        std::unique_ptr<GameCommon::Scenes::Scene> mScene;
-        GameCommon::GameLogic::BattleLogic mBattleLogic{mWorldManager};
+        std::unique_ptr<Common::Scenes::Scene> mScene;
+        Common::GameLogic::BattleLogic mBattleLogic{mWorldManager};
 
     public:
         MdfGame( const Ogre::String &helpDescription );

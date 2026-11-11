@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/TextOverleyManager.h"
+#include "Game/TextOverleyManager.h"
 
 #include <string>
 
@@ -16,7 +16,7 @@
 #include <OgreHlmsUnlit.h>
 #include <OgreHlmsUnlitDatablock.h>
 
-namespace MaxDoF::GameClient
+namespace MaxDoF::Game
 {
     TextOverleyManager::TextOverleyManager( const Ogre::String &helpDescription ) :
         mGraphicsSystem( 0 ),
@@ -62,7 +62,7 @@ namespace MaxDoF::GameClient
         overlay->show();
     }
 
-    void TextOverleyManager::generateDebugText( float timeSinceLast, const GameCommon::Types::Telemetry& telemetry )
+    void TextOverleyManager::generateDebugText( float timeSinceLast, const Common::Types::Telemetry& telemetry )
     {
         Ogre::String finalText;
         if( mDisplayHelpMode == 0 )
@@ -184,4 +184,4 @@ namespace MaxDoF::GameClient
         crosshairOverlay->show();
     }
 
-}  // namespace MaxDoF::GameClient
+}  // namespace MaxDoF::Game

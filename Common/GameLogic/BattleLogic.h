@@ -5,20 +5,20 @@
 
 #pragma once
 
-#include "GameCommon/World/ContactListener.h"
-#include "GameCommon/World/Manager.h"
+#include "Common/World/ContactListener.h"
+#include "Common/World/Manager.h"
 
-namespace MaxDoF::GameCommon::GameLogic
+namespace MaxDoF::Common::GameLogic
 {
     class BattleLogic
     {
-        GameCommon::World::Manager& mWorldManager;
-        GameCommon::World::MyContactListener mMyContactListener;
+        Common::World::Manager& mWorldManager;
+        Common::World::MyContactListener mMyContactListener;
 
     public:
-        BattleLogic(GameCommon::World::Manager&);
+        BattleLogic(Common::World::Manager&);
         ~BattleLogic();
-        GameCommon::World::MyContactListener& GetMyContactListener(){ return mMyContactListener; }
+        Common::World::MyContactListener& GetMyContactListener(){ return mMyContactListener; }
         void Update();
     };
 }

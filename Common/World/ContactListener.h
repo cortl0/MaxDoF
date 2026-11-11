@@ -11,7 +11,7 @@
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/Physics/Collision/ContactListener.h>
 
-namespace MaxDoF::GameCommon::World
+namespace MaxDoF::Common::World
 {
     struct ContactData
     {

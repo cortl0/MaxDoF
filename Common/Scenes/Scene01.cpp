@@ -3,14 +3,14 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/Scenes/Scene01.h"
+#include "Common/Scenes/Scene01.h"
 
-#include "GameCommon/LevelMeshes/MeshBuilder.h"
-#include "GameCommon/LevelMeshes/DeathmatchGraphGenerator.h"
-#include "GameCommon/LevelMeshes/PipeGraphGenerator.h"
-#include "GameCommon/LevelMeshes/TetrahedronGraphGenerator.h"
+#include "Common/LevelMeshes/MeshBuilder.h"
+#include "Common/LevelMeshes/DeathmatchGraphGenerator.h"
+#include "Common/LevelMeshes/PipeGraphGenerator.h"
+#include "Common/LevelMeshes/TetrahedronGraphGenerator.h"
 
-namespace MaxDoF::GameCommon::Scenes
+namespace MaxDoF::Common::Scenes
 {
     Scene01::Scene01(World::Manager& worldManager) :
         Scene(worldManager)
@@ -30,7 +30,7 @@ namespace MaxDoF::GameCommon::Scenes
                 .position = JPH::RVec3(-mapHalfSize, 0.0f, 0.0f),
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(GameCommon::Types3d::cUserDataNull, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
         }
 
         {
@@ -38,7 +38,7 @@ namespace MaxDoF::GameCommon::Scenes
                 .position = JPH::RVec3(mapHalfSize, 0.0f, 0.0f), // Смещение вправо по X
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(GameCommon::Types3d::cUserDataNull, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
         }
 
         {
@@ -46,7 +46,7 @@ namespace MaxDoF::GameCommon::Scenes
                 .position = JPH::RVec3(0.0f, -mapHalfSize, 0.0f), // Смещение вниз по Y
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(GameCommon::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
         }
 
         {
@@ -54,7 +54,7 @@ namespace MaxDoF::GameCommon::Scenes
                 .position = JPH::RVec3(0.0f, mapHalfSize, 0.0f), // Смещение вверх по Y
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(GameCommon::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
         }
 
         {
@@ -62,7 +62,7 @@ namespace MaxDoF::GameCommon::Scenes
                 .position = JPH::RVec3(0.0f, 0.0f, -mapHalfSize), // Смещение назад по Z
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(GameCommon::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
         }
 
         {
@@ -70,7 +70,7 @@ namespace MaxDoF::GameCommon::Scenes
                 .position = JPH::RVec3(0.0f, 0.0f, mapHalfSize), // Смещение вперед по Z
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(GameCommon::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
         }
     }
 
@@ -109,7 +109,7 @@ namespace MaxDoF::GameCommon::Scenes
                         .position = JPH::RVec3( i * 1.1f, j * 1.1f, -offset - k * 1.1f ),
                         .orientation = JPH::Quat::sIdentity()
                     };
-                    mWorldManager.createCube(GameCommon::Types3d::cUserDataNull, pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
+                    mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
                 }
 
         Types::PhysPose pose
@@ -117,36 +117,36 @@ namespace MaxDoF::GameCommon::Scenes
             .position = JPH::RVec3( 0.0f, 0.0f, -12.0f ),
             .orientation = JPH::Quat::sIdentity()
         };
-        mWorldManager.createSphere(GameCommon::Types3d::cUserDataNull, pose, 0.5f, 1000.0f);
+        mWorldManager.createSphere(Common::Types3d::cUserDataNull, pose, 0.5f, 1000.0f);
         auto& shipEntity = createShipEntity();
 #ifdef MAXDOF_CLIENT_BUILD
-        mShip = new GameClient::Ships::Ship(mWorldManager, mWorldManager.getGraphics(), shipEntity);
+        mShip = new Game::Ships::Ship(mWorldManager, mWorldManager.getGraphics(), shipEntity);
 #endif
 
-        GameCommon::Types3d::MeshData meshData;
-        GameCommon::Types::LevelGraphs::PureLevelGraph levelGraph;
+        Common::Types3d::MeshData meshData;
+        Common::Types::LevelGraphs::PureLevelGraph levelGraph;
 
         switch (2)
         {
         case 0:
-            GameCommon::LevelGraphs::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
+            Common::LevelGraphs::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
             break;
         case 1:
-            GameCommon::LevelGraphs::PipeGraphGenerator::GenerateGraph(levelGraph);
+            Common::LevelGraphs::PipeGraphGenerator::GenerateGraph(levelGraph);
             break;
         case 2:
-            GameCommon::LevelGraphs::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
+            Common::LevelGraphs::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
             break;
         default:
             break;
         }
 
-        MaxDoF::GameCommon::LevelMeshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
+        MaxDoF::Common::LevelMeshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
         mWorldManager.createMesh(meshData);
     }
 
     Types::Entity& Scene01::createShipEntity()
     {
-        return mWorldManager.createSphere(GameCommon::Types3d::cUserDataNull + 100, Types::cDefaultPhysPose, 0.5f, 1000.0f, true);
+        return mWorldManager.createSphere(Common::Types3d::cUserDataNull + 100, Types::cDefaultPhysPose, 0.5f, 1000.0f, true);
     }
 }

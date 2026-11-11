@@ -7,9 +7,9 @@
 
 #include <optional>
 
-#include "GameCommon/Types/Entity.h"
+#include "Common/Types/Entity.h"
 
-namespace MaxDoF::GameCommon::World
+namespace MaxDoF::Common::World
 {
     class Entites
     {

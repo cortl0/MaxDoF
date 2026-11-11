@@ -3,9 +3,9 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/World/Entities.h"
+#include "Common/World/Entities.h"
 
-namespace MaxDoF::GameCommon::World
+namespace MaxDoF::Common::World
 {
     void Entites::AddEntity(JPH::BodyID bodyId
 #ifdef MAXDOF_CLIENT_BUILD

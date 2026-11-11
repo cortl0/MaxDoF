@@ -5,7 +5,7 @@
 
 #pragma once
 
-namespace MaxDoF::GameCommon::LevelGraph
+namespace MaxDoF::Common::LevelGraph
 {
     // =========================================================================
     // БАЗОВЫЕ ФИЗИЧЕСКИЕ И ГЕОМЕТРИЧЕСКИЕ КОНСТАНТЫ УРОВНЯ

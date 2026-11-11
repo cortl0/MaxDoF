@@ -3,12 +3,12 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_GameClient_Input_MouseController_H_
-#define MaxDoF_GameClient_Input_MouseController_H_
+#ifndef MaxDoF_Game_Input_MouseController_H_
+#define MaxDoF_Game_Input_MouseController_H_
 
 #include <SDL_events.h>
 
-namespace MaxDoF::GameClient::Input
+namespace MaxDoF::Game::Input
 {
     class MouseController
     {
@@ -26,6 +26,6 @@ namespace MaxDoF::GameClient::Input
         bool isLeftButtonPressed() const;
         bool isRightButtonPressed() const;
     };
-}  // namespace MaxDoF::GameClient::Input
+}  // namespace MaxDoF::Game::Input
 
 #endif

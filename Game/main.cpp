@@ -10,7 +10,7 @@
 #include <OgreRoot.h>
 #include <OgreWindow.h>
 
-#include "GameClient/MdfGame.h"
+#include "Game/MdfGame.h"
 
 // Declares WinMain / main
 #include "MainEntryPointHelper.h"
@@ -49,7 +49,7 @@ int mainApp( int argc, const char *argv[] )
     return Demo::MainEntryPoints::mainAppSingleThreaded( DEMO_MAIN_ENTRY_PARAMS );
 }
 
-namespace MaxDoF::GameClient
+namespace MaxDoF::Game
 {
     class MaxDoFGraphicsSystem final : public Demo::GraphicsSystem
     {
@@ -188,7 +188,7 @@ namespace MaxDoF::GameClient
 #endif
         }
     };
-}  // namespace MaxDoF::GameClient
+}  // namespace MaxDoF::Game
 
 namespace Demo
 {
@@ -196,9 +196,9 @@ namespace Demo
                                          GraphicsSystem **outGraphicsSystem,
                                          GameState **outLogicGameState, LogicSystem **outLogicSystem )
     {
-        MaxDoF::GameClient::MdfGame *gfxGameState = new MaxDoF::GameClient::MdfGame( "MaxDoF Client" );
+        MaxDoF::Game::MdfGame *gfxGameState = new MaxDoF::Game::MdfGame( "MaxDoF Client" );
 
-        GraphicsSystem *graphicsSystem = new MaxDoF::GameClient::MaxDoFGraphicsSystem( gfxGameState );
+        GraphicsSystem *graphicsSystem = new MaxDoF::Game::MaxDoFGraphicsSystem( gfxGameState );
 
         gfxGameState->_notifyGraphicsSystem( graphicsSystem );
 

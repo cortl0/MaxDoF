@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/World/ContactListener.h"
+#include "Common/World/ContactListener.h"
 
 #include <iostream>
 
@@ -12,11 +12,11 @@
 #include <Jolt/Physics/Collision/ContactListener.h>
 
 #ifdef MAXDOF_CLIENT_BUILD
-#include "GameClient/Utils/Converters.h"
+#include "Game/Utils/Converters.h"
 #include "ContactListener.h"
 #endif
 
-namespace MaxDoF::GameCommon::World
+namespace MaxDoF::Common::World
 {
     void MyContactListener::OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold, JPH::ContactSettings &ioSettings)
     {

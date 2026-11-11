@@ -7,10 +7,10 @@
 
 #include <GraphicsSystem.h>
 
-#include "GameClient/TextOverleyManager.h"
-#include "GameCommon/Types/Types3d.h"
-#include "GameCommon/Types/Poses.h"
-namespace MaxDoF::GameClient::World
+#include "Game/TextOverleyManager.h"
+#include "Common/Types/Types3d.h"
+#include "Common/Types/Poses.h"
+namespace MaxDoF::Game::World
 {
     class Graphics
     {
@@ -34,11 +34,11 @@ namespace MaxDoF::GameClient::World
         void initialize();
         void changeTexture(Ogre::Item*, const Ogre::String& newTextureFileName);
         void changeUniqueTexture(Ogre::Item*, const Ogre::String& newTextureFileName, const Ogre::String& uniqueMaterialName);
-        Ogre::SceneNode* createCube(const GameCommon::Types::GraphPose&, const Ogre::Vector3& halfSize, Ogre::SceneNode* parent = nullptr);
-        Ogre::SceneNode* createMesh(const GameCommon::Types3d::MeshData& meshData);
+        Ogre::SceneNode* createCube(const Common::Types::GraphPose&, const Ogre::Vector3& halfSize, Ogre::SceneNode* parent = nullptr);
+        Ogre::SceneNode* createMesh(const Common::Types3d::MeshData& meshData);
         Ogre::SceneNode* createPointLight(Ogre::Vector3 position);
-        Ogre::SceneNode* createShape( const Ogre::String& meshName, const GameCommon::Types::GraphPose&, Ogre::SceneNode* parent = nullptr);
-        Ogre::SceneNode* createSphere(const GameCommon::Types::GraphPose&, float radius, Ogre::SceneNode* parent = nullptr);
+        Ogre::SceneNode* createShape( const Ogre::String& meshName, const Common::Types::GraphPose&, Ogre::SceneNode* parent = nullptr);
+        Ogre::SceneNode* createSphere(const Common::Types::GraphPose&, float radius, Ogre::SceneNode* parent = nullptr);
         void setPositionOfGlobalStaticNode(const Ogre::Vector3&);
         void printAllMaterials();
     };

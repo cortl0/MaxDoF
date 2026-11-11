@@ -5,15 +5,15 @@
 
 #include "PipeGraphGenerator.h"
 
-#include "GameCommon/LevelMeshes/MeshBuilder.h"
+#include "Common/LevelMeshes/MeshBuilder.h"
 #include "MeshBuilder.h"
 #include "Pipe.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::Common::LevelGraphs
 {
-    void PipeGraphGenerator::GenerateGraph(GameCommon::Types::LevelGraphs::PureLevelGraph& graph)
+    void PipeGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph)
     {
-        using namespace MaxDoF::GameCommon::LevelGraphs;
+        using namespace MaxDoF::Common::LevelGraphs;
 
         // 1. КОНСТАНТЫ СТРОГОЙ ГЕОМЕТРИИ ТРУБЫ
         const float cPipeRadius = 1.732f*2;     // Радиус сечения туннеля для 1м корабля

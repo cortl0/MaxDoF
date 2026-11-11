@@ -9,10 +9,10 @@
 #include <Jolt/Physics/Body/BodyInterface.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
-#include "GameCommon/Types/Types3d.h"
-#include "GameCommon/Types/Poses.h"
+#include "Common/Types/Types3d.h"
+#include "Common/Types/Poses.h"
 
-namespace MaxDoF::GameCommon::World
+namespace MaxDoF::Common::World
 {
     class Physics
     {

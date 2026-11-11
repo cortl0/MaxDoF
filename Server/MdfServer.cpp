@@ -3,11 +3,11 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameServer/MdfServer.h"
+#include "Server/MdfServer.h"
 
-#include "GameCommon/Scenes/Scene01.h"
+#include "Common/Scenes/Scene01.h"
 
-namespace MaxDoF::GameServer
+namespace MaxDoF::Server
 {
     MdfServer::MdfServer()
     {
@@ -19,10 +19,10 @@ namespace MaxDoF::GameServer
 
     void MdfServer::createScene01()
     {
-        mScene = std::make_unique<GameCommon::Scenes::Scene01>(mWorldManager);
+        mScene = std::make_unique<Common::Scenes::Scene01>(mWorldManager);
         // mWorldManager.initialize( mMaxBodiesLimit );
         mScene->createScene();
         // mShip = mScene->createShip();
     }
 
-}  // namespace MaxDoF::GameServer
+}  // namespace MaxDoF::Server

@@ -3,9 +3,9 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/Utils/Converters.h"
+#include "Common/Utils/Converters.h"
 
-namespace MaxDoF::GameCommon::Utils
+namespace MaxDoF::Common::Utils
 {
     JPH::Vec3 getLocalAngularVelocities(const JPH::Quat& qPrev, const JPH::Quat& qCurr, float dt)
     {
@@ -48,4 +48,4 @@ namespace MaxDoF::GameCommon::Utils
 
         return localVelocity;
     }
-}  // namespace MaxDoF::GameCommon::Utils
+}  // namespace MaxDoF::Common::Utils

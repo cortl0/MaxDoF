@@ -9,7 +9,7 @@
 // #include <Jolt/Math/Quat.h>
 #include <Jolt/Math/Real.h>
 
-namespace MaxDoF::GameCommon::Types3d
+namespace MaxDoF::Common::Types3d
 {
     inline JPH::uint64 cUserDataNull = reinterpret_cast<JPH::uint64>(nullptr);
     using Vertex = JPH::RVec3;

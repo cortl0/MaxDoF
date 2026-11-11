@@ -9,14 +9,14 @@
 
 #include <OgreSceneManager.h>
 
-#include "GameClient/World/Graphics.h"
-#include "GameCommon/Types/Telemetry.h"
+#include "Game/World/Graphics.h"
+#include "Common/Types/Telemetry.h"
 
-namespace MaxDoF::GameClient::Ships
+namespace MaxDoF::Game::Ships
 {
     class Dashboard {
         Ogre::SceneManager* mSceneMgr;
-        GameClient::World::Graphics& mGraphics;
+        Game::World::Graphics& mGraphics;
         Ogre::SceneNode* mDashboardNode;
 
         struct Element
@@ -35,8 +35,8 @@ namespace MaxDoF::GameClient::Ships
 */
 
     public:
-        Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position, GameClient::World::Graphics&);
+        Dashboard(Ogre::SceneManager* sceneMgr, Ogre::SceneNode* parentNode, const Ogre::Vector3& position, Game::World::Graphics&);
         ~Dashboard();
-        void update(const GameCommon::Types::Telemetry&);
+        void update(const Common::Types::Telemetry&);
     };
 }

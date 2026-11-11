@@ -5,9 +5,9 @@
 
 #include "Pipe.h"
 
-#include "GameCommon/LevelMeshes/MeshBuilder.h"
+#include "Common/LevelMeshes/MeshBuilder.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::Common::LevelGraphs
 {
     Pipe::Pipe()
     {
@@ -21,8 +21,8 @@ namespace MaxDoF::GameCommon::LevelGraphs
         JPH::RVec3 V(0.0f, 1.0f, 0.0f);
 
         vertices = {
-            GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
-            GameCommon::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
+            Common::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
+            Common::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
         };
 
         interfaces = {{

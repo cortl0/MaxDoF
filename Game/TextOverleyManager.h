@@ -3,15 +3,15 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_GameClient_TextOverleyManager_H_
-#define MaxDoF_GameClient_TextOverleyManager_H_
+#ifndef MaxDoF_Game_TextOverleyManager_H_
+#define MaxDoF_Game_TextOverleyManager_H_
 
 #include <GraphicsSystem.h>
 #include <OgreTextAreaOverlayElement.h>
 
-#include "GameCommon/Types/Telemetry.h"
+#include "Common/Types/Telemetry.h"
 
-namespace MaxDoF::GameClient
+namespace MaxDoF::Game
 {
     class TextOverleyManager
     {
@@ -25,13 +25,13 @@ namespace MaxDoF::GameClient
         Ogre::uint16 mNumDisplayHelpModes;
 
         virtual void createDebugTextOverlay();
-        virtual void generateDebugText( float timeSinceLast, const GameCommon::Types::Telemetry& );
+        virtual void generateDebugText( float timeSinceLast, const Common::Types::Telemetry& );
 
         TextOverleyManager( const Ogre::String &helpDescription );
         ~TextOverleyManager();
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
         void createCrosshair();
     };
-}  // namespace MaxDoF::GameClient
+}  // namespace MaxDoF::Game
 
 #endif

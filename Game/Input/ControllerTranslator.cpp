@@ -3,14 +3,14 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/Input/ControllerTranslator.h"
+#include "Game/Input/ControllerTranslator.h"
 
 #include <OgreVector3.h>
 
-#include "GameClient/Input/KeyboardController.h"
-#include "GameClient/Input/MouseController.h"
+#include "Game/Input/KeyboardController.h"
+#include "Game/Input/MouseController.h"
 
-namespace MaxDoF::GameClient::Input
+namespace MaxDoF::Game::Input
 {
     ShipController::ControllerData ControllerTranslator::translate(
         const KeyboardController* keyboard,
@@ -38,4 +38,4 @@ namespace MaxDoF::GameClient::Input
 
         return outData;
     }
-}  // namespace MaxDoF::GameClient::Input
+}  // namespace MaxDoF::Game::Input

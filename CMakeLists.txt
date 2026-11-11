@@ -18,5 +18,5 @@ include_directories(${CMAKE_BINARY_DIR})
 set(MAXDOF_PATH_DEPENDENCIES "${CMAKE_SOURCE_DIR}/../MaxDoF-Dependencies")
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
 
-add_subdirectory(GameClient)
-add_subdirectory(GameServer)
+add_subdirectory(Game)
+add_subdirectory(Server)

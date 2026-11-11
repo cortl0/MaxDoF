@@ -3,18 +3,18 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/Ships/Ship.h"
+#include "Game/Ships/Ship.h"
 
 #include <OgreItem.h>
 
-namespace MaxDoF::GameClient::Ships
+namespace MaxDoF::Game::Ships
 {
     Ship::Ship(
-        GameCommon::World::Manager& worldManager,
+        Common::World::Manager& worldManager,
 #ifdef MAXDOF_CLIENT_BUILD
-        GameClient::World::Graphics& graphics,
+        Game::World::Graphics& graphics,
 #endif
-        const GameCommon::Types::Entity& entity)
+        const Common::Types::Entity& entity)
         : mWorldManager(worldManager)
 #ifdef MAXDOF_CLIENT_BUILD
         , mDashboard(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), entity.graphNode, Ogre::Vector3(0.0f, -0.1f, -0.3f), graphics)
@@ -53,7 +53,7 @@ namespace MaxDoF::GameClient::Ships
     }
 #endif
 
-    void Ship::update(float timeSinceLastFrame, const GameCommon::Types::Telemetry& telemetry)
+    void Ship::update(float timeSinceLastFrame, const Common::Types::Telemetry& telemetry)
     {
         mDashboard.update(telemetry);
     }
@@ -85,9 +85,9 @@ namespace MaxDoF::GameClient::Ships
             JPH::Vec3 localForward = -JPH::Vec3::sAxisZ();
             JPH::Vec3 globalForwardDirection = shipRot * localForward;
 
-            MaxDoF::GameCommon::Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * 1.5f, shipRot};
+            MaxDoF::Common::Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * 1.5f, shipRot};
 
-            auto& bullet = mWorldManager.createSphere(GameCommon::Types3d::cUserDataNull + 123, projectilePose, 0.1f, bulletMass, true);
+            auto& bullet = mWorldManager.createSphere(Common::Types3d::cUserDataNull + 123, projectilePose, 0.1f, bulletMass, true);
             JPH::Vec3 projectileImpulse = shipVelocity + (globalForwardDirection * bulletMass * 100.0f);
             bodyInterface->AddImpulse(bullet.physId, projectileImpulse);
 

@@ -5,7 +5,7 @@
 
 #include "Tetrahedron.h"
 
-namespace MaxDoF::GameCommon::LevelGraphs
+namespace MaxDoF::Common::LevelGraphs
 {
     Tetrahedron::Tetrahedron()
     {

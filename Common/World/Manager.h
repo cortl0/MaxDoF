@@ -8,13 +8,13 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
-#include "GameCommon/World/Entities.h"
+#include "Common/World/Entities.h"
 
 #ifdef MAXDOF_CLIENT_BUILD
-#include "GameClient/World/Graphics.h"
+#include "Game/World/Graphics.h"
 #endif
 
-#include "GameCommon/World/Physics.h"
+#include "Common/World/Physics.h"
 
 namespace JPH
 {
@@ -24,7 +24,7 @@ namespace JPH
 }
 namespace Ogre { class SceneNode; }
 
-namespace MaxDoF::GameCommon::World
+namespace MaxDoF::Common::World
 {
     // 1. Заглушка для слоев широкой фазы (BroadPhase)
     class MyBroadPhaseLayerInterface final : public JPH::BroadPhaseLayerInterface
@@ -59,7 +59,7 @@ namespace MaxDoF::GameCommon::World
 
         Physics mPhysics;
 #ifdef MAXDOF_CLIENT_BUILD
-        MaxDoF::GameClient::World::Graphics mGraphics;
+        MaxDoF::Game::World::Graphics mGraphics;
 #endif
 
         std::unique_ptr<MyBroadPhaseLayerInterface>      mBroadPhaseLayerInterface;
@@ -73,7 +73,7 @@ namespace MaxDoF::GameCommon::World
         ~Manager();
 
 #ifdef MAXDOF_CLIENT_BUILD
-        MaxDoF::GameClient::World::Graphics& getGraphics(){ return mGraphics; }
+        MaxDoF::Game::World::Graphics& getGraphics(){ return mGraphics; }
 #endif
         JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysicsSystem; }
         void initialize(unsigned int maxBodies = 1024);
@@ -86,7 +86,7 @@ namespace MaxDoF::GameCommon::World
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
         Types::Entity& createCube(JPH::uint64 userData, const Types::PhysPose&, const JPH::Vec3& halfSize, float mass, bool dynamic = true, bool onCCD = false);
-        Types::Entity& createMesh(const GameCommon::Types3d::MeshData& meshData);
+        Types::Entity& createMesh(const Common::Types3d::MeshData& meshData);
         Types::Entity& createSphere(JPH::uint64 userData, const Types::PhysPose&, float radius, float mass, bool onCCD = false);
     };
 }

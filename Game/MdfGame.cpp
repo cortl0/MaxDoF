@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/MdfGame.h"
+#include "Game/MdfGame.h"
 
 #include <iostream>
 
@@ -12,7 +12,7 @@
 #include <OgreHlmsManager.h>
 #include <OgreRoot.h>
 
-namespace MaxDoF::GameClient
+namespace MaxDoF::Game
 {
     MdfGame::MdfGame( const Ogre::String &helpDescription )
         : mTextOverleyManager( helpDescription )
@@ -39,7 +39,7 @@ namespace MaxDoF::GameClient
 
     void MdfGame::createScene01()
     {
-        mScene = std::make_unique<GameCommon::Scenes::Scene01>(mWorldManager);
+        mScene = std::make_unique<Common::Scenes::Scene01>(mWorldManager);
         mWorldManager.initialize( mMaxBodiesLimit );
         mWorldManager.getPhysicsSystem()->SetContactListener(&mBattleLogic.GetMyContactListener());
         mScene->createScene();

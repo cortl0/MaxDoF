@@ -13,7 +13,7 @@
 #include <OgreSceneNode.h>
 #endif
 
-namespace MaxDoF::GameCommon::Types
+namespace MaxDoF::Common::Types
 {
     inline const JPH::Vec3 cUnitScaleVector{ 1.0f, 1.0f, 1.0f };
 

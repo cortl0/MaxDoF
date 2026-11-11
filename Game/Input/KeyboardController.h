@@ -3,13 +3,13 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_GameClient_Input_KeyboardController_H_
-#define MaxDoF_GameClient_Input_KeyboardController_H_
+#ifndef MaxDoF_Game_Input_KeyboardController_H_
+#define MaxDoF_Game_Input_KeyboardController_H_
 
 #include <SDL_events.h>
 #include <OgreVector3.h>
 
-namespace MaxDoF::GameClient::Input
+namespace MaxDoF::Game::Input
 {
     class KeyboardController
     {
@@ -40,6 +40,6 @@ namespace MaxDoF::GameClient::Input
         /// Сброс состояний (опционально, например при потере фокуса окна)
         void reset();
     };
-}  // namespace MaxDoF::GameClient::Input
+}  // namespace MaxDoF::Game::Input
 
 #endif

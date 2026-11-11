@@ -3,16 +3,16 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameCommon/World/Physics.h"
+#include "Common/World/Physics.h"
 
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
 #include <Jolt/Physics/Collision/Shape/MeshShape.h>
 
-#include "GameCommon/Utils/SystemUtils.h"
+#include "Common/Utils/SystemUtils.h"
 
-namespace MaxDoF::GameCommon::World
+namespace MaxDoF::Common::World
 {
     Physics::Physics()
     {

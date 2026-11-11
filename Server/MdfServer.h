@@ -5,15 +5,15 @@
 
 #pragma once
 
-#include "GameCommon/Scenes/Scene.h"
-#include "GameCommon/World/Manager.h"
+#include "Common/Scenes/Scene.h"
+#include "Common/World/Manager.h"
 
-namespace MaxDoF::GameServer
+namespace MaxDoF::Server
 {
     class MdfServer
     {
-        GameCommon::World::Manager mWorldManager;
-        std::unique_ptr<GameCommon::Scenes::Scene> mScene;
+        Common::World::Manager mWorldManager;
+        std::unique_ptr<Common::Scenes::Scene> mScene;
 
     public:
         MdfServer();

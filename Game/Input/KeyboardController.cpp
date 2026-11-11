@@ -3,9 +3,9 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/Input/KeyboardController.h"
+#include "Game/Input/KeyboardController.h"
 
-namespace MaxDoF::GameClient::Input
+namespace MaxDoF::Game::Input
 {
     KeyboardController::KeyboardController()
     {
@@ -86,4 +86,4 @@ namespace MaxDoF::GameClient::Input
 
         return state;
     }
-}  // namespace MaxDoF::GameClient::Input
+}  // namespace MaxDoF::Game::Input

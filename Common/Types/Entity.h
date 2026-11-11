@@ -12,7 +12,7 @@
 #include <OgreSceneNode.h>
 #endif
 
-namespace MaxDoF::GameCommon::Types
+namespace MaxDoF::Common::Types
 {
     struct Entity
     {

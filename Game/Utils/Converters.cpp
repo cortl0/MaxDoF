@@ -3,9 +3,9 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "GameClient/Utils/Converters.h"
+#include "Game/Utils/Converters.h"
 
-namespace MaxDoF::GameClient::Utils
+namespace MaxDoF::Game::Utils
 {
     JPH::Quat OgreQuaternionToJphQuat( const Ogre::Quaternion& q )
     {
@@ -32,18 +32,18 @@ namespace MaxDoF::GameClient::Utils
         return Ogre::Vector3( v.GetX(), v.GetY(), v.GetZ() );
     }
 
-    GameCommon::Types::GraphPose PhysPoseToGraphPose(const GameCommon::Types::PhysPose& p)
+    Common::Types::GraphPose PhysPoseToGraphPose(const Common::Types::PhysPose& p)
     {
-        return GameCommon::Types::GraphPose
+        return Common::Types::GraphPose
         {
             .position = JphRVec3ToOgreVector3( p.position ),
             .orientation = JphQuatToOgreQuaternion( p.orientation )
         };
     }
 
-    GameCommon::Types::PhysPose GraphPoseToPhysPose(const GameCommon::Types::GraphPose& p)
+    Common::Types::PhysPose GraphPoseToPhysPose(const Common::Types::GraphPose& p)
     {
-        return GameCommon::Types::PhysPose
+        return Common::Types::PhysPose
         {
             .position = OgreVector3ToJphRVec3( p.position ),
             .orientation = OgreQuaternionToJphQuat( p.orientation )
