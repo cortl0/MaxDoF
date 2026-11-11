@@ -13,6 +13,8 @@
 #include "GameClient/Utils/Converters.h"
 #endif
 
+#include "GameCommon/Utils/SystemUtils.h"
+
 namespace MaxDoF::GameCommon::World
 {
     Manager::Manager()
@@ -68,10 +70,7 @@ namespace MaxDoF::GameCommon::World
 
         mPhysics.setBodyInterface(&mPhysicsSystem->GetBodyInterface());
         mPhysicsSystem->SetGravity(JPH::Vec3::sZero());
-
-        mEntities.reserve(maxBodies);
-        mEntitiesIndex.reserve(maxBodies * 2);
-        mEntitiesIndex.max_load_factor(static_cast<float>(maxBodies));
+        mEntities.Reserve(maxBodies);
 
 #ifdef MAXDOF_CLIENT_BUILD
         mGraphics.initialize();
@@ -87,7 +86,7 @@ namespace MaxDoF::GameCommon::World
         mPhysicsSystem->Update(physicsTimeStep, 1, mPhysicsAllocator, mJobSystem);
         JPH::RVec3 shipPosition = mPhysics.getBodyInterface()->GetPosition(shipBodyId);
 #ifdef MAXDOF_CLIENT_BUILD
-        for (const auto& entity : mEntities)
+        for (const auto& entity : mEntities.GetEntities())
         {
             if (!entity.graphNode)
                 continue;
@@ -109,23 +108,36 @@ namespace MaxDoF::GameCommon::World
 #endif
         JPH::BodyID bodyId)
     {
-        auto& entity = mEntities.emplace_back(bodyId
+         mEntities.AddEntity(bodyId
 #ifdef MAXDOF_CLIENT_BUILD
             , ogreNode
 #endif
         );
-        mEntitiesIndex[bodyId.GetIndex()] = mEntities.size() - 1;
 
-        return entity;
+        return mEntities.GetEntities().back();
     }
 
-    Types::Entity& Manager::createCube(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool оnCCD)
+    void Manager::destroyEntity(JPH::uint32 bodyIndex)
+    {
+        auto entity = mEntities.RemoveEntity(bodyIndex);
+
+        if(!entity.has_value())
+            return;
+
+        mPhysics.destroyBody(entity.value().physId);
+
+#ifdef MAXDOF_CLIENT_BUILD
+        mGraphics.destroyNodeRecursively(entity.value().graphNode);
+#endif
+    }
+
+    Types::Entity& Manager::createCube(JPH::uint64 userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
             mGraphics.createCube(MaxDoF::GameClient::Utils::PhysPoseToGraphPose(pose), MaxDoF::GameClient::Utils::JphVec3ToOgreVector3(halfSize)),
 #endif
-            mPhysics.createBox(pose, halfSize, mass, dynamic, оnCCD));
+            mPhysics.createBox(userData, pose, halfSize, mass, dynamic, onCCD));
     }
 
     Types::Entity& Manager::createMesh(const GameCommon::Types3d::MeshData& meshData)
@@ -137,12 +149,12 @@ namespace MaxDoF::GameCommon::World
             mPhysics.createMesh(meshData));
     }
 
-    Types::Entity& Manager::createSphere(const Types::PhysPose& pose, float radius, float mass, bool оnCCD)
+    Types::Entity& Manager::createSphere(JPH::uint64 userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
             mGraphics.createSphere( MaxDoF::GameClient::Utils::PhysPoseToGraphPose( pose ), radius ),
 #endif
-            mPhysics.createSphere(pose, radius, mass, оnCCD));
+            mPhysics.createSphere(userData, pose, radius, mass, onCCD));
     }
 }

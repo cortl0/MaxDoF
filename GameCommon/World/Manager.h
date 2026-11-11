@@ -8,7 +8,7 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
-#include "GameCommon/Types/Entity.h"
+#include "GameCommon/World/Entities.h"
 
 #ifdef MAXDOF_CLIENT_BUILD
 #include "GameClient/World/Graphics.h"
@@ -66,11 +66,7 @@ namespace MaxDoF::GameCommon::World
         std::unique_ptr<MyObjectVsBroadPhaseLayerFilter> mObjectVsBroadPhaseLayerFilter;
         std::unique_ptr<MyObjectLayerPairFilter>         mObjectLayerPairFilter;
 
-        using Entities = std::vector<Types::Entity>;
-        using EntitiesIndex = std::unordered_map<uint32_t, size_t>;
-
-        Entities mEntities;
-        EntitiesIndex mEntitiesIndex;
+        World::Entites mEntities;
 
     public:
         Manager();
@@ -86,10 +82,11 @@ namespace MaxDoF::GameCommon::World
             Ogre::SceneNode* ogreNode,
 #endif
             JPH::BodyID bodyId);
+        void destroyEntity(JPH::uint32 bodyIndex);
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
-        Types::Entity& createCube(const Types::PhysPose&, const JPH::Vec3& halfSize, float mass, bool dynamic = true, bool оnCCD = false);
+        Types::Entity& createCube(JPH::uint64 userData, const Types::PhysPose&, const JPH::Vec3& halfSize, float mass, bool dynamic = true, bool onCCD = false);
         Types::Entity& createMesh(const GameCommon::Types3d::MeshData& meshData);
-        Types::Entity& createSphere(const Types::PhysPose&, float radius, float mass, bool оnCCD = false);
+        Types::Entity& createSphere(JPH::uint64 userData, const Types::PhysPose&, float radius, float mass, bool onCCD = false);
     };
 }

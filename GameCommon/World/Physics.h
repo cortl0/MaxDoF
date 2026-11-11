@@ -22,12 +22,13 @@ namespace MaxDoF::GameCommon::World
         Physics();
         ~Physics();
 
-        void setBodyInterface(JPH::BodyInterface* bodyInterface) { mBodyInterface = bodyInterface; }
+        JPH::BodyID createBox(JPH::uint64 userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD);
+        JPH::BodyID createMesh(const Types3d::MeshData&);
+        JPH::BodyID createSphere(JPH::uint64 userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD);
+        void destroyBody(JPH::BodyID);
         JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
         void initialize(unsigned int maxBodies = 1024);
-        JPH::BodyID setBodySettings(const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool оnCCD);
-        JPH::BodyID createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool оnCCD);
-        JPH::BodyID createMesh(const Types3d::MeshData&);
-        JPH::BodyID createSphere(const Types::PhysPose& pose, float radius, float mass, bool оnCCD);
+        void setBodyInterface(JPH::BodyInterface* bodyInterface) { mBodyInterface = bodyInterface; }
+        JPH::BodyID setBodySettings(JPH::uint64 userData, const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD);
     };
 }

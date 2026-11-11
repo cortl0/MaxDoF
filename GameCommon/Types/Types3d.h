@@ -11,6 +11,7 @@
 
 namespace MaxDoF::GameCommon::Types3d
 {
+    inline JPH::uint64 cUserDataNull = reinterpret_cast<JPH::uint64>(nullptr);
     using Vertex = JPH::RVec3;
     using TriangleVertices = std::array<Vertex, 3>;
     using VerticesIndexKey = std::size_t;

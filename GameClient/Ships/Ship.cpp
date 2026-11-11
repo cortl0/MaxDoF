@@ -87,7 +87,7 @@ namespace MaxDoF::GameClient::Ships
 
             MaxDoF::GameCommon::Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * 1.5f, shipRot};
 
-            auto& bullet = mWorldManager.createSphere(projectilePose, 0.1f, bulletMass, true);
+            auto& bullet = mWorldManager.createSphere(GameCommon::Types3d::cUserDataNull + 123, projectilePose, 0.1f, bulletMass, true);
             JPH::Vec3 projectileImpulse = shipVelocity + (globalForwardDirection * bulletMass * 100.0f);
             bodyInterface->AddImpulse(bullet.physId, projectileImpulse);
 

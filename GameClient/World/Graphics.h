@@ -29,6 +29,8 @@ namespace MaxDoF::GameClient::World
 
         Demo::GraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
         void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
+        void destroyAllObjects(Ogre::SceneNode *node);
+        void destroyNodeRecursively(Ogre::SceneNode *node);
         void initialize();
         void changeTexture(Ogre::Item*, const Ogre::String& newTextureFileName);
         void changeUniqueTexture(Ogre::Item*, const Ogre::String& newTextureFileName, const Ogre::String& uniqueMaterialName);

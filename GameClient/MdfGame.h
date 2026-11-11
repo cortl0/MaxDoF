@@ -12,9 +12,9 @@
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/ControllerTranslator.h"
+#include "GameCommon/GameLogic/BattleLogic.h"
 #include "GameClient/ShipController.h"
 #include "GameCommon/Scenes/Scene01.h"
-#include "GameCommon/Types/Entity.h"
 #include "GameCommon/World/Manager.h"
 
 namespace MaxDoF::GameClient
@@ -36,6 +36,7 @@ namespace MaxDoF::GameClient
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;
         std::unique_ptr<GameCommon::Scenes::Scene> mScene;
+        GameCommon::GameLogic::BattleLogic mBattleLogic{mWorldManager};
 
     public:
         MdfGame( const Ogre::String &helpDescription );

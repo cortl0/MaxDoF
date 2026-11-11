@@ -41,6 +41,7 @@ namespace MaxDoF::GameClient
     {
         mScene = std::make_unique<GameCommon::Scenes::Scene01>(mWorldManager);
         mWorldManager.initialize( mMaxBodiesLimit );
+        mWorldManager.getPhysicsSystem()->SetContactListener(&mBattleLogic.GetMyContactListener());
         mScene->createScene();
 #ifdef MAXDOF_CLIENT_BUILD
         mTextOverleyManager.createCrosshair();
@@ -64,6 +65,8 @@ namespace MaxDoF::GameClient
 
     void MdfGame::update( float timeSinceLast )
     {
+        mBattleLogic.Update();
+
         // 1. Шагаем физику (Jolt считает мир и автоматически двигает Ogre-узлы из mEntities)
         mWorldManager.update( timeSinceLast, mScene->getShip().getEntity().physId );
         //mShip->mEntity.graphNode->setPosition(Ogre::Vector3::ZERO);

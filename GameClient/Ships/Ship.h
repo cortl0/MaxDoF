@@ -10,7 +10,6 @@
 #include "GameClient/Ships/Dashboard.h"
 #endif
 
-#include "GameCommon/Types/Entity.h"
 #include "GameCommon/Types/Telemetry.h"
 #include "GameCommon/World/Manager.h"
 

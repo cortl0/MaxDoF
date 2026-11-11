@@ -6,7 +6,6 @@
 #pragma once
 
 #include "GameClient/Ships/Ship.h"
-#include "GameCommon/Types/Entity.h"
 #include "GameCommon/World/Manager.h"
 
 namespace MaxDoF::GameCommon::Scenes

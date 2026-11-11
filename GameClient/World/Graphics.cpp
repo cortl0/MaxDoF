@@ -137,6 +137,39 @@ namespace MaxDoF::GameClient::World
         datablock->setTexture(static_cast<Ogre::uint8>(Ogre::PBSM_DIFFUSE), texture);
     }
 
+    void Graphics::destroyAllObjects(Ogre::SceneNode* node)
+    {
+        auto* sceneMgr = mGraphicsSystem->getSceneManager();
+
+        while(auto num = node->numAttachedObjects() > 0)
+        {
+            Ogre::MovableObject* a = node->getAttachedObject(num - 1);
+            a->detachFromParent();
+            sceneMgr->destroyMovableObject(a);
+        }
+    }
+
+    void Graphics::destroyNodeRecursively(Ogre::SceneNode* node)
+    {
+        if (!node)
+            return;
+
+        auto* sceneMgr = mGraphicsSystem->getSceneManager();
+
+        while(auto num = node->numChildren() > 0)
+        {
+            Ogre::Node* genericChild = node->getChild(num - 1);
+            
+            if (auto* childSceneNode = dynamic_cast<Ogre::SceneNode*>(genericChild))
+                destroyNodeRecursively(childSceneNode);
+            else
+                node->removeChild(genericChild);
+        }
+
+        destroyAllObjects(node);
+        sceneMgr->destroySceneNode(node);
+    }
+
     void Graphics::initialize()
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();

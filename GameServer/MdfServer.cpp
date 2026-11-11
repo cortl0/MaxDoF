@@ -5,6 +5,8 @@
 
 #include "GameServer/MdfServer.h"
 
+#include "GameCommon/Scenes/Scene01.h"
+
 namespace MaxDoF::GameServer
 {
     MdfServer::MdfServer()

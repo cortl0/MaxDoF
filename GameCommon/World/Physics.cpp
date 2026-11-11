@@ -22,7 +22,18 @@ namespace MaxDoF::GameCommon::World
     {
     }
 
-    JPH::BodyID Physics::setBodySettings(const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool оnCCD)
+    void Physics::destroyBody(JPH::BodyID bodyID)
+    {
+        if (!mBodyInterface->IsAdded(bodyID))
+            return;
+
+        if (mBodyInterface->IsActive(bodyID))
+            mBodyInterface->DeactivateBody(bodyID);
+
+        mBodyInterface->RemoveBody(bodyID);
+    }
+
+    JPH::BodyID Physics::setBodySettings(JPH::uint64 userData, const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD)
     {
         JPH::BodyCreationSettings bodySettings(
             shapeResult.Get(),
@@ -37,17 +48,19 @@ namespace MaxDoF::GameCommon::World
         bodySettings.mMassPropertiesOverride.mMass = mass;
         bodySettings.mLinearDamping = 0.0f;
         bodySettings.mAngularDamping = 0.0f;
+        bodySettings.mUserData = userData;
 
-        if(оnCCD)
+        if(onCCD)
             bodySettings.mMotionQuality = JPH::EMotionQuality::LinearCast;
 
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createBox(const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool оnCCD)
+    JPH::BodyID Physics::createBox(JPH::uint64 userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
-        return setBodySettings(shapeSettings.Create(), pose, mass, dynamic, оnCCD);
+        shapeSettings.mUserData = userData + 12;
+        return setBodySettings(userData, shapeSettings.Create(), pose, mass, dynamic, onCCD);
     }
 
     JPH::BodyCreationSettings CreateMeshBodySettings(JPH::ShapeRefC mapShape)
@@ -105,9 +118,10 @@ namespace MaxDoF::GameCommon::World
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createSphere(const Types::PhysPose& pose, float radius, float mass, bool оnCCD)
+    JPH::BodyID Physics::createSphere(JPH::uint64 userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
-        return setBodySettings(shapeSettings.Create(), pose, mass, true, оnCCD);
+        shapeSettings.mUserData = userData + 15;
+        return setBodySettings(userData, shapeSettings.Create(), pose, mass, true, onCCD);
     }
 }

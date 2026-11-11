@@ -3,11 +3,9 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_GameServer_MdfServer_H_
-#define MaxDoF_GameServer_MdfServer_H_
+#pragma once
 
-#include "GameCommon/Scenes/Scene01.h"
-#include "GameCommon/Types/Entity.h"
+#include "GameCommon/Scenes/Scene.h"
 #include "GameCommon/World/Manager.h"
 
 namespace MaxDoF::GameServer
@@ -22,6 +20,4 @@ namespace MaxDoF::GameServer
         ~MdfServer();
         void createScene01();
     };
-}  // namespace MaxDoF::GameServer
-
-#endif
+}
