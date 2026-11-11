@@ -45,8 +45,8 @@ namespace MaxDoF::Common::World
         void destroyEntity(JPH::uint32 bodyIndex);
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
-        Types::Entity& createCube(JPH::uint64 userData, const Types::PhysPose&, const JPH::Vec3& halfSize, float mass, bool dynamic = true, bool onCCD = false);
+        Types::Entity& createCube(Common::Types3d::EntityType userData, const Types::PhysPose&, const JPH::Vec3& halfSize, float mass, bool dynamic = true, bool onCCD = false);
         Types::Entity& createMesh(const Common::Types3d::MeshData& meshData);
-        Types::Entity& createSphere(JPH::uint64 userData, const Types::PhysPose&, float radius, float mass, bool onCCD = false);
+        Types::Entity& createSphere(Common::Types3d::EntityType userData, const Types::PhysPose&, float radius, float mass, bool onCCD = false);
     };
 }

@@ -43,9 +43,9 @@ namespace MaxDoF::Common::World
 
         float physicsTimeStep = std::min(timeSinceLast, 0.1f);
         mPhysics.update(physicsTimeStep, shipBodyId);
-        JPH::RVec3 shipPosition = mPhysics.getBodyInterface()->GetPosition(shipBodyId);
 
 #ifdef MAXDOF_CLIENT_BUILD
+        JPH::RVec3 shipPosition = mPhysics.getBodyInterface()->GetPosition(shipBodyId);
         for (const auto& entity : mEntities.GetEntities())
         {
             if (!entity.graphNode)
@@ -91,7 +91,7 @@ namespace MaxDoF::Common::World
 #endif
     }
 
-    Types::Entity& Manager::createCube(JPH::uint64 userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
+    Types::Entity& Manager::createCube(Common::Types3d::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
@@ -109,7 +109,7 @@ namespace MaxDoF::Common::World
             mPhysics.createMesh(meshData));
     }
 
-    Types::Entity& Manager::createSphere(JPH::uint64 userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
+    Types::Entity& Manager::createSphere(Common::Types3d::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD

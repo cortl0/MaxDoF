@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "Game/Ships/Ship.h"
+#include "Common/Ships/Ship.h"
 #include "Common/World/Manager.h"
 
 namespace MaxDoF::Common::Scenes
@@ -14,13 +14,13 @@ namespace MaxDoF::Common::Scenes
     {
     protected:
         World::Manager& mWorldManager;
-        Game::Ships::Ship* mShip;
+        Common::Ships::Ship* mShip;
 
     public:
         Scene(World::Manager&);
         virtual ~Scene();
         virtual void createScene() = 0;
         virtual Types::Entity& createShipEntity() = 0;
-        Game::Ships::Ship& getShip() { return *mShip; }
+        Common::Ships::Ship& getShip() { return *mShip; }
     };
 }

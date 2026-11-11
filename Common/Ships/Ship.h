@@ -13,30 +13,30 @@
 #include "Common/Types/Telemetry.h"
 #include "Common/World/Manager.h"
 
-namespace MaxDoF::Game::Ships
+namespace MaxDoF::Common::Ships
 {
     class Ship {
-        Common::World::Manager& mWorldManager;
+        World::Manager& mWorldManager;
 #ifdef MAXDOF_CLIENT_BUILD
         Game::Ships::Dashboard mDashboard;
         Ogre::SceneNode* lightNode;
         Ogre::Light* light;
 #endif
-        Common::Types::Entity mEntity;
+        Types::Entity mEntity;
 
     public:
         Ship(
-            Common::World::Manager&,
+            World::Manager&,
 #ifdef MAXDOF_CLIENT_BUILD
             Game::World::Graphics&,
 #endif
-            const Common::Types::Entity&);
+            const Types::Entity&);
         ~Ship();
 #ifdef MAXDOF_CLIENT_BUILD
         void connectCameraToShip(Ogre::Camera*);
 #endif
-        const Common::Types::Entity& getEntity() const { return mEntity; }
-        void update(float timeSinceLastFrame, const Common::Types::Telemetry&);
+        const Types::Entity& getEntity() const { return mEntity; }
+        void update(float timeSinceLastFrame, const Types::Telemetry&);
         void CreateBullet(float timeSinceLast, bool needCreate);
     };
 }

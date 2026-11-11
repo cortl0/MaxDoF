@@ -6,12 +6,21 @@
 #pragma once
 
 #include <Jolt/Jolt.h>
-// #include <Jolt/Math/Quat.h>
 #include <Jolt/Math/Real.h>
 
 namespace MaxDoF::Common::Types3d
 {
-    inline JPH::uint64 cUserDataNull = reinterpret_cast<JPH::uint64>(nullptr);
+    using UserDataType = JPH::uint64;
+
+    enum class EntityType : UserDataType
+    {
+        cUndefined,
+        cAsteroid,
+        cShip,
+        cBullet,
+        cOtherObject
+    };
+
     using Vertex = JPH::RVec3;
     using TriangleVertices = std::array<Vertex, 3>;
     using VerticesIndexKey = std::size_t;

@@ -5,10 +5,11 @@
 
 #pragma once
 
-#include <Jolt/Jolt.h>
-#include <Jolt/Math/Vec3.h>
 #include <vector>
 #include <cstdint>
+
+#include <Jolt/Jolt.h>
+#include <Jolt/Math/Vec3.h>
 
 #include "Common/Types/Types3d.h"
 

@@ -30,7 +30,7 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(-mapHalfSize, 0.0f, 0.0f),
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
         }
 
         {
@@ -38,7 +38,7 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(mapHalfSize, 0.0f, 0.0f), // Смещение вправо по X
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
         }
 
         {
@@ -46,7 +46,7 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(0.0f, -mapHalfSize, 0.0f), // Смещение вниз по Y
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
         }
 
         {
@@ -54,7 +54,7 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(0.0f, mapHalfSize, 0.0f), // Смещение вверх по Y
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
         }
 
         {
@@ -62,7 +62,7 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(0.0f, 0.0f, -mapHalfSize), // Смещение назад по Z
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
         }
 
         {
@@ -70,7 +70,7 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(0.0f, 0.0f, mapHalfSize), // Смещение вперед по Z
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
+            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
         }
     }
 
@@ -109,7 +109,7 @@ namespace MaxDoF::Common::Scenes
                         .position = JPH::RVec3( i * 1.1f, j * 1.1f, -offset - k * 1.1f ),
                         .orientation = JPH::Quat::sIdentity()
                     };
-                    mWorldManager.createCube(Common::Types3d::cUserDataNull, pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
+                    mWorldManager.createCube(Common::Types3d::EntityType::cOtherObject, pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
                 }
 
         Types::PhysPose pose
@@ -117,11 +117,13 @@ namespace MaxDoF::Common::Scenes
             .position = JPH::RVec3( 0.0f, 0.0f, -12.0f ),
             .orientation = JPH::Quat::sIdentity()
         };
-        mWorldManager.createSphere(Common::Types3d::cUserDataNull, pose, 0.5f, 1000.0f);
+        mWorldManager.createSphere(Common::Types3d::EntityType::cOtherObject, pose, 0.5f, 1000.0f);
         auto& shipEntity = createShipEntity();
+        mShip = new Common::Ships::Ship(mWorldManager,
 #ifdef MAXDOF_CLIENT_BUILD
-        mShip = new Game::Ships::Ship(mWorldManager, mWorldManager.getGraphics(), shipEntity);
+            mWorldManager.getGraphics(),
 #endif
+            shipEntity);
 
         Common::Types3d::MeshData meshData;
         Common::Types::LevelGraphs::PureLevelGraph levelGraph;
@@ -147,6 +149,6 @@ namespace MaxDoF::Common::Scenes
 
     Types::Entity& Scene01::createShipEntity()
     {
-        return mWorldManager.createSphere(Common::Types3d::cUserDataNull + 100, Types::cDefaultPhysPose, 0.5f, 1000.0f, true);
+        return mWorldManager.createSphere(Common::Types3d::EntityType::cShip, Types::cDefaultPhysPose, 0.5f, 1000.0f, true);
     }
 }

@@ -102,7 +102,7 @@ namespace MaxDoF::Common::World
         );
     }
 
-    JPH::BodyID Physics::setBodySettings(JPH::uint64 userData, const JPH::ShapeSettings::ShapeResult &shapeResult, const Types::PhysPose &pose, float mass, bool dynamic, bool onCCD)
+    JPH::BodyID Physics::setBodySettings(Common::Types3d::EntityType userData, const JPH::ShapeSettings::ShapeResult &shapeResult, const Types::PhysPose &pose, float mass, bool dynamic, bool onCCD)
     {
         JPH::BodyCreationSettings bodySettings(
             shapeResult.Get(),
@@ -117,7 +117,7 @@ namespace MaxDoF::Common::World
         bodySettings.mMassPropertiesOverride.mMass = mass;
         bodySettings.mLinearDamping = 0.0f;
         bodySettings.mAngularDamping = 0.0f;
-        bodySettings.mUserData = userData;
+        bodySettings.mUserData = static_cast<JPH::uint64>(userData);
 
         if(onCCD)
             bodySettings.mMotionQuality = JPH::EMotionQuality::LinearCast;
@@ -125,10 +125,10 @@ namespace MaxDoF::Common::World
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createBox(JPH::uint64 userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
+    JPH::BodyID Physics::createBox(Common::Types3d::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
-        shapeSettings.mUserData = userData + 12;
+        shapeSettings.mUserData = static_cast<JPH::uint64>(userData);
         return setBodySettings(userData, shapeSettings.Create(), pose, mass, dynamic, onCCD);
     }
 
@@ -182,15 +182,16 @@ namespace MaxDoF::Common::World
         JPH::Shape::ShapeResult shapeResult = meshSettings.Create();
         JPH::ShapeRefC mapShape = shapeResult.Get();
         auto bodySettings = CreateMeshBodySettings(mapShape);
+        bodySettings.mUserData = static_cast<JPH::uint64>(Common::Types3d::EntityType::cAsteroid);
 
         // Возвращаем ID тела статического уровня для контроля памяти (очистки при смене карты)
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createSphere(JPH::uint64 userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
+    JPH::BodyID Physics::createSphere(Common::Types3d::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
-        shapeSettings.mUserData = userData + 15;
+        shapeSettings.mUserData = static_cast<JPH::uint64>(userData);
         return setBodySettings(userData, shapeSettings.Create(), pose, mass, true, onCCD);
     }
 

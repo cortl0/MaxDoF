@@ -3,24 +3,27 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "Game/Ships/Ship.h"
+#include "Common/Ships/Ship.h"
 
+#ifdef MAXDOF_CLIENT_BUILD
 #include <OgreItem.h>
+#endif
 
-namespace MaxDoF::Game::Ships
+namespace MaxDoF::Common::Ships
 {
     Ship::Ship(
-        Common::World::Manager& worldManager,
+        World::Manager& worldManager,
 #ifdef MAXDOF_CLIENT_BUILD
         Game::World::Graphics& graphics,
 #endif
-        const Common::Types::Entity& entity)
+        const Types::Entity& entity)
         : mWorldManager(worldManager)
 #ifdef MAXDOF_CLIENT_BUILD
         , mDashboard(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), entity.graphNode, Ogre::Vector3(0.0f, -0.1f, -0.3f), graphics)
 #endif
         , mEntity(entity)
     {
+#ifdef MAXDOF_CLIENT_BUILD
         auto* mSceneMgr = mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager();
         lightNode = mEntity.graphNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         // lightNode->setPosition(Ogre::Vector3(0.0f, 0.0f, -0.4f));
@@ -31,13 +34,16 @@ namespace MaxDoF::Game::Ships
         light->setAttenuation(lightRadius, 1.0f, 0.0f, 0.01f);
         light->setSpotlightRange(Ogre::Degree(0), Ogre::Degree(60));
         lightNode->attachObject(light);
+#endif
     }
 
     Ship::~Ship()
     {
+#ifdef MAXDOF_CLIENT_BUILD
         auto* sceneManager = mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager();
         sceneManager->destroyLight(light);
         sceneManager->destroySceneNode(lightNode);
+#endif
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
@@ -53,9 +59,11 @@ namespace MaxDoF::Game::Ships
     }
 #endif
 
-    void Ship::update(float timeSinceLastFrame, const Common::Types::Telemetry& telemetry)
+    void Ship::update(float timeSinceLastFrame, const Types::Telemetry& telemetry)
     {
+#ifdef MAXDOF_CLIENT_BUILD
         mDashboard.update(telemetry);
+#endif
     }
 
     void Ship::CreateBullet(float timeSinceLast, bool needCreate)
@@ -85,9 +93,9 @@ namespace MaxDoF::Game::Ships
             JPH::Vec3 localForward = -JPH::Vec3::sAxisZ();
             JPH::Vec3 globalForwardDirection = shipRot * localForward;
 
-            MaxDoF::Common::Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * 1.5f, shipRot};
+            Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * 1.5f, shipRot};
 
-            auto& bullet = mWorldManager.createSphere(Common::Types3d::cUserDataNull + 123, projectilePose, 0.1f, bulletMass, true);
+            auto& bullet = mWorldManager.createSphere(Types3d::EntityType::cBullet, projectilePose, 0.1f, bulletMass, true);
             JPH::Vec3 projectileImpulse = shipVelocity + (globalForwardDirection * bulletMass * 100.0f);
             bodyInterface->AddImpulse(bullet.physId, projectileImpulse);
 

@@ -13,7 +13,7 @@
 
 namespace MaxDoF::Game
 {
-    ShipController::ShipController(Game::Ships::Ship& ship, JPH::BodyInterface* bodyInterface) :
+    ShipController::ShipController(Common::Ships::Ship& ship, JPH::BodyInterface* bodyInterface) :
         mShip(ship),
         mBodyInterface(bodyInterface),
         mThrustPower(10000.0f),
