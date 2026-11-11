@@ -24,18 +24,10 @@ namespace MaxDoF::Common::LevelGraphs
             Common::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
             Common::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
         };
-
-        interfaces = {{
-            {0, 1, 2}, // Торец 0 Передний
-            {3, 4, 5}  // Торец 1 Задний
-        }};
     }
 
     void Pipe::SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph& graph, Types::LevelGraphs::TriangleInterface first, double length, double radius)
     {
-        JPH::RVec3 U(1.0f, 0.0f, 0.0f);
-        JPH::RVec3 V(0.0f, 1.0f, 0.0f);
-
         const auto& p0 = graph.vertices[first.verticesIndices[0]];
         const auto& p1 = graph.vertices[first.verticesIndices[1]];
         const auto& p2 = graph.vertices[first.verticesIndices[2]];
@@ -56,11 +48,25 @@ namespace MaxDoF::Common::LevelGraphs
                 graph.vertices[first.verticesIndices[2]] + offset
             }
         };
+    }
 
-        interfaces = {{
-            {0, 1, 2}, // Торец 0 Передний
-            {3, 4, 5}  // Торец 1 Задний
-        }};
+    void Pipe::SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph& graph,
+        Types::LevelGraphs::TriangleInterface first, Types::LevelGraphs::TriangleInterface second)
+    {
+        vertices = {
+            Types3d::TriangleVertices
+            {
+                graph.vertices[first.verticesIndices[0]],
+                graph.vertices[first.verticesIndices[1]],
+                graph.vertices[first.verticesIndices[2]]
+            },
+            Types3d::TriangleVertices
+            {
+                graph.vertices[second.verticesIndices[0]],
+                graph.vertices[second.verticesIndices[1]],
+                graph.vertices[second.verticesIndices[2]]
+            }
+        };
     }
 
     void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<bool, 2> invertInterfaces, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes)
@@ -69,16 +75,14 @@ namespace MaxDoF::Common::LevelGraphs
         const auto baseInterfaceIndex = graph.interfaces.size();
 
         for(const auto& innerVertices : vertices)
-            for(const auto& vertice : innerVertices)
-                graph.vertices.push_back(vertice);
+            for(const auto& vertex : innerVertices)
+                graph.vertices.push_back(vertex);
 
         for(const auto& interface : interfaces)
             graph.interfaces.push_back(Types::LevelGraphs::TriangleInterface
                 {
                     .id = graph.interfaces.size(),
-                    .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex},
-                    .nodeA = graph.nodes.size(),
-                    .nodeB = static_cast<Types::LevelGraphs::NodeKey>(Types::LevelGraphs::InterfaceType::SolidRock)
+                    .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex}
                 }
             );
 

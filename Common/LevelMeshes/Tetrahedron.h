@@ -6,10 +6,11 @@
 #pragma once
 
 #include "Common/Types/LevelGraphStructures.h"
+#include "Primitive.h"
 
 namespace MaxDoF::Common::LevelGraphs
 {
-    class Tetrahedron
+    class Tetrahedron : public Primitive
     {
     public:
         using Vertices = std::array<JPH::RVec3, 4>;
@@ -17,7 +18,13 @@ namespace MaxDoF::Common::LevelGraphs
 
     private:
         Vertices vertices;
-        TrianglesVerticesIndices interfaces;
+        TrianglesVerticesIndices interfaces
+        {{
+            {0, 2, 1}, // Грань 0 Левая
+            {0, 1, 3}, // Грань 1 Правая
+            {0, 3, 2}, // Грань 2 Нижняя
+            {1, 2, 3}  // Грань 3 Переднияя
+        }};
 
     public:
         Tetrahedron();

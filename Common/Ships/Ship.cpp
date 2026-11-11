@@ -82,7 +82,7 @@ namespace MaxDoF::Common::Ships
 
         if (fireCooldown <= 0.0f)
         {
-            fireCooldown = 0.15f; 
+            fireCooldown = 0.15f;
 
             JPH::BodyInterface* bodyInterface = mWorldManager.getBodyInterface();
 
@@ -101,10 +101,10 @@ namespace MaxDoF::Common::Ships
 
             {
                 JPH::BodyLockWrite lock(mWorldManager.getPhysicsSystem()->GetBodyLockInterface(), mEntity.physId);
-                if (lock.Succeeded()) 
+                if (lock.Succeeded())
                 {
                     JPH::Body &body = lock.GetBody();
-                    
+
                     if (body.IsDynamic())
                     {
                         JPH::MotionProperties* motionProperties = body.GetMotionProperties();

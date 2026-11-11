@@ -6,11 +6,9 @@
 #include "Common/LevelMeshes/MeshBuilder.h"
 
 #include <array>
-#include <cstdint>
 #include <random>
 #include <vector>
 
-#include "Common/LevelMeshes/Constants.h"
 #include "Common/Utils/SystemUtils.h"
 
 namespace MaxDoF::Common::LevelMeshes
@@ -30,7 +28,7 @@ namespace MaxDoF::Common::LevelMeshes
         }
     }
 
-    void MeshBuilder::AddPipeWall(
+    void MeshBuilder::AddAntiprism(
         Common::Types3d::MeshData& meshData, bool reverseDiagonals,
         const std::array<UVVertex, 3>& a, const std::array<UVVertex, 3>& b)
     {
@@ -57,106 +55,56 @@ namespace MaxDoF::Common::LevelMeshes
         }
     }
 
-    void MeshBuilder::ConnectTriangles(MaxDoF::Common::Types3d::MeshData& meshData,
-        const Types::LevelGraphs::PureLevelGraph& graph,
-        const Types::LevelGraphs::VolumeNode& pipeNode,
-        const Types::LevelGraphs::TriangleInterface& TriangleInterface,
-        const Types3d::TriangleVertices& verticesEnd)
+    void MeshBuilder::AddAntiprism(MaxDoF::Common::Types3d::MeshData& meshData,
+    const Types::LevelGraphs::PureLevelGraph& graph,
+    const Types::LevelGraphs::VolumeNode& pipeNode,
+    const Types::LevelGraphs::TriangleInterface& begin,
+    const Types::LevelGraphs::TriangleInterface& end)
     {
-        // // 1. Комбинаторный поиск пар по кратчайшему расстоянию
-        // const std::array<std::array<int, 3>, 6> permutations = {{
-        //     {0, 1, 2}, {0, 2, 1},
-        //     {1, 0, 2}, {1, 2, 0},
-        //     {2, 0, 1}, {2, 1, 0}
-        // }};
+        const auto& interface = graph.interfaces[begin.id];
+        const auto& interfaceEnd = graph.interfaces[end.id];
 
-        // float minTotalDistance = FLT_MAX;
-        // std::array<int, 3> bestPermutation = {0, 1, 2};
-        const auto& interface = graph.interfaces[TriangleInterface.id];
-        // for (const auto& p : permutations) {
-        //     float dist0 = (interface.vertices[0] - verticesEnd[p[0]]).Length();
-        //     float dist1 = (interface.vertices[1] - verticesEnd[p[1]]).Length();
-        //     float dist2 = (interface.vertices[2] - verticesEnd[p[2]]).Length();
+        // 1. Заполняем позиции вершин для обоих торцов
+        std::array<UVVertex, 3> a, b;
 
-        //     float currentSum = dist0 + dist1 + dist2;
-        //     if (currentSum < minTotalDistance) {
-        //         minTotalDistance = currentSum;
-        //         bestPermutation = p;
-        //     }
-        // }
-
-        // 2. Подготовка базовых UV-вершин
-        std::array<UVVertex, 3> a;
         for (int i = 0; i < 3; ++i)
         {
             a[i].pos = graph.vertices[interface.verticesIndices[i]];
-            a[i].u   = static_cast<float>(i) / 3.0f;
-            a[i].v   = 0.0f;
+            b[i].pos = graph.vertices[interfaceEnd.verticesIndices[i]];
         }
-        if(pipeNode.inverted)//pipeNode.orientedInterfacesIds.front().inverted
+
+        if (pipeNode.inverted)
         {
-            auto temp = a[1].pos;
+            auto tempA = a[1].pos;
             a[1].pos = a[2].pos;
-            a[2].pos = temp;
-        }
+            a[2].pos = tempA;
 
-        std::array<UVVertex, 3> b;
-        for (int i = 0; i < 3; ++i)
-        {
-            int targetIdx = i;//bestPermutation[i];
-            b[i].pos = verticesEnd[targetIdx];
-            b[i].u   = static_cast<float>(i) / 3.0f;
-            b[i].v   = 1.0f;
-        }
-        if(pipeNode.inverted)//pipeNode.orientedInterfacesIds.back().inverted
-        {
-            auto temp = b[1].pos;
+            auto tempB = b[1].pos;
             b[1].pos = b[2].pos;
-            b[2].pos = temp;
+            b[2].pos = tempB;
         }
-/*
-        UVVertex a_last = a[0]; a_last.u = 1.0f;
-        UVVertex b_last = b[0]; b_last.u = 1.0f;
-        3. Выбор диагонали по знаку ориентированного объема складки
-        JPH::Vec3 v0 = a[0].pos;
-        JPH::Vec3 v1 = a[1].pos;
-        JPH::Vec3 v2 = b[0].pos;
-        JPH::Vec3 v3 = b[1].pos;
 
-        JPH::Vec3 volEdge1 = v1 - v0;
-        JPH::Vec3 volEdge2 = v2 - v0;
-        JPH::Vec3 volEdge3 = v3 - v0;
+        // 2. Вычисляем реальные размеры в метрах (1.0f в координатах = 1 метр)
+        // Расстояние по окружности для каждой вершины (учитывает даже разносторонние треугольники)
+        float u0 = 0.0f;
+        float u1 = (a[1].pos - a[0].pos).Length();
+        float u2 = u1 + (a[2].pos - a[1].pos).Length();
 
-        float volumeSign = volEdge1.Dot(volEdge2.Cross(volEdge3));
-        bool useAlternativeDiagonal = (volumeSign < 0.0f);
+        // Длина сегмента антипризмы между центрами торцов
+        auto centerA = (a[0].pos + a[1].pos + a[2].pos) / 3.0f;
+        auto centerB = (b[0].pos + b[1].pos + b[2].pos) / 3.0f;
+        float segmentLength = (centerB - centerA).Length();
 
-        --- СИСТЕМНЫЙ ТЕСТ ВЫВЕРНУТОСТИ КОЛЬЦА ЧЕРЕЗ ОБЪЕМ ---
-        Считаем объем первого тетраэдра складки (a0, b0, a1) относительно центра пролета
-        JPH::Vec3 centerBegin = (verticesBegin[0] + verticesBegin[1] + verticesBegin[2]) / 3.0f;
-        JPH::Vec3 centerEnd   = (verticesEnd[0] + verticesEnd[1] + verticesEnd[2]) / 3.0f;
-        JPH::Vec3 localPipeCenter = (centerBegin + centerEnd) * 0.5f;
+        // 3. Назначаем UV-координаты в метрах (1 метр = 1.0 UV)
+        a[0].u = u0; a[0].v = 0.0f;
+        a[1].u = u1; a[1].v = 0.0f;
+        a[2].u = u2; a[2].v = 0.0f;
 
-        JPH::Vec3 e0 = a[0].pos - localPipeCenter;
-        JPH::Vec3 e1 = b[0].pos - localPipeCenter;
-        JPH::Vec3 e2 = a[1].pos - localPipeCenter;
+        b[0].u = u0; b[0].v = segmentLength;
+        b[1].u = u1; b[1].v = segmentLength;
+        b[2].u = u2; b[2].v = segmentLength;
 
-        Если нормали изначально пошли наружу (> 0), взводим флаг инверсии для всего кольца
-        bool invertRing = (e0.Dot(e1.Cross(e2)) > 0.0f);
-
-        4. ЧЕСТНАЯ ГЕОМЕТРИЧЕСКАЯ СБОРКА СТЕН (ЖЕСТКИЙ ПАССИВНЫЙ CCW/CW КОНТРОЛЬ)
-        useAlternativeDiagonal = true;
-
-
-                a.u = 1.0f;
-        a.v = 1.0f;
-        b.u = 0.0f;
-        b.v = 1.0f;
-        c.u = 0.0f;
-        c.v = 0.0f;
-        d.u = 1.0f;
-        d.v = 0.0f;
-*/
-        AddPipeWall(meshData, false, a, b);
+        AddAntiprism(meshData, false, a, b);
     }
 
     // 3. Генерация вершин торца (без изменений)
@@ -174,32 +122,7 @@ namespace MaxDoF::Common::LevelMeshes
         }
         return vertices;
     }
-/*
-    // Локальная утилита контроля вывернутости индивидуальной боковой стены
-    void MeshBuilder::AddOrientedWallTriangle(
-        MaxDoF::Common::LevelMeshes::MeshData& meshData,
-        const MaxDoF::Common::LevelMeshes::MeshBuilder::UVVertex& p0,
-        const MaxDoF::Common::LevelMeshes::MeshBuilder::UVVertex& p1,
-        const MaxDoF::Common::LevelMeshes::MeshBuilder::UVVertex& p2,
-        const JPH::Vec3& localPipeCenter)
-    {
-        JPH::Vec3 e0 = p0.pos - localPipeCenter;
-        JPH::Vec3 e1 = p1.pos - localPipeCenter;
-        JPH::Vec3 e2 = p2.pos - localPipeCenter;
 
-        float volumeSign = e0.Dot(e1.Cross(e2));
-
-        // Возвращаем строгое и чистое сравнение с нулем
-        if (volumeSign > 0.0f)
-        {
-            MaxDoF::Common::LevelMeshes::MeshBuilder::AddTriangle(meshData, p0, p2, p1);
-        }
-        else
-        {
-            MaxDoF::Common::LevelMeshes::MeshBuilder::AddTriangle(meshData, p0, p1, p2);
-        }
-    }
-*/
     void MeshBuilder::CreateMeshData(
         Common::Types3d::MeshData& meshData,
         const Common::Types::LevelGraphs::PureLevelGraph& graph)
@@ -216,47 +139,10 @@ namespace MaxDoF::Common::LevelMeshes
                 if(node.orientedInterfaces.size() < 2)
                     MaxDoF_LOG_AND_ABORT("bad data")
 
-                // Извлекаем два интерфейса трубы напрямую
-                const auto& interface0 = graph.interfaces[node.orientedInterfaces[0].interfaceId];
-                const auto& interface1 = graph.interfaces[node.orientedInterfaces[1].interfaceId];
-
-/*
-                FILE *file = fopen("output.txt", "w");
-    if (file != NULL) {
-        // Записываем данные в файл вместо консоли
-        fprintf(file, "x: %f\n", (double)interface0.vertices[0].GetX());
-        fprintf(file, "y: %f\n", (double)interface0.vertices[0].GetY());
-        fprintf(file, "z: %f\n\n", (double)interface0.vertices[0].GetZ());
-        fprintf(file, "x: %f\n", (double)interface0.vertices[1].GetX());
-        fprintf(file, "y: %f\n", (double)interface0.vertices[1].GetY());
-        fprintf(file, "z: %f\n\n", (double)interface0.vertices[1].GetZ());
-        fprintf(file, "x: %f\n", (double)interface0.vertices[2].GetX());
-        fprintf(file, "y: %f\n", (double)interface0.vertices[2].GetY());
-        fprintf(file, "z: %f\n", (double)interface0.vertices[2].GetZ());
-        fprintf(file, "aaaaaaaaa\n");
-        fprintf(file, "x: %f\n", (double)interface1.vertices[0].GetX());
-        fprintf(file, "y: %f\n", (double)interface1.vertices[0].GetY());
-        fprintf(file, "z: %f\n\n", (double)interface1.vertices[0].GetZ());
-        fprintf(file, "x: %f\n", (double)interface1.vertices[1].GetX());
-        fprintf(file, "y: %f\n", (double)interface1.vertices[1].GetY());
-        fprintf(file, "z: %f\n\n", (double)interface1.vertices[1].GetZ());
-        fprintf(file, "x: %f\n", (double)interface1.vertices[2].GetX());
-        fprintf(file, "y: %f\n", (double)interface1.vertices[2].GetY());
-        fprintf(file, "z: %f\n", (double)interface1.vertices[2].GetZ());
-        // Обязательно закрываем файл
-        fclose(file);
-    } else {
-        printf("Ошибка открытия файла!\n");
-    }
-                // std::abort();
-*/
                 // Натягиваем 6 боковых прямоугольников-складок
-                ConnectTriangles(meshData, graph, node, interface0,
-                    {
-                        graph.vertices[interface1.verticesIndices[0]],
-                        graph.vertices[interface1.verticesIndices[1]],
-                        graph.vertices[interface1.verticesIndices[2]]
-                    }
+                AddAntiprism(meshData, graph, node,
+                    graph.interfaces[node.orientedInterfaces[0].interfaceId],
+                    graph.interfaces[node.orientedInterfaces[1].interfaceId]
                 );
             }
             // Для тетраэдра на этом этапе ничего делать не нужно — у него нет боковых складок,
@@ -267,19 +153,41 @@ namespace MaxDoF::Common::LevelMeshes
             // =========================================================================
             // Проходим по всем узлам еще раз и заставляем каждый из них честно
             // проверить свои интерфейсы на наличие глухих тупиков
-            for(const auto& orientedInterface : node.orientedInterfaces)
+            for (const auto& orientedInterface : node.orientedInterfaces)
             {
                 const auto& face = graph.interfaces[orientedInterface.interfaceId];
                 // Если грань официально ведет в монолитный камень — строим заглушку!
-                // if(face.nodeB == static_cast<NodeKey>(Types::LevelGraphs::InterfaceType::SolidRock))
-                if(orientedInterface.interfaceType == static_cast<Types::LevelGraphs::InterfaceType>(Types::LevelGraphs::InterfaceType::SolidRock))
+                if (orientedInterface.interfaceType == static_cast<Types::LevelGraphs::InterfaceType>(Types::LevelGraphs::InterfaceType::SolidRock))
                 {
-                    MeshBuilder::UVVertex p0{ graph.vertices[face.verticesIndices[0]], 0.0f, 0.0f };
-                    MeshBuilder::UVVertex p1{ graph.vertices[face.verticesIndices[1]], 1.0f, 0.0f };
-                    MeshBuilder::UVVertex p2{ graph.vertices[face.verticesIndices[2]], 0.5f, 1.0f };
+                    const auto& pos0 = graph.vertices[face.verticesIndices[0]];
+                    const auto& pos1 = graph.vertices[face.verticesIndices[1]];
+                    const auto& pos2 = graph.vertices[face.verticesIndices[2]];
+
+                    // 1. Строим ортонормированный базис (оси U и V в плоскости треугольника)
+                    auto edge1 = pos1 - pos0;
+                    auto edge2 = pos2 - pos0;
+
+                    float len1 = edge1.Length();
+                    // Защита от вырожденного треугольника
+                    auto axisU = (len1 > 0.0001f) ? (edge1 / len1) : edge1;
+
+                    // Нормаль плоскости и перпендикулярная ось V внутри этой же плоскости
+                    auto normal = edge1.Cross(edge2).Normalized();
+                    auto axisV = normal.Cross(axisU);
+
+                    // 2. Проецируем вершины на локальные оси в метрах (1.0f = 1 метр)
+                    // Вершина 0 — начало координат (0, 0)
+                    // Вершина 1 лежит строго на оси U на расстоянии len1
+                    // Вершина 2 получает точные координаты (u, v) без искажения углов
+                    float u2 = edge2.Dot(axisU);
+                    float v2 = edge2.Dot(axisV);
+
+                    MeshBuilder::UVVertex p0{ pos0, 0.0f, 0.0f };
+                    MeshBuilder::UVVertex p1{ pos1, len1, 0.0f };
+                    MeshBuilder::UVVertex p2{ pos2, u2,   v2   };
 
                     // Единое пуленепробиваемое правило для труб, тетраэдров и комнат:
-                    if(orientedInterface.inverted)
+                    if (orientedInterface.inverted)
                     {
                         AddTriangle(meshData, p0, p2, p1);
                     }

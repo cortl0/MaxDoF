@@ -7,10 +7,11 @@
 
 #include "Common/Types/Types3d.h"
 #include "Common/Types/LevelGraphStructures.h"
+#include "Primitive.h"
 
-namespace MaxDoF::Common::LevelGraphs
+ namespace MaxDoF::Common::LevelGraphs
 {
-    class Pipe
+    class Pipe : public Primitive
     {
     public:
         using Vertices = std::array<Types3d::TriangleVertices, 2>;
@@ -18,7 +19,11 @@ namespace MaxDoF::Common::LevelGraphs
 
     private:
         Vertices vertices;
-        TrianglesVerticesIndices interfaces;
+        TrianglesVerticesIndices interfaces
+        {{
+            {0, 1, 2}, // Торец 0 Передний
+            {3, 4, 5}  // Торец 1 Задний
+        }};
 
     public:
         Pipe();
@@ -28,6 +33,7 @@ namespace MaxDoF::Common::LevelGraphs
         void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
         void SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, double radius);
         void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface fitst, double length, double radius);
-        void FillGraph(Types::LevelGraphs::PureLevelGraph&, std::array<bool, 2> invertInterfaces, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes);
+        void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface first, Types::LevelGraphs::TriangleInterface second);
+        void FillGraph(Types::LevelGraphs::PureLevelGraph &, std::array<bool, 2> invertInterfaces, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes);
     };
 }

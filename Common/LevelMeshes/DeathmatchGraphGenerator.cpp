@@ -4,6 +4,7 @@
 // See LICENSE file in the project root for full license information
 
 #include "DeathmatchGraphGenerator.h"
+
 #include "Common/LevelMeshes/MeshBuilder.h"
 #include "MeshBuilder.h"
 #include "Pipe.h"
@@ -30,14 +31,11 @@ namespace MaxDoF::Common::LevelGraphs
 
         for (size_t i = 0; i < 4; ++i)
         {
-            graph.interfaces[graph.nodes[tetrahedronIndex].orientedInterfaces[i].interfaceId].nodeB =
-                static_cast<Types::LevelGraphs::NodeKey>(Types::LevelGraphs::InterfaceType::UnDefined);
-
             Pipe pipe;
             pipe.SetVetricesAndInterfaces(
-                graph, 
+                graph,
                 graph.interfaces[graph.nodes[tetrahedronIndex].orientedInterfaces[i].interfaceId],
-                cArenaRadius, 
+                cArenaRadius,
                 cArenaRadius
             );
 

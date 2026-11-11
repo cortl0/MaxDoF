@@ -58,7 +58,7 @@ namespace MaxDoF::Common::World
         // Вызывается, когда тела перестают соприкасаться
         virtual void OnContactRemoved(const JPH::SubShapeIDPair &inSubShapePair) override
         {
-            // Внимание: здесь передаются ID под-форм (SubShapeIDPair), 
+            // Внимание: здесь передаются ID под-форм (SubShapeIDPair),
             // так как сами тела к этому моменту уже могут быть удалены из контакта.
             // Получить BodyID можно так: inSubShapePair.GetBody1ID()
             //std::cout << "Контакты разорваны между телами." << std::endl;

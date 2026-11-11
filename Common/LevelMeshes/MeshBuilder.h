@@ -22,14 +22,14 @@ namespace MaxDoF::Common::LevelMeshes
     public:
         static void AddNonPlanarQuad(Common::Types3d::MeshData &meshData, bool reverseDiagonal,
             const UVVertex &a, const UVVertex &b, const UVVertex &c, const UVVertex &d);
-        static void AddPipeWall(Common::Types3d::MeshData &meshData, bool reverseDiagonals,
-            const std::array<UVVertex, 3> &verticesBegin, const std::array<UVVertex, 3> &verticesEnd);
+        static void AddAntiprism(Common::Types3d::MeshData &meshData, bool reverseDiagonals,
+            const std::array<UVVertex, 3> &begin, const std::array<UVVertex, 3> &end);
         static void AddTriangle(Common::Types3d::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2);
-        static void ConnectTriangles(Common::Types3d::MeshData& meshData,
+        static void AddAntiprism(Common::Types3d::MeshData& meshData,
             const Types::LevelGraphs::PureLevelGraph& graph,
             const Types::LevelGraphs::VolumeNode& pipeNode,
-            const Types::LevelGraphs::TriangleInterface& TriangleInterface,
-            const Types3d::TriangleVertices& verticesEnd);
+            const Types::LevelGraphs::TriangleInterface& begin,
+            const Types::LevelGraphs::TriangleInterface& end);
         /**
          * @brief Главная функция трансляции графа в полигональный меш уровня.
          *

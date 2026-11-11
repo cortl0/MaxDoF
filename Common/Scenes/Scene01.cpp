@@ -7,6 +7,7 @@
 
 #include "Common/LevelMeshes/MeshBuilder.h"
 #include "Common/LevelMeshes/DeathmatchGraphGenerator.h"
+#include "Common/LevelMeshes/DeathmatchSpaceGraphGenerator.h"
 #include "Common/LevelMeshes/PipeGraphGenerator.h"
 #include "Common/LevelMeshes/TetrahedronGraphGenerator.h"
 
@@ -128,7 +129,7 @@ namespace MaxDoF::Common::Scenes
         Common::Types3d::MeshData meshData;
         Common::Types::LevelGraphs::PureLevelGraph levelGraph;
 
-        switch (2)
+        switch (3)
         {
         case 0:
             Common::LevelGraphs::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
@@ -138,6 +139,9 @@ namespace MaxDoF::Common::Scenes
             break;
         case 2:
             Common::LevelGraphs::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
+            break;
+        case 3:
+            Common::LevelGraphs::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph);
             break;
         default:
             break;

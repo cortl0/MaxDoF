@@ -46,11 +46,6 @@ namespace MaxDoF::Common::Types::LevelGraphs
     {
         TriangleInterfaceKey id;
         Types3d::TriangleVerticesIndices verticesIndices;
-
-        // Математическое направление ребра: ИЗ внешнего пространства ВНУТРЬ узла nodeA.
-        // Нормаль этого треугольника по умолчанию смотрит внутрь nodeA.
-        NodeKey nodeA = static_cast<NodeKey>(Types::LevelGraphs::InterfaceType::UnDefined);
-        NodeKey nodeB = static_cast<NodeKey>(Types::LevelGraphs::InterfaceType::UnDefined);
     };
 
     struct OrientedInterface

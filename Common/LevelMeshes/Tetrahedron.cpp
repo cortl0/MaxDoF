@@ -36,13 +36,6 @@ namespace MaxDoF::Common::LevelGraphs
             JPH::RVec3(-edgeLength / 2.0f, yBottom, zFront),   // Вершина 2 (Вперед-влево-вниз)
             JPH::RVec3(edgeLength / 2.0f, yBottom, zFront)     // Вершина 3 (Вперед-вправо-вниз)
         };
-
-        interfaces = {{
-            {0, 2, 1}, // Грань 0 Левая
-            {0, 1, 3}, // Грань 1 Правая
-            {0, 3, 2}, // Грань 2 Нижняя
-            {1, 2, 3}  // Грань 3 Переднияя
-        }};
     }
 
     void Tetrahedron::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<Types::LevelGraphs::InterfaceType, 4> interfaceTypes)
@@ -50,15 +43,13 @@ namespace MaxDoF::Common::LevelGraphs
         const auto baseVertexIndex = graph.vertices.size();
         const auto baseInterfaceIndex = graph.interfaces.size();
 
-        for(const auto& vertice : vertices)
-            graph.vertices.push_back(vertice);
+        for(const auto& vertex : vertices)
+            graph.vertices.push_back(vertex);
 
         for(const auto& interface : interfaces)
             graph.interfaces.push_back(Types::LevelGraphs::TriangleInterface{
                 .id = graph.interfaces.size(),
-                .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex},
-                .nodeA = graph.nodes.size(),
-                .nodeB = static_cast<Types::LevelGraphs::NodeKey>(Types::LevelGraphs::InterfaceType::SolidRock)
+                .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex}
             }
         );
 

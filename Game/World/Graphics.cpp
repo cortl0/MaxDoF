@@ -16,10 +16,15 @@
 
 namespace MaxDoF::Game::World
 {
+    Ogre::HlmsSamplerblock samplerblock;
+
     Graphics::Graphics( const Ogre::String &helpDescription ) :
         mTextOverleyManager(helpDescription),
         mGraphicsSystem( 0 )
     {
+        samplerblock.mU = Ogre::TAM_WRAP;
+        samplerblock.mV = Ogre::TAM_WRAP;
+        samplerblock.mW = Ogre::TAM_WRAP;
     }
 
     Graphics::~Graphics()
@@ -57,7 +62,7 @@ namespace MaxDoF::Game::World
             newTexture->scheduleTransitionTo(Ogre::GpuResidency::Resident);
 
             // 4. Меняем диффузную карту (основной цвет/рисунок) на новую текстуру
-            pbsDatablock->setTexture(Ogre::PBSM_DIFFUSE, newTexture);
+            pbsDatablock->setTexture(Ogre::PBSM_DIFFUSE, newTexture, &samplerblock);
         }
     }
 
@@ -101,7 +106,7 @@ namespace MaxDoF::Game::World
         texture->scheduleTransitionTo(Ogre::GpuResidency::Resident);
 
         // 4. Привязываем текстуру к новому материалу
-        uniqueDatablock->setTexture(Ogre::PBSM_DIFFUSE, texture);
+        uniqueDatablock->setTexture(Ogre::PBSM_DIFFUSE, texture, &samplerblock);
 
         // 5. Применяем этот новый уникальный материал ТОЛЬКО к этому конкретному кубу
         cubeItem->setDatablock(uniqueDatablock);
@@ -134,7 +139,7 @@ namespace MaxDoF::Game::World
 
         // 3. Передаем указатель на TextureGpu в датаблок
         // Обратите внимание: первый аргумент приводится к uint8 (так как тип в перечислении Ogre::PbsTextureTypes)
-        datablock->setTexture(static_cast<Ogre::uint8>(Ogre::PBSM_DIFFUSE), texture);
+        datablock->setTexture(static_cast<Ogre::uint8>(Ogre::PBSM_DIFFUSE), texture, &samplerblock);
     }
 
     void Graphics::destroyAllObjects(Ogre::SceneNode* node)
@@ -159,7 +164,7 @@ namespace MaxDoF::Game::World
         while(auto num = node->numChildren() > 0)
         {
             Ogre::Node* genericChild = node->getChild(num - 1);
-            
+
             if (auto* childSceneNode = dynamic_cast<Ogre::SceneNode*>(genericChild))
                 destroyNodeRecursively(childSceneNode);
             else
