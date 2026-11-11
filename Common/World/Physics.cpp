@@ -5,6 +5,10 @@
 
 #include "Common/World/Physics.h"
 
+#include <Jolt/RegisterTypes.h>
+#include <Jolt/Core/Factory.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/Body/BodyInterface.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
 #include <Jolt/Physics/Collision/Shape/SphereShape.h>
 #include <Jolt/Physics/Collision/Shape/BoxShape.h>
@@ -14,12 +18,46 @@
 
 namespace MaxDoF::Common::World
 {
+    // 1. Заглушка для слоев широкой фазы (BroadPhase)
+    class MyBroadPhaseLayerInterface final : public JPH::BroadPhaseLayerInterface
+    {
+    public:
+        virtual JPH::uint GetNumBroadPhaseLayers() const override { return 1; }
+        virtual JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override { return JPH::BroadPhaseLayer(0); }
+#if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
+        virtual const char * GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override { return "Default"; }
+#endif
+    };
+
+    // 2. Фильтр: Объект против Слоя широкой фазы (всегда разрешаем коллизию)
+    class MyObjectVsBroadPhaseLayerFilter final : public JPH::ObjectVsBroadPhaseLayerFilter
+    {
+    public:
+        virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override { return true; }
+    };
+
+    // 3. Фильтр: Пара Объектов друг с другом (всегда разрешаем коллизию)
+    class MyObjectLayerPairFilter final : public JPH::ObjectLayerPairFilter
+    {
+    public:
+        virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override { return true; }
+    };
+
     Physics::Physics()
     {
     }
 
     Physics::~Physics()
     {
+        if (mPhysicsSystem)
+        {
+            delete mPhysicsSystem;
+            delete mJobSystem;
+            delete mPhysicsAllocator;
+
+            delete JPH::Factory::sInstance;
+            JPH::Factory::sInstance = nullptr;
+        }
     }
 
     void Physics::destroyBody(JPH::BodyID bodyID)
@@ -33,7 +71,38 @@ namespace MaxDoF::Common::World
         mBodyInterface->RemoveBody(bodyID);
     }
 
-    JPH::BodyID Physics::setBodySettings(JPH::uint64 userData, const JPH::ShapeSettings::ShapeResult& shapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD)
+    void Physics::initialize(unsigned int maxBodies)
+    {
+        JPH::RegisterDefaultAllocator();
+        JPH::Factory::sInstance = new JPH::Factory();
+        JPH::RegisterTypes();
+
+        mPhysicsAllocator = new JPH::TempAllocatorImpl(10 * 1024 * 1024); // 10 Mb
+
+        int numThreads = static_cast<int>(std::thread::hardware_concurrency()) - 1;
+        numThreads = std::max(1, numThreads);
+
+        mJobSystem = new JPH::JobSystemThreadPool(
+            JPH::cMaxPhysicsJobs,
+            JPH::cMaxPhysicsBarriers,
+            numThreads
+        );
+
+        mBroadPhaseLayerInterface = std::make_unique<MyBroadPhaseLayerInterface>();
+        mObjectVsBroadPhaseLayerFilter = std::make_unique<MyObjectVsBroadPhaseLayerFilter>();
+        mObjectLayerPairFilter = std::make_unique<MyObjectLayerPairFilter>();
+
+        mPhysicsSystem = new JPH::PhysicsSystem();
+
+        mPhysicsSystem->Init(
+            maxBodies, 0, maxBodies, maxBodies,
+            *mBroadPhaseLayerInterface,
+            *mObjectVsBroadPhaseLayerFilter,
+            *mObjectLayerPairFilter
+        );
+    }
+
+    JPH::BodyID Physics::setBodySettings(JPH::uint64 userData, const JPH::ShapeSettings::ShapeResult &shapeResult, const Types::PhysPose &pose, float mass, bool dynamic, bool onCCD)
     {
         JPH::BodyCreationSettings bodySettings(
             shapeResult.Get(),
@@ -123,5 +192,10 @@ namespace MaxDoF::Common::World
         JPH::SphereShapeSettings shapeSettings(radius);
         shapeSettings.mUserData = userData + 15;
         return setBodySettings(userData, shapeSettings.Create(), pose, mass, true, onCCD);
+    }
+
+    void Physics::update(float timeSinceLast, const JPH::BodyID &shipBodyId)
+    {
+        mPhysicsSystem->Update(timeSinceLast, 1, mPhysicsAllocator, mJobSystem);
     }
 }

@@ -5,10 +5,6 @@
 
 #include "Common/World/Manager.h"
 
-#include <Jolt/RegisterTypes.h>
-#include <Jolt/Core/Factory.h>
-#include <Jolt/Core/JobSystemThreadPool.h>
-
 #ifdef MAXDOF_CLIENT_BUILD
 #include "Game/Utils/Converters.h"
 #endif
@@ -26,50 +22,13 @@ namespace MaxDoF::Common::World
 
     Manager::~Manager()
     {
-        if (mPhysicsSystem)
-        {
-            delete mPhysicsSystem;
-            delete mJobSystem;
-            delete mPhysicsAllocator;
-
-            delete JPH::Factory::sInstance;
-            JPH::Factory::sInstance = nullptr;
-        }
     }
 
     void Manager::initialize(unsigned int maxBodies)
     {
-        JPH::RegisterDefaultAllocator();
-        JPH::Factory::sInstance = new JPH::Factory();
-        JPH::RegisterTypes();
-
-        mPhysicsAllocator = new JPH::TempAllocatorImpl(10 * 1024 * 1024); // 10 Mb
-
-        int numThreads = static_cast<int>(std::thread::hardware_concurrency()) - 1;
-        numThreads = std::max(1, numThreads);
-
-        mJobSystem = new JPH::JobSystemThreadPool(
-            JPH::cMaxPhysicsJobs,
-            JPH::cMaxPhysicsBarriers,
-            numThreads
-        );
-
-        // ИЗМЕНЕНО: Выделяем объекты фильтров в куче (их адреса теперь не изменятся)
-        mBroadPhaseLayerInterface = std::make_unique<MyBroadPhaseLayerInterface>();
-        mObjectVsBroadPhaseLayerFilter = std::make_unique<MyObjectVsBroadPhaseLayerFilter>();
-        mObjectLayerPairFilter = std::make_unique<MyObjectLayerPairFilter>();
-
-        mPhysicsSystem = new JPH::PhysicsSystem();
-
-        mPhysicsSystem->Init(
-            maxBodies, 0, maxBodies, maxBodies,
-            *mBroadPhaseLayerInterface,
-            *mObjectVsBroadPhaseLayerFilter,
-            *mObjectLayerPairFilter
-        );
-
-        mPhysics.setBodyInterface(&mPhysicsSystem->GetBodyInterface());
-        mPhysicsSystem->SetGravity(JPH::Vec3::sZero());
+        mPhysics.initialize();
+        mPhysics.setBodyInterface(&mPhysics.getPhysicsSystem()->GetBodyInterface());
+        mPhysics.getPhysicsSystem()->SetGravity(JPH::Vec3::sZero());
         mEntities.Reserve(maxBodies);
 
 #ifdef MAXDOF_CLIENT_BUILD
@@ -79,12 +38,13 @@ namespace MaxDoF::Common::World
 
     void Manager::update(float timeSinceLast, const JPH::BodyID& shipBodyId)
     {
-        if (!mPhysicsSystem)
+        if (!mPhysics.getPhysicsSystem())
             return;
 
         float physicsTimeStep = std::min(timeSinceLast, 0.1f);
-        mPhysicsSystem->Update(physicsTimeStep, 1, mPhysicsAllocator, mJobSystem);
+        mPhysics.update(physicsTimeStep, shipBodyId);
         JPH::RVec3 shipPosition = mPhysics.getBodyInterface()->GetPosition(shipBodyId);
+
 #ifdef MAXDOF_CLIENT_BUILD
         for (const auto& entity : mEntities.GetEntities())
         {

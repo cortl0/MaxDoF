@@ -5,9 +5,6 @@
 
 #pragma once
 
-#include <Jolt/Jolt.h>
-#include <Jolt/Physics/PhysicsSystem.h>
-
 #include "Common/World/Entities.h"
 
 #ifdef MAXDOF_CLIENT_BUILD
@@ -16,57 +13,18 @@
 
 #include "Common/World/Physics.h"
 
-namespace JPH
-{
-    class TempAllocatorImpl;
-    class JobSystemThreadPool;
-    class BodyInterface;
-}
 namespace Ogre { class SceneNode; }
 
 namespace MaxDoF::Common::World
 {
-    // 1. Заглушка для слоев широкой фазы (BroadPhase)
-    class MyBroadPhaseLayerInterface final : public JPH::BroadPhaseLayerInterface
-    {
-    public:
-        virtual JPH::uint GetNumBroadPhaseLayers() const override { return 1; }
-        virtual JPH::BroadPhaseLayer GetBroadPhaseLayer(JPH::ObjectLayer inLayer) const override { return JPH::BroadPhaseLayer(0); }
-#if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-        virtual const char * GetBroadPhaseLayerName(JPH::BroadPhaseLayer inLayer) const override { return "Default"; }
-#endif
-    };
-
-    // 2. Фильтр: Объект против Слоя широкой фазы (всегда разрешаем коллизию)
-    class MyObjectVsBroadPhaseLayerFilter final : public JPH::ObjectVsBroadPhaseLayerFilter
-    {
-    public:
-        virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::BroadPhaseLayer inLayer2) const override { return true; }
-    };
-
-    // 3. Фильтр: Пара Объектов друг с другом (всегда разрешаем коллизию)
-    class MyObjectLayerPairFilter final : public JPH::ObjectLayerPairFilter
-    {
-    public:
-        virtual bool ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const override { return true; }
-    };
-
     class Manager
     {
-        JPH::TempAllocatorImpl*     mPhysicsAllocator{ nullptr };
-        JPH::JobSystemThreadPool*   mJobSystem{ nullptr };
-        JPH::PhysicsSystem*         mPhysicsSystem{ nullptr };
-
+        World::Entites mEntities;
         Physics mPhysics;
+
 #ifdef MAXDOF_CLIENT_BUILD
         MaxDoF::Game::World::Graphics mGraphics;
 #endif
-
-        std::unique_ptr<MyBroadPhaseLayerInterface>      mBroadPhaseLayerInterface;
-        std::unique_ptr<MyObjectVsBroadPhaseLayerFilter> mObjectVsBroadPhaseLayerFilter;
-        std::unique_ptr<MyObjectLayerPairFilter>         mObjectLayerPairFilter;
-
-        World::Entites mEntities;
 
     public:
         Manager();
@@ -75,13 +33,15 @@ namespace MaxDoF::Common::World
 #ifdef MAXDOF_CLIENT_BUILD
         MaxDoF::Game::World::Graphics& getGraphics(){ return mGraphics; }
 #endif
-        JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysicsSystem; }
-        void initialize(unsigned int maxBodies = 1024);
+        JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysics.getPhysicsSystem(); }
+        void initialize(unsigned int maxBodies);
+
         Types::Entity& createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
             Ogre::SceneNode* ogreNode,
 #endif
             JPH::BodyID bodyId);
+
         void destroyEntity(JPH::uint32 bodyIndex);
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
