@@ -5,11 +5,11 @@
 
 #include "Common/Scenes/Scene01.h"
 
-#include "Common/LevelMeshes/MeshBuilder.h"
-#include "Common/LevelMeshes/DeathmatchGraphGenerator.h"
-#include "Common/LevelMeshes/DeathmatchSpaceGraphGenerator.h"
-#include "Common/LevelMeshes/PipeGraphGenerator.h"
-#include "Common/LevelMeshes/TetrahedronGraphGenerator.h"
+#include "Common/Maps/DeathmatchGraphGenerator.h"
+#include "Common/Maps/DeathmatchSpaceGraphGenerator.h"
+#include "Common/Maps/PipeGraphGenerator.h"
+#include "Common/Maps/TetrahedronGraphGenerator.h"
+#include "Common/Meshes/MeshBuilder.h"
 
 namespace MaxDoF::Common::Scenes
 {
@@ -132,22 +132,22 @@ namespace MaxDoF::Common::Scenes
         switch (3)
         {
         case 0:
-            Common::LevelGraphs::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
+            Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
             break;
         case 1:
-            Common::LevelGraphs::PipeGraphGenerator::GenerateGraph(levelGraph);
+            Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph);
             break;
         case 2:
-            Common::LevelGraphs::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
+            Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
             break;
         case 3:
-            Common::LevelGraphs::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph);
+            Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph);
             break;
         default:
             break;
         }
 
-        MaxDoF::Common::LevelMeshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
+        MaxDoF::Common::Meshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
         mWorldManager.createMesh(meshData);
     }
 

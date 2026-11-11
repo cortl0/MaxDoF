@@ -7,7 +7,7 @@
 
 #include "Common/Types/LevelGraphStructures.h"
 
-namespace MaxDoF::Common::LevelGraphs
+namespace MaxDoF::Common::Maps
 {
     class TetrahedronGraphGenerator
     {

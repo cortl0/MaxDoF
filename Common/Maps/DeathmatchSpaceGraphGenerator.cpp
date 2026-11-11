@@ -3,20 +3,19 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "DeathmatchSpaceGraphGenerator.h"
+#include "Common/Maps/DeathmatchSpaceGraphGenerator.h"
 
-#include "Common/LevelMeshes/MeshBuilder.h"
-#include "MeshBuilder.h"
-#include "Pipe.h"
-#include "Tetrahedron.h"
+#include "Common/Meshes/MeshBuilder.h"
+#include "Common/Meshes/Pipe.h"
+#include "Common/Meshes/Tetrahedron.h"
 
-namespace MaxDoF::Common::LevelGraphs
+namespace MaxDoF::Common::Maps
 {
     void DeathmatchSpaceGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph)
     {
         const float cArenaRadius = 10.0f;
 
-        Tetrahedron tetrahedron;
+        Common::LevelGraphs::Tetrahedron tetrahedron;
         tetrahedron.SetVetricesAndInterfaces(cArenaRadius);
 
         tetrahedron.FillGraph(graph,
@@ -29,7 +28,7 @@ namespace MaxDoF::Common::LevelGraphs
 
         const auto& tetrahedronIndex = graph.nodes.size() - 1;
 
-        Tetrahedron tetrahedronSecond;
+        Common::LevelGraphs::Tetrahedron tetrahedronSecond;
         tetrahedronSecond.SetVetricesAndInterfaces(cArenaRadius * 5);
 
         tetrahedronSecond.FillGraph(graph,
@@ -44,7 +43,7 @@ namespace MaxDoF::Common::LevelGraphs
 
         for (size_t i = 0; i < 4; ++i)
         {
-            Pipe pipe;
+            Common::LevelGraphs::Pipe pipe;
             pipe.SetVetricesAndInterfaces(
                 graph,
                 graph.interfaces[graph.nodes[tetrahedronIndex].orientedInterfaces[i].interfaceId],

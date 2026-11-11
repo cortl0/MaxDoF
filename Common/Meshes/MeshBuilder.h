@@ -10,7 +10,7 @@
 
 #include "Common/Types/LevelGraphStructures.h"
 
-namespace MaxDoF::Common::LevelMeshes
+namespace MaxDoF::Common::Meshes
 {
     class MeshBuilder
     {

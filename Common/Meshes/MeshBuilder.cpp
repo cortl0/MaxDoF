@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "Common/LevelMeshes/MeshBuilder.h"
+#include "Common/Meshes/MeshBuilder.h"
 
 #include <array>
 #include <random>
@@ -11,7 +11,7 @@
 
 #include "Common/Utils/SystemUtils.h"
 
-namespace MaxDoF::Common::LevelMeshes
+namespace MaxDoF::Common::Meshes
 {
     void MeshBuilder::AddNonPlanarQuad(Common::Types3d::MeshData& meshData, bool reverseDiagonal,
         const UVVertex& a, const UVVertex& b, const UVVertex& c, const UVVertex& d)

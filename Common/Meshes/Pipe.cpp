@@ -5,7 +5,7 @@
 
 #include "Pipe.h"
 
-#include "Common/LevelMeshes/MeshBuilder.h"
+#include "Common/Meshes/MeshBuilder.h"
 
 namespace MaxDoF::Common::LevelGraphs
 {
@@ -21,8 +21,8 @@ namespace MaxDoF::Common::LevelGraphs
         JPH::RVec3 V(0.0f, 1.0f, 0.0f);
 
         vertices = {
-            Common::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
-            Common::LevelMeshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
+            Common::Meshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
+            Common::Meshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
         };
     }
 
