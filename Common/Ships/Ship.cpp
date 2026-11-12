@@ -82,7 +82,7 @@ namespace MaxDoF::Common::Ships
 
         if (fireCooldown <= 0.0f)
         {
-            fireCooldown = 0.15f;
+            fireCooldown = 0.1f;
 
             JPH::BodyInterface* bodyInterface = mWorldManager.getBodyInterface();
 
@@ -99,6 +99,18 @@ namespace MaxDoF::Common::Ships
             JPH::Vec3 projectileImpulse = shipVelocity + (globalForwardDirection * bulletMass * 100.0f);
             bodyInterface->AddImpulse(bullet.physId, projectileImpulse);
 
+
+        //     mBodyInterface->GetRotation(shipEntity.physId);
+
+        //         // 3. Переводим локальный вектор в глобальный (умножаем кватернион на вектор)
+        //         JPH::Vec3 global_torque = body_rotation * local_torque;
+
+        //         // Передаем момент по BodyID. Третий параметр автоматически будит тело, если оно спало.
+        //         mBodyInterface->AddTorque(shipEntity.physId, global_torque, JPH::EActivation::Activate);
+
+
+
+        //   mWorldManager.getPhysicsSystem()->GetBodyInterface().    .->GetPositionAndRotation(entity.physId, position, rotation);
             {
                 JPH::BodyLockWrite lock(mWorldManager.getPhysicsSystem()->GetBodyLockInterface(), mEntity.physId);
                 if (lock.Succeeded())

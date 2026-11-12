@@ -65,18 +65,14 @@ namespace MaxDoF::Game
 
     void MdfGame::update( float timeSinceLast )
     {
-        mBattleLogic.Update();
-
-        // 1. Шагаем физику (Jolt считает мир и автоматически двигает Ogre-узлы из mEntities)
-        mWorldManager.update( timeSinceLast, mScene->getShip().getEntity().physId );
-        //mShip->mEntity.graphNode->setPosition(Ogre::Vector3::ZERO);
-        // 2. Опрашиваем устройства ввода через правильные методы транслятора
         auto data = mInputTranslator.translate(&mKeyboardController, &mMouseController);
+        mMouseController.reset();
 
-        // 3. Передаем полностью собранные данные в контроллер корабля
-        if( mShipController.operator bool() )
-            mShipController->update( timeSinceLast, data );
-                mMouseController.reset();
+        if(mShipController.operator bool())
+            mShipController->update(timeSinceLast, data);
+
+        mWorldManager.update( timeSinceLast, mScene->getShip().getEntity().physId );
+        mBattleLogic.Update();
 
 #ifdef MAXDOF_CLIENT_BUILD
         if( mTextOverleyManager.mDisplayHelpMode != 0 )

@@ -13,16 +13,14 @@ namespace MaxDoF::Common::LevelGraphs
     {
     }
 
-    void Pipe::SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, double radius)
+    void Pipe::SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, float rotation, double radius)
     {
-        const float cFixedRotation = 3.1415926535f / 6.0f;
-
         JPH::RVec3 U(1.0f, 0.0f, 0.0f);
         JPH::RVec3 V(0.0f, 1.0f, 0.0f);
 
         vertices = {
             Common::Meshes::MeshBuilder::GenerateTriangleVertices(posBegin, U, V, 0.0f, radius),
-            Common::Meshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, cFixedRotation, radius)
+            Common::Meshes::MeshBuilder::GenerateTriangleVertices(posEnd, U, V, rotation, radius)
         };
     }
 
@@ -69,7 +67,7 @@ namespace MaxDoF::Common::LevelGraphs
         };
     }
 
-    void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<bool, 2> invertInterfaces, bool invert,
+    void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<bool, 2> invertInterfaces, bool invertPipe,
         std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes)
     {
         const auto baseVertexIndex = graph.vertices.size();
@@ -107,7 +105,7 @@ namespace MaxDoF::Common::LevelGraphs
                         .inverted = invertInterfaces.back()
                     }
                 },
-                .inverted = invert
+                .inverted = invertPipe
             }
         );
     }

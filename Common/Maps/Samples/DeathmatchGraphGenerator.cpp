@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "Common/Maps/DeathmatchGraphGenerator.h"
+#include "Common/Maps/Samples/DeathmatchGraphGenerator.h"
 
 #include "Common/Meshes/MeshBuilder.h"
 #include "Common/Meshes/Pipe.h"
@@ -11,12 +11,12 @@
 
 namespace MaxDoF::Common::Maps
 {
-    void DeathmatchGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph)
+    void DeathmatchGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 50.0f;
 
         Common::LevelGraphs::Tetrahedron tetrahedron;
-        tetrahedron.SetVetricesAndInterfaces(cArenaRadius);
+        tetrahedron.SetVetricesAndInterfaces(offset, cArenaRadius);
 
         tetrahedron.FillGraph(graph,
             {

@@ -32,7 +32,7 @@ namespace MaxDoF::Common::LevelGraphs
         const Vertices& GetVertices(){ return vertices; }
         void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
         void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
-        void SetVetricesAndInterfaces(double tetrahedronSphereRadius);
+        void SetVetricesAndInterfaces(JPH::RVec3 offset, double tetrahedronSphereRadius);
         void FillGraph(Types::LevelGraphs::PureLevelGraph&, std::array<Types::LevelGraphs::InterfaceType, 4> interfaceTypes);
     };
 }

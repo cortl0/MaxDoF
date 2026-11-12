@@ -20,6 +20,6 @@ namespace MaxDoF::Common::Maps
          *
          * @param graph Ссылка на структуру графа уровня, куда будут записаны узлы и интерфейсы.
          */
-        static void GenerateGraph(Types::LevelGraphs::PureLevelGraph& graph);
+        static void GenerateGraph(Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset);
     };
 }

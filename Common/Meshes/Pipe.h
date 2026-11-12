@@ -31,9 +31,9 @@
         const Vertices& GetVertices(){ return vertices; }
         void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
         void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
-        void SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, double radius);
+        void SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, float rotation, double radius);
         void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface fitst, double length, double radius);
         void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface first, Types::LevelGraphs::TriangleInterface second);
-        void FillGraph(Types::LevelGraphs::PureLevelGraph &, std::array<bool, 2> invertInterfaces, bool invert, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes);
+        void FillGraph(Types::LevelGraphs::PureLevelGraph &, std::array<bool, 2> invertInterfaces, bool invertPipe, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes);
     };
 }

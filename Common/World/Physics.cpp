@@ -195,7 +195,7 @@ namespace MaxDoF::Common::World
         return setBodySettings(userData, shapeSettings.Create(), pose, mass, true, onCCD);
     }
 
-    void Physics::update(float timeSinceLast, const JPH::BodyID &shipBodyId)
+    void Physics::update(float timeSinceLast)
     {
         mPhysicsSystem->Update(timeSinceLast, 1, mPhysicsAllocator, mJobSystem);
     }

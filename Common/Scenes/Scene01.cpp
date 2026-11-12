@@ -5,10 +5,12 @@
 
 #include "Common/Scenes/Scene01.h"
 
-#include "Common/Maps/DeathmatchGraphGenerator.h"
-#include "Common/Maps/DeathmatchSpaceGraphGenerator.h"
-#include "Common/Maps/PipeGraphGenerator.h"
-#include "Common/Maps/TetrahedronGraphGenerator.h"
+#include "Common/Maps/Samples/DeathmatchGraphGenerator.h"
+#include "Common/Maps/Samples/DeathmatchAsteroidGraphGenerator.h"
+#include "Common/Maps/Samples/DeathmatchAsteroidRotGraphGenerator.h"
+#include "Common/Maps/Samples/DeathmatchSpaceGraphGenerator.h"
+#include "Common/Maps/Samples/PipeGraphGenerator.h"
+#include "Common/Maps/Samples/TetrahedronGraphGenerator.h"
 #include "Common/Meshes/MeshBuilder.h"
 
 namespace MaxDoF::Common::Scenes
@@ -126,33 +128,30 @@ namespace MaxDoF::Common::Scenes
 #endif
             shipEntity);
 
-        Common::Types3d::MeshData meshData;
         Common::Types::LevelGraphs::PureLevelGraph levelGraph;
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {25.0, 25.0, -100.0}, {false, true}, true, 3.1415926535f / 6.0f);
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-25.0, 25.0, -100.0}, {false, true}, true, -3.1415926535f / 6.0f);
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {25.0, -25.0, -100.0}, {true, false}, false, 3.1415926535f / 6.0f);
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-25.0, -25.0, -100.0}, {true, false}, false, -3.1415926535f / 6.0f);
+        Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, {-100.0, -100.0, 0.0});
+        Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, {100.0, -100.0, 0.0});
+        Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, {-100.0, 100.0, 0.0});
+        Common::Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, {100.0, 100.0, 0.0});
+        Common::Maps::DeathmatchAsteroidRotGraphGenerator::GenerateGraph(levelGraph, {0.0, 0.0, 0.0});
 
-        switch (3)
-        {
-        case 0:
-            Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph);
-            break;
-        case 1:
-            Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph);
-            break;
-        case 2:
-            Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph);
-            break;
-        case 3:
-            Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph);
-            break;
-        default:
-            break;
-        }
-
+        Common::Types3d::MeshData meshData;
         MaxDoF::Common::Meshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
         mWorldManager.createMesh(meshData);
     }
 
     Types::Entity& Scene01::createShipEntity()
     {
-        return mWorldManager.createSphere(Common::Types3d::EntityType::cShip, Types::cDefaultPhysPose, 0.5f, 1000.0f, true);
+        return mWorldManager.createSphere(Common::Types3d::EntityType::cShip,
+            Common::Types::PhysPose
+            {
+                .position = JPH::RVec3{1.0, 1.0, 1.0},
+                .orientation = JPH::Quat{0.01, 0.01, 0.01, 1.97}.Normalized()
+            }
+            , 0.5f, 1000.0f, true);
     }
 }

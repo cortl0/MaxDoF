@@ -23,7 +23,7 @@ namespace MaxDoF::Common::Maps
          *
          * @param graph Ссылка на структуру графа уровня для записи.
          */
-        static void GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph);
+        static void GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset, std::array<bool, 2> invertInterfaces, bool invertPipe, float rotation);
     };
 }
 

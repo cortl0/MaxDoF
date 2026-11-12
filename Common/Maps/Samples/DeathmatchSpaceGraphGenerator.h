@@ -9,10 +9,10 @@
 
 namespace MaxDoF::Common::Maps
 {
-    class DeathmatchGraphGenerator
+    class DeathmatchSpaceGraphGenerator
     {
     public:
-        DeathmatchGraphGenerator() = delete;
+        DeathmatchSpaceGraphGenerator() = delete;
 
         /**
          * @brief Генератор идеального симметричного графа для режима Deathmatch (Бой на смерть).
@@ -26,6 +26,6 @@ namespace MaxDoF::Common::Maps
          *
          * @param graph Ссылка на структуру графа уровня для записи.
          */
-        static void GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph);
+        static void GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset);
     };
 }

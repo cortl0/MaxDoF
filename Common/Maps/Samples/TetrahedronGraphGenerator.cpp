@@ -3,20 +3,20 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "Common/Maps/TetrahedronGraphGenerator.h"
+#include "Common/Maps/Samples/TetrahedronGraphGenerator.h"
 
 #include "Common/Meshes/MeshBuilder.h"
 #include "Common/Meshes/Tetrahedron.h"
 
 namespace MaxDoF::Common::Maps
 {
-    void TetrahedronGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph)
+    void TetrahedronGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
     {
         // 1. РАДИУС НАШЕЙ ЕДИНСТВЕННОЙ КОМНАТЫ
         const float cArenaRadius = 50.0f;
 
         Common::LevelGraphs::Tetrahedron tetrahedron;
-        tetrahedron.SetVetricesAndInterfaces(cArenaRadius);
+        tetrahedron.SetVetricesAndInterfaces(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
             {
                 Types::LevelGraphs::InterfaceType::SolidRock,

@@ -42,7 +42,7 @@ namespace MaxDoF::Common::World
             return;
 
         float physicsTimeStep = std::min(timeSinceLast, 0.1f);
-        mPhysics.update(physicsTimeStep, shipBodyId);
+        mPhysics.update(physicsTimeStep);
 
 #ifdef MAXDOF_CLIENT_BUILD
         JPH::RVec3 shipPosition = mPhysics.getBodyInterface()->GetPosition(shipBodyId);

@@ -49,6 +49,6 @@ namespace MaxDoF::Common::World
         void initialize(unsigned int maxBodies = 1024);
         void setBodyInterface(JPH::BodyInterface* bodyInterface) { mBodyInterface = bodyInterface; }
         JPH::BodyID setBodySettings(Common::Types3d::EntityType userData, const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD);
-        void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
+        void update(float timeSinceLast);
     };
 }

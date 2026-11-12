@@ -11,7 +11,7 @@ namespace MaxDoF::Common::LevelGraphs
     {
     }
 
-    void Tetrahedron::SetVetricesAndInterfaces(double tetrahedronSphereRadius)
+    void Tetrahedron::SetVetricesAndInterfaces(JPH::RVec3 offset, double tetrahedronSphereRadius)
     {
         constexpr double sqrt3 = 1.7320508;
         constexpr double sqrt6 = 2.4494897;
@@ -31,10 +31,10 @@ namespace MaxDoF::Common::LevelGraphs
         const double yBottom = -gateSize / 2.0;       // Нижняя линия основания
 
         vertices = {
-            JPH::RVec3(0.0f, 0.0f, zBack),                     // Вершина 0 (Сзади, на оси +Z)
-            JPH::RVec3(0.0f, yTop, zFront),                    // Вершина 1 (Вперед-вверх)
-            JPH::RVec3(-edgeLength / 2.0f, yBottom, zFront),   // Вершина 2 (Вперед-влево-вниз)
-            JPH::RVec3(edgeLength / 2.0f, yBottom, zFront)     // Вершина 3 (Вперед-вправо-вниз)
+            JPH::RVec3(0.0f, 0.0f, zBack) + offset,                     // Вершина 0 (Сзади, на оси +Z)
+            JPH::RVec3(0.0f, yTop, zFront) + offset,                    // Вершина 1 (Вперед-вверх)
+            JPH::RVec3(-edgeLength / 2.0f, yBottom, zFront) + offset,   // Вершина 2 (Вперед-влево-вниз)
+            JPH::RVec3(edgeLength / 2.0f, yBottom, zFront) + offset     // Вершина 3 (Вперед-вправо-вниз)
         };
     }
 
