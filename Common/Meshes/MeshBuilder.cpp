@@ -152,22 +152,6 @@ namespace MaxDoF::Common::Meshes
         }
     }
 
-    // 3. Генерация вершин торца (без изменений)
-    Types3d::TriangleVertices MeshBuilder::GenerateTriangleVertices(
-        const JPH::RVec3& position, const JPH::RVec3& U, const JPH::RVec3& V, float angleOffset, float radius)
-    {
-        const float PI = 3.1415926535f;
-        Types3d::TriangleVertices vertices;
-        for (int i = 0; i < 3; ++i)
-        {
-            float angle = (120.0f * i * PI / 180.0f) + angleOffset;
-            float x2d = radius * std::cos(angle);
-            float y2d = radius * std::sin(angle);
-            vertices[i] = position + x2d * U + y2d * V;
-        }
-        return vertices;
-    }
-
     void MeshBuilder::CreateMeshData(
         Common::Types3d::MeshData& meshData,
         const Common::Types::LevelGraphs::PureLevelGraph& graph)

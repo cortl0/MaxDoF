@@ -46,6 +46,16 @@ namespace MaxDoF::Common::Types::LevelGraphs
     {
         TriangleInterfaceKey id;
         Types3d::TriangleVerticesIndices verticesIndices;
+
+        void Print() const
+        {
+            std::cout
+                << "====TriangleInterface id: " << std::to_string(id)<< std::endl
+                << std::to_string(verticesIndices[0]) << std::endl
+                << std::to_string(verticesIndices[1]) << std::endl
+                << std::to_string(verticesIndices[2]) << std::endl
+                << "====" << std::endl;
+        }
     };
 
     struct OrientedInterface
@@ -83,5 +93,21 @@ namespace MaxDoF::Common::Types::LevelGraphs
         std::vector<VolumeNode> nodes; // Все материальные комнаты, коридоры и тупики
         std::vector<TriangleInterface> interfaces; // Все плоские швы, стены и порталы между ними
         Vertices vertices; // Сквозной массив точек графа. Все сущности должны ссылаться на него и не иметь своихточек.
+
+        void PrintVertices()
+        {
+            for(auto i = vertices.size() - vertices.size(); i < vertices.size(); ++i)
+            std::cout
+                << "====PureLevelGraph::Vertex id: " << std::to_string(i)<< std::endl
+                << std::to_string(vertices[i].GetX()) << std::endl
+                << std::to_string(vertices[i].GetY()) << std::endl
+                << std::to_string(vertices[i].GetZ()) << std::endl
+                << "====" << std::endl;
+        }
+        void PrintInterfaces()
+        {
+            for(const auto& i : interfaces)
+                i.Print();
+        }
     };
 }

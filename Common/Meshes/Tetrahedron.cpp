@@ -11,7 +11,7 @@ namespace MaxDoF::Common::LevelGraphs
     {
     }
 
-    void Tetrahedron::SetVetricesAndInterfaces(JPH::RVec3 offset, double tetrahedronSphereRadius)
+    void Tetrahedron::GenerateVetrices(JPH::RVec3 offset, double tetrahedronSphereRadius)
     {
         constexpr double sqrt3 = 1.7320508;
         constexpr double sqrt6 = 2.4494897;

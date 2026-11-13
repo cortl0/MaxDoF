@@ -43,12 +43,5 @@ namespace MaxDoF::Common::Meshes
             Common::Types3d::MeshData& meshData,
             const Common::Types::LevelGraphs::PureLevelGraph& graph
         );
-        // static void AddOrientedWallTriangle(MaxDoF::Common::LevelMeshes::MeshData &meshData, const UVVertex &p0, const UVVertex &p1, const UVVertex &p2, const JPH::Vec3 &localPipeCenter);
-        static Types3d::TriangleVertices GenerateTriangleVertices(
-            const JPH::RVec3 &position,
-            const JPH::RVec3 &U,
-            const JPH::RVec3 &V,
-            float angleOffset,
-            float radius);
     };
 }

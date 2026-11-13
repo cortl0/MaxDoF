@@ -18,7 +18,7 @@ namespace MaxDoF::Common::LevelGraphs
 
     private:
         Vertices vertices;
-        TrianglesVerticesIndices interfaces
+        static constexpr TrianglesVerticesIndices interfaces
         {{
             {0, 2, 1}, // Грань 0 Левая
             {0, 1, 3}, // Грань 1 Правая
@@ -28,11 +28,11 @@ namespace MaxDoF::Common::LevelGraphs
 
     public:
         Tetrahedron();
-        const TrianglesVerticesIndices& GetInterfaces(){ return interfaces; }
-        const Vertices& GetVertices(){ return vertices; }
-        void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
-        void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
-        void SetVetricesAndInterfaces(JPH::RVec3 offset, double tetrahedronSphereRadius);
+        // const TrianglesVerticesIndices& GetInterfaces() const noexcept { return interfaces; }
+        const Vertices& GetVertices() const noexcept { return vertices; }
+        // void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
+        // void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
+        void GenerateVetrices(JPH::RVec3 offset, double tetrahedronSphereRadius);
         void FillGraph(Types::LevelGraphs::PureLevelGraph&, std::array<Types::LevelGraphs::InterfaceType, 4> interfaceTypes);
     };
 }

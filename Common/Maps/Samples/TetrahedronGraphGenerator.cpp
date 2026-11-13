@@ -12,11 +12,9 @@ namespace MaxDoF::Common::Maps
 {
     void TetrahedronGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
     {
-        // 1. РАДИУС НАШЕЙ ЕДИНСТВЕННОЙ КОМНАТЫ
         const float cArenaRadius = 50.0f;
-
         Common::LevelGraphs::Tetrahedron tetrahedron;
-        tetrahedron.SetVetricesAndInterfaces(offset, cArenaRadius);
+        tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
             {
                 Types::LevelGraphs::InterfaceType::SolidRock,

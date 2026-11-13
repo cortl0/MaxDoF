@@ -14,48 +14,33 @@ namespace MaxDoF::Common::Maps
     void DeathmatchSpaceGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 10.0f;
-
+        const auto& interfacesBaseIndex = graph.interfaces.size();
         Common::LevelGraphs::Tetrahedron tetrahedron;
-        tetrahedron.SetVetricesAndInterfaces(offset, cArenaRadius);
+        Common::LevelGraphs::Pipe pipe;
 
-        tetrahedron.FillGraph(graph,
-            {
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined
-            });
+        tetrahedron.GenerateVetrices(offset, cArenaRadius);
+        tetrahedron.FillGraph(graph, {
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined
+        });
 
-        const auto& tetrahedronIndex = graph.nodes.size() - 1;
-
-        Common::LevelGraphs::Tetrahedron tetrahedronSecond;
-        tetrahedronSecond.SetVetricesAndInterfaces(offset, cArenaRadius * 5);
-
-        tetrahedronSecond.FillGraph(graph,
-            {
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined
-            });
-
-        const auto& tetrahedronIndexSecond = graph.nodes.size() - 1;
+        tetrahedron.GenerateVetrices(offset, cArenaRadius * 5);
+        tetrahedron.FillGraph(graph,{
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined
+        });
 
         for (size_t i = 0; i < 4; ++i)
         {
-            Common::LevelGraphs::Pipe pipe;
-            pipe.SetVetricesAndInterfaces(
-                graph,
-                graph.interfaces[graph.nodes[tetrahedronIndex].orientedInterfaces[i].interfaceId],
-                graph.interfaces[graph.nodes[tetrahedronIndexSecond].orientedInterfaces[i].interfaceId]
-            );
-
+            pipe.SetTriangleInterfaceKeys({
+                graph.interfaces[interfacesBaseIndex + i].id,
+                graph.interfaces[interfacesBaseIndex + i + 4].id
+            });
             pipe.FillGraph(graph, {false, true}, true, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::UnDefined});
-
-            // auto& pipeGraph = graph.nodes.back();
-            // pipeGraph.inverted = true;
-            // pipeGraph.orientedInterfaces.back().inverted = false;
-            // pipeGraph.orientedInterfaces.front().interfaceType = Types::LevelGraphs::InterfaceType::UnDefined;
         }
     }
 }

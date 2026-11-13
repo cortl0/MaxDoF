@@ -12,6 +12,7 @@
 #include "Common/Maps/Samples/PipeGraphGenerator.h"
 #include "Common/Maps/Samples/TetrahedronGraphGenerator.h"
 #include "Common/Meshes/MeshBuilder.h"
+#include "Common/Meshes/Tetrahedron.h"
 
 namespace MaxDoF::Common::Scenes
 {
@@ -128,15 +129,20 @@ namespace MaxDoF::Common::Scenes
 #endif
             shipEntity);
 
+        Common::LevelGraphs::Tetrahedron tetrahedron;
+        tetrahedron.GenerateVetrices(JPH::RVec3::sZero(), 1.0);
+        auto places = tetrahedron.GetVertices();
+        const double pipePos = 15.0;
+        const double pipePosZ = 75.0;
         Common::Types::LevelGraphs::PureLevelGraph levelGraph;
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {25.0, 25.0, -100.0}, {false, true}, true, 3.1415926535f / 6.0f);
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-25.0, 25.0, -100.0}, {false, true}, true, -3.1415926535f / 6.0f);
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {25.0, -25.0, -100.0}, {true, false}, false, 3.1415926535f / 6.0f);
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-25.0, -25.0, -100.0}, {true, false}, false, -3.1415926535f / 6.0f);
-        Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, {-100.0, -100.0, 0.0});
-        Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, {100.0, -100.0, 0.0});
-        Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, {-100.0, 100.0, 0.0});
-        Common::Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, {100.0, 100.0, 0.0});
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, {false, true}, true, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f});
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, {false, true}, true, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f});
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, {true, false}, false, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f});
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, {true, false}, false, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f});
+        Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, places[0] * 100.0);
+        Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, places[1] * 140.0);
+        Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, places[2] * 100.0);
+        Common::Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, places[3] * 100.0);
         Common::Maps::DeathmatchAsteroidRotGraphGenerator::GenerateGraph(levelGraph, {0.0, 0.0, 0.0});
 
         Common::Types3d::MeshData meshData;
@@ -149,8 +155,8 @@ namespace MaxDoF::Common::Scenes
         return mWorldManager.createSphere(Common::Types3d::EntityType::cShip,
             Common::Types::PhysPose
             {
-                .position = JPH::RVec3{1.0, 1.0, 1.0},
-                .orientation = JPH::Quat{0.01, 0.01, 0.01, 1.97}.Normalized()
+                .position = JPH::RVec3{0.0, 0.0, 0.0},
+                .orientation = JPH::Quat{0.0f, 0.0f, 0.0f, 1.0f}.Normalized()
             }
             , 0.5f, 1000.0f, true);
     }

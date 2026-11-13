@@ -8,36 +8,35 @@
 #include "Common/Meshes/MeshBuilder.h"
 #include "Common/Meshes/Pipe.h"
 #include "Common/Meshes/Tetrahedron.h"
+#include "Common/Meshes/Triangle.h"
 
 namespace MaxDoF::Common::Maps
 {
     void DeathmatchGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 50.0f;
-
+        const auto& interfacesBaseIndex = graph.interfaces.size();
         Common::LevelGraphs::Tetrahedron tetrahedron;
-        tetrahedron.SetVetricesAndInterfaces(offset, cArenaRadius);
+        Common::LevelGraphs::Triangle triangle;
+        Common::LevelGraphs::Pipe pipe;
 
-        tetrahedron.FillGraph(graph,
-            {
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined,
-                Types::LevelGraphs::InterfaceType::UnDefined
-            });
-
-        const auto& tetrahedronIndex = graph.nodes.size() - 1;
+        tetrahedron.GenerateVetrices(offset, cArenaRadius);
+        tetrahedron.FillGraph(graph, {
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined,
+            Types::LevelGraphs::InterfaceType::UnDefined
+        });
 
         for (size_t i = 0; i < 4; ++i)
         {
-            Common::LevelGraphs::Pipe pipe;
-            pipe.SetVetricesAndInterfaces(
-                graph,
-                graph.interfaces[graph.nodes[tetrahedronIndex].orientedInterfaces[i].interfaceId],
-                cArenaRadius,
-                cArenaRadius
-            );
-
+            triangle.SetVertices(graph, graph.interfaces[interfacesBaseIndex + i]);
+            triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);
+            triangle.FillGraphVerticesAndCreateInterface(graph);
+            pipe.SetTriangleInterfaceKeys({
+                graph.interfaces[interfacesBaseIndex + i].id,
+                graph.interfaces[graph.interfaces.size() - 1].id
+            });
             pipe.FillGraph(graph, {true, false}, false, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::SolidRock});
         }
     }

@@ -16,9 +16,10 @@
     public:
         using Vertices = std::array<Types3d::TriangleVertices, 2>;
         using TrianglesVerticesIndices = std::array<Types3d::TriangleVerticesIndices, 2>;
+        using TriangleInterfaceKeys = std::array<Types::LevelGraphs::TriangleInterfaceKey, 2>;
 
     private:
-        Vertices vertices;
+        TriangleInterfaceKeys mTriangleInterfaceKeys;
         TrianglesVerticesIndices interfaces
         {{
             {0, 1, 2}, // Торец 0 Передний
@@ -26,14 +27,11 @@
         }};
 
     public:
-        Pipe();
-        const TrianglesVerticesIndices& GetInterfaces(){ return interfaces; }
-        const Vertices& GetVertices(){ return vertices; }
-        void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
-        void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
-        void SetVetricesAndInterfaces(JPH::RVec3 posBegin, JPH::RVec3 posEnd, float rotation, double radius);
-        void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface fitst, double length, double radius);
-        void SetVetricesAndInterfaces(Types::LevelGraphs::PureLevelGraph&, Types::LevelGraphs::TriangleInterface first, Types::LevelGraphs::TriangleInterface second);
+        // const TrianglesVerticesIndices& GetInterfaces() const noexcept { return interfaces; }
+        // const Vertices& GetVertices() const noexcept { return vertices; }
+        // void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
+        void SetTriangleInterfaceKeys(const TriangleInterfaceKeys& Keys){ mTriangleInterfaceKeys = Keys; }
+        // void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
         void FillGraph(Types::LevelGraphs::PureLevelGraph &, std::array<bool, 2> invertInterfaces, bool invertPipe, std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes);
     };
 }
