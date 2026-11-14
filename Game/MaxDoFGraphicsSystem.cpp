@@ -27,13 +27,15 @@
 #    include "iOS/macUtils.h"
 #endif
 
+#include "Game/PlatformPaths.h"
+
 namespace MaxDoF::Game
-{    class PlatformPaths final
+{   /* class PlatformPaths final
     {
     public:
         static Ogre::String getResourcePath();
         static Ogre::String getWriteAccessFolder();
-    };
+    };*/
     MaxDoFGraphicsSystem::MaxDoFGraphicsSystem( Demo::GameState *gameState ) :
         Demo::GraphicsSystem( gameState )
     {
