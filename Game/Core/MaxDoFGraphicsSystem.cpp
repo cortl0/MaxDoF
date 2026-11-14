@@ -20,7 +20,7 @@
 #include <OgreOverlaySystem.h>
 #include <OgrePlatformInformation.h>
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
     MaxDoFGraphicsSystem::MaxDoFGraphicsSystem()
         : mResourcePath( PlatformPaths::getResourcePath() )
@@ -36,8 +36,7 @@ namespace MaxDoF::Game
     void MaxDoFGraphicsSystem::initialize( const Ogre::String &windowTitle )
     {
         Ogre::String pluginsPath = mResourcePath + "plugins.cfg";
-#if OGRE_DEBUG_MODE
-//#if defined( DEBUG ) || defined( _DEBUG ) || defined( OGRE_DEBUG_MODE )
+#if defined( DEBUG ) || defined( _DEBUG ) || defined( OGRE_DEBUG_MODE )
         std::ifstream debugCfg( ( mResourcePath + "plugins_d.cfg" ).c_str() );
         if( debugCfg.good() )
             pluginsPath = mResourcePath + "plugins_d.cfg";

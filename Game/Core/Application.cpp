@@ -3,14 +3,14 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "Game/Application.h"
+#include "Game/Core/Application.h"
 
 #include <algorithm>
 #include <SDL.h>
 #include <OgreRoot.h>
 #include <OgreWindow.h>
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
     Application::~Application()
     {

@@ -5,15 +5,14 @@
 
 #pragma once
 
-#include <OgreString.h>
+#include <OgrePrerequisites.h>
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
-    class PlatformPaths final
+    class OgreResourceSetup final
     {
     public:
-        static Ogre::String getResourcePath();
-        static Ogre::String getWriteAccessFolder();
+        static void setupResources( const Ogre::String &resourcePath );
+        static void registerHlms( Ogre::Root *root, const Ogre::String &resourcePath );
     };
 }
-

@@ -9,10 +9,6 @@ project(MaxDoFGame)
 
 find_package(SDL2 REQUIRED)
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
-endif()
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(OGRE_CFG_SUFFIX "_d")
     set(OGRE_BUILD_SUBDIR "Debug")
@@ -21,11 +17,9 @@ else()
     set(OGRE_BUILD_SUBDIR "Release")
 endif()
 
-# Пути к Ogre-Next 4.0
-set(OGRE_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/ogre-next")
-set(OGRE_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/build/${OGRE_BUILD_SUBDIR}")
+set(OGRE_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/ogre-next" CACHE STRING "Path to OGRE-Next source code" FORCE)
+set(OGRE_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/build/${OGRE_BUILD_SUBDIR}" CACHE STRING "Path to OGRE-Next build folder" FORCE)
 
-# Копируем актуальные шейдеры, материалы и композитор в bin/Data
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/MaxDoFWorkspace.compositor"
     "${CMAKE_SOURCE_DIR}/bin/Data/MaxDoFWorkspace.compositor"
@@ -35,7 +29,6 @@ file(COPY "${OGRE_SOURCE}/Samples/Media/Hlms" DESTINATION "${CMAKE_SOURCE_DIR}/b
 file(COPY "${OGRE_SOURCE}/Samples/Media/2.0" DESTINATION "${CMAKE_SOURCE_DIR}/bin/Data")
 file(COPY "${OGRE_SOURCE}/Samples/Media/packs/DebugPack.zip" DESTINATION "${CMAKE_SOURCE_DIR}/bin/Data")
 
-# Настройка плагинов под текущую платформу
 if(WIN32)
     set(OGRE_PLUGIN_DIR "${OGRE_BINARIES}/bin")
     set(OGRE_PLUGIN_RS_D3D11 "Plugin=RenderSystem_Direct3D11${OGRE_CFG_SUFFIX}")
@@ -67,7 +60,7 @@ configure_file(
     "${CMAKE_SOURCE_DIR}/bin/Data/resources2.cfg"
     @ONLY
 )
-# Сбор исходных файлов игры (без OgreCommon)
+
 file(GLOB_RECURSE SRC_FILES_Game "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE SRC_FILES_Common "${CMAKE_SOURCE_DIR}/Common/*.cpp")
 
@@ -76,13 +69,9 @@ if(APPLE)
 endif()
 
 add_executable(${PROJECT_NAME} ${SRC_FILES_Game} ${SRC_FILES_Common})
-
-# Физический движок Jolt
 add_subdirectory(${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/Build ${CMAKE_CURRENT_BINARY_DIR}/JoltBuild)
-
 target_compile_definitions(${PROJECT_NAME} PRIVATE MAXDOF_CLIENT_BUILD)
 
-# Заголовочные файлы проекта и Ogre-Next 4.0
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}

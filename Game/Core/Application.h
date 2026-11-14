@@ -9,10 +9,10 @@
 #include <OgreString.h>
 #include <OgreTimer.h>
 
-#include "Game/MaxDoFGraphicsSystem.h"
+#include "Game/Core/MaxDoFGraphicsSystem.h"
 #include "Game/MdfGame.h"
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
     class Application final
     {

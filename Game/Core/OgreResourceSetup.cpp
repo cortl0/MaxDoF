@@ -14,7 +14,7 @@
 #include <OgreResourceGroupManager.h>
 #include <OgreRoot.h>
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
     void OgreResourceSetup::setupResources( const Ogre::String &resourcePath )
     {

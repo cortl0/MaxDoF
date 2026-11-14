@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "Game/MaxDoFGraphicsSystem.h"
+#include "Game/Core/MaxDoFGraphicsSystem.h"
 #include "Game/TextOverleyManager.h"
 #include "Common/Types/Types3d.h"
 #include "Common/Types/Poses.h"
@@ -16,7 +16,7 @@ namespace MaxDoF::Game::World
     {
     protected:
         TextOverleyManager mTextOverleyManager;
-        MaxDoF::Game::MaxDoFGraphicsSystem* mGraphicsSystem{ nullptr };
+        MaxDoF::Game::Core::MaxDoFGraphicsSystem* mGraphicsSystem{ nullptr };
         Ogre::SceneNode* globalStaticNode{ nullptr };
 
     public:
@@ -27,8 +27,8 @@ namespace MaxDoF::Game::World
         Graphics( const Ogre::String &helpDescription );
         ~Graphics();
 
-        MaxDoF::Game::MaxDoFGraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
-        void _notifyGraphicsSystem(MaxDoF::Game::MaxDoFGraphicsSystem*);
+        MaxDoF::Game::Core::MaxDoFGraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
+        void _notifyGraphicsSystem(MaxDoF::Game::Core::MaxDoFGraphicsSystem*);
         void destroyAllObjects(Ogre::SceneNode*);
         void destroyNodeRecursively(Ogre::SceneNode*);
         void initialize();

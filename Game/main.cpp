@@ -8,7 +8,7 @@
 #include <OgreException.h>
 
 #include "version.h"
-#include "Game/Application.h"
+#include "Game/Core/Application.h"
 
 int main( int argc, char *argv[] )
 {
@@ -16,7 +16,7 @@ int main( int argc, char *argv[] )
 
     try
     {
-        MaxDoF::Game::Application app;
+        MaxDoF::Game::Core::Application app;
         app.run( "MaxDoF", "MaxDoF Client" );
     }
     catch( const Ogre::Exception &e )

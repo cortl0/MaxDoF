@@ -7,9 +7,8 @@
 
 #include <SDL.h>
 #include <OgrePrerequisites.h>
-#include <OgreString.h>
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
     class SdlWindowManager final
     {

@@ -15,7 +15,7 @@ namespace Ogre::v1
     class OverlaySystem;
 }
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
     class MaxDoFGraphicsSystem final
     {

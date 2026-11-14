@@ -25,7 +25,7 @@
 #    include "iOS/macUtils.h"
 #endif
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
     Ogre::String PlatformPaths::getResourcePath()
     {
@@ -47,7 +47,7 @@ namespace MaxDoF::Game
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
         writeFolder = "/";
         TCHAR path[MAX_PATH];
-        if( SUCCEEDED( SHGetFolderPath( NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path ) != S_OK ) )
+        if( SUCCEEDED( SHGetFolderPath( NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path ) ) )
         {
 #    if defined( _UNICODE ) || defined( UNICODE )
             int size_needed = WideCharToMultiByte( CP_OEMCP, 0, path, (int)wcslen( path ), NULL, 0, NULL, NULL );

@@ -9,7 +9,7 @@
 #include <OgreException.h>
 #include <OgreStringConverter.h>
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Core
 {
     SdlWindowManager::~SdlWindowManager()
     {

@@ -25,7 +25,7 @@ namespace MaxDoF::Game
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
-    void MdfGame::_notifyGraphicsSystem( MaxDoFGraphicsSystem *graphicsSystem )
+    void MdfGame::_notifyGraphicsSystem( Core::MaxDoFGraphicsSystem *graphicsSystem )
     {
         mGraphicsSystem = graphicsSystem;
         mWorldManager.getGraphics()._notifyGraphicsSystem( mGraphicsSystem );

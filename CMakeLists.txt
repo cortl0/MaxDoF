@@ -3,9 +3,13 @@
 # Licensed under the GNU Affero General Public License v3.0 or later
 # See LICENSE file in the project root for full license information
 
-cmake_minimum_required( VERSION 3.5.1 )
+cmake_minimum_required(VERSION 3.16)
 
 project(MaxDoF VERSION 0.2.0)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type" FORCE)
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

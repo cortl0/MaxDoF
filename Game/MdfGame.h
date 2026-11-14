@@ -9,7 +9,7 @@
 #include <OgrePrerequisites.h>
 #include <OgreString.h>
 
-#include "Game/MaxDoFGraphicsSystem.h"
+#include "Game/Core/MaxDoFGraphicsSystem.h"
 #include "Game/TextOverleyManager.h"
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
@@ -32,7 +32,7 @@ namespace MaxDoF::Game
         void mouseMoved( const SDL_Event &arg );
 
     protected:
-        MaxDoFGraphicsSystem *mGraphicsSystem{ nullptr };
+        Core::MaxDoFGraphicsSystem *mGraphicsSystem{ nullptr };
         TextOverleyManager mTextOverleyManager;
         const unsigned int mMaxBodiesLimit{ 2048 };
         Common::World::Manager mWorldManager;
@@ -47,7 +47,7 @@ namespace MaxDoF::Game
         explicit MdfGame( const Ogre::String &helpDescription );
         ~MdfGame();
 
-        void _notifyGraphicsSystem( MaxDoFGraphicsSystem *graphicsSystem );
+        void _notifyGraphicsSystem( Core::MaxDoFGraphicsSystem *graphicsSystem );
         void createScene01();
         void update( float timeSinceLast );
         void handleEvent( const SDL_Event &evt );
