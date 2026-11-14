@@ -35,7 +35,7 @@ namespace MaxDoF::Game
 
     void MdfGame::connectControllerToShip()
     {
-        mShipController = std::make_unique<ShipController>( mScene->getShip(), mWorldManager.getBodyInterface() );
+        mShipController = std::make_unique<Ships::ShipController>( mScene->getShip(), mWorldManager.getBodyInterface() );
     }
 
     void MdfGame::createScene01()

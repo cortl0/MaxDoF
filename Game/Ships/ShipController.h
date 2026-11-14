@@ -9,7 +9,6 @@
 #include <Jolt/Math/Quat.h>
 #include <Jolt/Math/Vec3.h>
 #include <OgreVector3.h>
-#include <OgreSceneNode.h>
 
 #include "Common/Ships/Ship.h"
 #include "Common/Types/Telemetry.h"
@@ -20,7 +19,7 @@ namespace JPH {
     class BodyID;
 }
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Ships
 {
     class ShipController
     {

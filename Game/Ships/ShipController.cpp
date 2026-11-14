@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "Game/ShipController.h"
+#include "Game/Ships/ShipController.h"
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/BodyInterface.h>
@@ -11,7 +11,7 @@
 #include "Common/Utils/Converters.h"
 #include "Common/Types/Telemetry.h"
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::Ships
 {
     ShipController::ShipController(Common::Ships::Ship& ship, JPH::BodyInterface* bodyInterface) :
         mShip(ship),

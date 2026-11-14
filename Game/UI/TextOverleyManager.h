@@ -3,15 +3,14 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_Game_TextOverleyManager_H_
-#define MaxDoF_Game_TextOverleyManager_H_
+#pragma once
 
 #include <OgreRoot.h>
 #include <OgreTextAreaOverlayElement.h>
 
 #include "Common/Types/Telemetry.h"
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::UI
 {
     class TextOverleyManager
     {
@@ -32,6 +31,4 @@ namespace MaxDoF::Game
         void _notifyRoot( Ogre::Root *root );
         void createCrosshair();
     };
-}  // namespace MaxDoF::Game
-
-#endif
+}

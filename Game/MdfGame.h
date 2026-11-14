@@ -10,12 +10,12 @@
 #include <OgreString.h>
 
 #include "Game/Core/MaxDoFGraphicsSystem.h"
-#include "Game/TextOverleyManager.h"
+#include "Game/UI/TextOverleyManager.h"
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/ControllerTranslator.h"
 #include "Common/GameLogic/BattleLogic.h"
-#include "Game/ShipController.h"
+#include "Game/Ships/ShipController.h"
 #include "Common/Scenes/Scene01.h"
 #include "Common/World/Manager.h"
 
@@ -33,10 +33,10 @@ namespace MaxDoF::Game
 
     protected:
         Core::MaxDoFGraphicsSystem *mGraphicsSystem{ nullptr };
-        TextOverleyManager mTextOverleyManager;
+        UI::TextOverleyManager mTextOverleyManager;
         const unsigned int mMaxBodiesLimit{ 2048 };
         Common::World::Manager mWorldManager;
-        std::unique_ptr<ShipController> mShipController;
+        std::unique_ptr<Ships::ShipController> mShipController;
         Input::ControllerTranslator mInputTranslator;
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;

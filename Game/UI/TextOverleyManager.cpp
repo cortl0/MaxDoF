@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "Game/TextOverleyManager.h"
+#include "Game/UI/TextOverleyManager.h"
 
 #include <string>
 
@@ -16,7 +16,7 @@
 #include <OgreHlmsUnlit.h>
 #include <OgreHlmsUnlitDatablock.h>
 
-namespace MaxDoF::Game
+namespace MaxDoF::Game::UI
 {
     TextOverleyManager::TextOverleyManager( const Ogre::String &helpDescription ) :
         mRoot( nullptr ),
@@ -184,5 +184,4 @@ namespace MaxDoF::Game
         crosshairOverlay->add2D(crosshairRoot);
         crosshairOverlay->show();
     }
-
-}  // namespace MaxDoF::Game
+}

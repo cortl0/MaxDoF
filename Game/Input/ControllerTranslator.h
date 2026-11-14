@@ -3,10 +3,9 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_Game_Input_ControllerTranslator_H_
-#define MaxDoF_Game_Input_ControllerTranslator_H_
+#pragma once
 
-#include "Game/ShipController.h"
+#include "Game/Ships/ShipController.h"
 
 namespace MaxDoF::Game::Input
 {
@@ -16,11 +15,9 @@ namespace MaxDoF::Game::Input
     class ControllerTranslator
     {
     public:
-        ShipController::ControllerData translate(
+        Ships::ShipController::ControllerData translate(
             const KeyboardController* keyboard,
             const MouseController* mouse
         );
     };
-}  // namespace MaxDoF::Game::Input
-
-#endif
+}

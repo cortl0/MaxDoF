@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Game/Core/MaxDoFGraphicsSystem.h"
-#include "Game/TextOverleyManager.h"
+#include "Game/UI/TextOverleyManager.h"
 #include "Common/Types/Types3d.h"
 #include "Common/Types/Poses.h"
 
@@ -15,7 +15,7 @@ namespace MaxDoF::Game::World
     class Graphics
     {
     protected:
-        TextOverleyManager mTextOverleyManager;
+        UI::TextOverleyManager mTextOverleyManager;
         MaxDoF::Game::Core::MaxDoFGraphicsSystem* mGraphicsSystem{ nullptr };
         Ogre::SceneNode* globalStaticNode{ nullptr };
 
