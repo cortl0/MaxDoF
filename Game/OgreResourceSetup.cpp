@@ -54,35 +54,68 @@ namespace MaxDoF::Game
 
         Ogre::String rootHlmsFolder = cf.getSetting( "DoNotUseAsResource", "Hlms", "" );
         if( rootHlmsFolder.empty() )
-            rootHlmsFolder = "./";
+            rootHlmsFolder = resourcePath;
         else if( rootHlmsFolder.back() != '/' )
             rootHlmsFolder += "/";
 
+        Ogre::String mainFolderPath;
+        Ogre::StringVector libraryFoldersPaths;
+        Ogre::ArchiveManager &archiveManager = Ogre::ArchiveManager::getSingleton();
+        Ogre::HlmsManager *hlmsManager = root->getHlmsManager();
+
+        Ogre::HlmsUnlit *hlmsUnlit = nullptr;
+        Ogre::HlmsPbs *hlmsPbs = nullptr;
+
+        if( !hlmsManager->getHlms( Ogre::HLMS_UNLIT ) )
+        {
+            Ogre::HlmsUnlit::getDefaultPaths( mainFolderPath, libraryFoldersPaths );
+            Ogre::Archive *archiveUnlit =
+                archiveManager.load( rootHlmsFolder + mainFolderPath, "FileSystem", true );
+
+            Ogre::ArchiveVec archiveUnlitLibraryFolders;
+            for( const auto &libPath : libraryFoldersPaths )
+            {
+                Ogre::Archive *archiveLibrary =
+                    archiveManager.load( rootHlmsFolder + libPath, "FileSystem", true );
+                archiveUnlitLibraryFolders.push_back( archiveLibrary );
+            }
+
+            hlmsUnlit = OGRE_NEW Ogre::HlmsUnlit( archiveUnlit, &archiveUnlitLibraryFolders );
+            hlmsManager->registerHlms( hlmsUnlit );
+        }
+
+        if( !hlmsManager->getHlms( Ogre::HLMS_PBS ) )
+        {
+            Ogre::HlmsPbs::getDefaultPaths( mainFolderPath, libraryFoldersPaths );
+            Ogre::Archive *archivePbs =
+                archiveManager.load( rootHlmsFolder + mainFolderPath, "FileSystem", true );
+
+            Ogre::ArchiveVec archivePbsLibraryFolders;
+            for( const auto &libPath : libraryFoldersPaths )
+            {
+                Ogre::Archive *archiveLibrary =
+                    archiveManager.load( rootHlmsFolder + libPath, "FileSystem", true );
+                archivePbsLibraryFolders.push_back( archiveLibrary );
+            }
+
+            hlmsPbs = OGRE_NEW Ogre::HlmsPbs( archivePbs, &archivePbsLibraryFolders );
+            hlmsManager->registerHlms( hlmsPbs );
+        }
+
         Ogre::RenderSystem *renderSystem = root->getRenderSystem();
-        Ogre::String shaderSyntax = "GLSL";
         if( renderSystem->getName() == "Direct3D11 Rendering Subsystem" )
-            shaderSyntax = "HLSL";
-        else if( renderSystem->getName() == "Metal Rendering Subsystem" )
-            shaderSyntax = "Metal";
-        else if( renderSystem->getName() == "Vulkan Rendering Subsystem" )
-            shaderSyntax = "GLSLVK";
+        {
+            bool supportsNoOverwriteOnTextureBuffers = false;
+            renderSystem->getCustomAttribute( "MapNoOverwriteOnDynamicBufferSRV",
+                                              &supportsNoOverwriteOnTextureBuffers );
 
-        auto getArchiveVec = [&]( const Ogre::String &libraryPath ) -> Ogre::ArchiveVec {
-            return {
-                Ogre::ArchiveManager::getSingletonPtr()->load( rootHlmsFolder + libraryPath, "FileSystem", true ),
-                Ogre::ArchiveManager::getSingletonPtr()->load( rootHlmsFolder + "Hlms/Common/Any", "FileSystem", true ),
-                Ogre::ArchiveManager::getSingletonPtr()->load( rootHlmsFolder + "Hlms/Common/" + shaderSyntax, "FileSystem", true )
-            };
-        };
-
-        Ogre::ArchiveVec unlitLibs = getArchiveVec( "Hlms/Unlit/Any" );
-        Ogre::Archive *archiveUnlit = Ogre::ArchiveManager::getSingletonPtr()->load(
-            rootHlmsFolder + "Hlms/Unlit/" + shaderSyntax, "FileSystem", true );
-        root->getHlmsManager()->registerHlms( OGRE_NEW Ogre::HlmsUnlit( archiveUnlit, &unlitLibs ) );
-
-        Ogre::ArchiveVec pbsLibs = getArchiveVec( "Hlms/Pbs/Any" );
-        Ogre::Archive *archivePbs = Ogre::ArchiveManager::getSingletonPtr()->load(
-            rootHlmsFolder + "Hlms/Pbs/" + shaderSyntax, "FileSystem", true );
-        root->getHlmsManager()->registerHlms( OGRE_NEW Ogre::HlmsPbs( archivePbs, &pbsLibs ) );
+            if( !supportsNoOverwriteOnTextureBuffers )
+            {
+                if( hlmsPbs )
+                    hlmsPbs->setTextureBufferDefaultSize( 512 * 1024 );
+                if( hlmsUnlit )
+                    hlmsUnlit->setTextureBufferDefaultSize( 512 * 1024 );
+            }
+        }
     }
 }

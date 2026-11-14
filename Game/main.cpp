@@ -23,10 +23,9 @@ int main( int argc, char *argv[] )
     try
     {
         auto game = std::make_unique<MaxDoF::Game::MdfGame>( "MaxDoF Client" );
-        auto graphicsSystem = std::make_unique<MaxDoF::Game::MaxDoFGraphicsSystem>( game.get() );
+        auto graphicsSystem = std::make_unique<MaxDoF::Game::MaxDoFGraphicsSystem>();
 
         game->_notifyGraphicsSystem( graphicsSystem.get() );
-
         graphicsSystem->initialize( "MaxDoF" );
         game->createScene01();
 
@@ -40,18 +39,14 @@ int main( int argc, char *argv[] )
             SDL_Event evt;
             while( SDL_PollEvent( &evt ) )
             {
-                if( evt.type == SDL_QUIT )
+                if( evt.type == SDL_QUIT ||
+                    ( evt.type == SDL_KEYDOWN && evt.key.keysym.scancode == SDL_SCANCODE_ESCAPE ) )
                 {
                     quit = true;
                 }
                 else
                 {
-                    // На 3-м этапе заменим это на единый game->handleEvent( evt )
-                    //graphicsSystem->handleSdlEvent( evt );
-                    graphicsSystem->beginFrameParallel();
-                    graphicsSystem->update( static_cast<float>( timeSinceLast ) );
-                    graphicsSystem->finishFrameParallel();
-                    graphicsSystem->finishFrame();
+                    game->handleEvent( evt );
                 }
             }
 
@@ -65,7 +60,7 @@ int main( int argc, char *argv[] )
 
             uint64_t endTime = timer.getMicroseconds();
             timeSinceLast = ( endTime - startTime ) / 1000000.0;
-            timeSinceLast = std::min( 1.0, timeSinceLast ); // Защита от скачков dt при паузе/отладке
+            timeSinceLast = std::min( 1.0, timeSinceLast );
             startTime = endTime;
         }
 

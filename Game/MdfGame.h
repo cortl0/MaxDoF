@@ -5,9 +5,11 @@
 
 #pragma once
 
+#include <SDL.h>
 #include <OgrePrerequisites.h>
-#include <GameState.h>
+#include <OgreString.h>
 
+#include "Game/MaxDoFGraphicsSystem.h"
 #include "Game/TextOverleyManager.h"
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
@@ -19,15 +21,18 @@
 
 namespace MaxDoF::Game
 {
-    class MdfGame : public Demo::GameState
+    class MdfGame final
     {
-        JPH::Quat qCameraPreviousQuaternion{JPH::Quat::sIdentity()};
-        JPH::Vec3 getJoltLocalAngularVelocities(JPH::Quat &qPrev, const JPH::Quat &qCurr, float dt);
+        JPH::Quat qCameraPreviousQuaternion{ JPH::Quat::sIdentity() };
+        JPH::Vec3 getJoltLocalAngularVelocities( JPH::Quat &qPrev, const JPH::Quat &qCurr, float dt );
 
         void connectControllerToShip();
+        void keyPressed( const SDL_KeyboardEvent &arg );
+        void keyReleased( const SDL_KeyboardEvent &arg );
+        void mouseMoved( const SDL_Event &arg );
 
     protected:
-        Demo::GraphicsSystem *mGraphicsSystem{ nullptr };
+        MaxDoFGraphicsSystem *mGraphicsSystem{ nullptr };
         TextOverleyManager mTextOverleyManager;
         const unsigned int mMaxBodiesLimit{ 2048 };
         Common::World::Manager mWorldManager;
@@ -36,16 +41,15 @@ namespace MaxDoF::Game
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;
         std::unique_ptr<Common::Scenes::Scene> mScene;
-        Common::GameLogic::BattleLogic mBattleLogic{mWorldManager};
+        Common::GameLogic::BattleLogic mBattleLogic{ mWorldManager };
 
     public:
-        MdfGame( const Ogre::String &helpDescription );
-        ~MdfGame() override;
-        void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
-        void createScene01() override;
-        void update( float timeSinceLast ) override;
-        void keyPressed( const SDL_KeyboardEvent &arg ) override;
-        void keyReleased( const SDL_KeyboardEvent &arg ) override;
-        void mouseMoved( const SDL_Event &arg ) override;
+        explicit MdfGame( const Ogre::String &helpDescription );
+        ~MdfGame();
+
+        void _notifyGraphicsSystem( MaxDoFGraphicsSystem *graphicsSystem );
+        void createScene01();
+        void update( float timeSinceLast );
+        void handleEvent( const SDL_Event &evt );
     };
 }

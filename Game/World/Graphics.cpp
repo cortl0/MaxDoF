@@ -31,7 +31,7 @@ namespace MaxDoF::Game::World
     {
     }
 
-    void Graphics::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
+    void Graphics::_notifyGraphicsSystem( MaxDoF::Game::MaxDoFGraphicsSystem* graphicsSystem)
     {
         mGraphicsSystem = graphicsSystem;
     }

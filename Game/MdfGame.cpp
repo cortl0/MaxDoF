@@ -11,6 +11,7 @@
 #include <OgreHlmsCompute.h>
 #include <OgreHlmsManager.h>
 #include <OgreRoot.h>
+#include <OgreSceneManager.h>
 
 namespace MaxDoF::Game
 {
@@ -24,52 +25,52 @@ namespace MaxDoF::Game
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
-    void MdfGame::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
+    void MdfGame::_notifyGraphicsSystem( MaxDoFGraphicsSystem *graphicsSystem )
     {
         mGraphicsSystem = graphicsSystem;
         mWorldManager.getGraphics()._notifyGraphicsSystem( mGraphicsSystem );
-        mTextOverleyManager._notifyRoot(mGraphicsSystem->getRoot());
+        mTextOverleyManager._notifyRoot( mGraphicsSystem->getRoot() );
     }
 #endif
 
     void MdfGame::connectControllerToShip()
     {
-        mShipController = std::make_unique<ShipController>(mScene->getShip(), mWorldManager.getBodyInterface());
+        mShipController = std::make_unique<ShipController>( mScene->getShip(), mWorldManager.getBodyInterface() );
     }
 
     void MdfGame::createScene01()
     {
-        mScene = std::make_unique<Common::Scenes::Scene01>(mWorldManager);
+        mScene = std::make_unique<Common::Scenes::Scene01>( mWorldManager );
         mWorldManager.initialize( mMaxBodiesLimit );
-        mWorldManager.getPhysicsSystem()->SetContactListener(&mBattleLogic.GetMyContactListener());
+        mWorldManager.getPhysicsSystem()->SetContactListener( &mBattleLogic.GetMyContactListener() );
         mScene->createScene();
 #ifdef MAXDOF_CLIENT_BUILD
         mTextOverleyManager.createCrosshair();
         mTextOverleyManager.createDebugTextOverlay();
 #endif
-        mScene->getShip().connectCameraToShip(mGraphicsSystem->getCamera());
+        mScene->getShip().connectCameraToShip( mGraphicsSystem->getCamera() );
         connectControllerToShip();
 
         mGraphicsSystem->getSceneManager()->setForwardClustered(
-            true,     // bEnable: Активируем систему
-            4,        // width: Разрешение сетки по горизонтали. 16 — стандарт для 1080p/4K.
-            4,        // height: Разрешение по вертикали.
-            24,       // numSlices: 24 слоя глубины дают плавное распределение света без резких переключений.
-            8,        // lightsPerCell: Максимум 8 источников на одну ячейку экрана. Для кабины (3 прибора + пара ламп) этого хватит с запасом.
-            1,        // decalsPerCell: Минимальное безопасное значение 1 (для экономии памяти, раз декали не используем).
-            1,        // cubemapProbesPerCel: Минимальное безопасное значение 1.
-            0.05f,    // minDistance: КРИТИЧЕСКИ ВАЖНО. Ставим 5 см от камеры, чтобы свет приборов не гас, когда камера пилота приближается к Dashboard.
-            500.0f    // maxDistance: Дальность работы точечного света. 500 единиц хватит, чтобы видеть свет от взрывов или пролетающих рядом ракет.
+            true,
+            4,
+            4,
+            24,
+            8,
+            1,
+            1,
+            0.05f,
+            500.0f
         );
     }
 
     void MdfGame::update( float timeSinceLast )
     {
-        auto data = mInputTranslator.translate(&mKeyboardController, &mMouseController);
+        auto data = mInputTranslator.translate( &mKeyboardController, &mMouseController );
         mMouseController.reset();
 
-        if(mShipController.operator bool())
-            mShipController->update(timeSinceLast, data);
+        if( mShipController )
+            mShipController->update( timeSinceLast, data );
 
         mWorldManager.update( timeSinceLast, mScene->getShip().getEntity().physId );
         mBattleLogic.Update();
@@ -77,19 +78,38 @@ namespace MaxDoF::Game
 #ifdef MAXDOF_CLIENT_BUILD
         if( mTextOverleyManager.mDisplayHelpMode != 0 )
         {
-            auto telemetry = mShipController->getTelemetry(timeSinceLast);
-            mTextOverleyManager.generateDebugText( timeSinceLast, telemetry);
-            mScene->getShip().update(timeSinceLast, telemetry);
+            auto telemetry = mShipController->getTelemetry( timeSinceLast );
+            mTextOverleyManager.generateDebugText( timeSinceLast, telemetry );
+            mScene->getShip().update( timeSinceLast, telemetry );
         }
 #endif
     }
 
+    void MdfGame::handleEvent( const SDL_Event &evt )
+    {
+        switch( evt.type )
+        {
+            case SDL_KEYDOWN:
+                if( evt.key.repeat == 0 )
+                    keyPressed( evt.key );
+                break;
+
+            case SDL_KEYUP:
+                keyReleased( evt.key );
+                break;
+
+            case SDL_MOUSEMOTION:
+                mouseMoved( evt );
+                break;
+
+            default:
+                break;
+        }
+    }
+
     void MdfGame::keyPressed( const SDL_KeyboardEvent &arg )
     {
-        bool handledEvent = false;
-        handledEvent = mKeyboardController.keyPressed( arg );
-        if( !handledEvent )
-            GameState::keyPressed( arg );
+        mKeyboardController.keyPressed( arg );
     }
 
     void MdfGame::keyReleased( const SDL_KeyboardEvent &arg )
@@ -98,17 +118,18 @@ namespace MaxDoF::Game
             ( arg.keysym.mod & ~( KMOD_NUM | KMOD_CAPS ) ) == 0 )
         {
 #ifdef MAXDOF_CLIENT_BUILD
-            mTextOverleyManager.mDisplayHelpMode = ( mTextOverleyManager.mDisplayHelpMode + 1 ) % mTextOverleyManager.mNumDisplayHelpModes;
-            const float timeSinceLast = 0.0f;
-            auto telemetry = mShipController->getTelemetry(timeSinceLast);
-            mTextOverleyManager.generateDebugText( timeSinceLast, telemetry);
+            if( mShipController )
+            {
+                mTextOverleyManager.mDisplayHelpMode = ( mTextOverleyManager.mDisplayHelpMode + 1 ) % mTextOverleyManager.mNumDisplayHelpModes;
+                const float timeSinceLast = 0.0f;
+                auto telemetry = mShipController->getTelemetry( timeSinceLast );
+                mTextOverleyManager.generateDebugText( timeSinceLast, telemetry );
+            }
 #endif
         }
         else if( arg.keysym.scancode == SDL_SCANCODE_F1 &&
                  ( arg.keysym.mod & ( KMOD_LCTRL | KMOD_RCTRL ) ) )
         {
-            // Hot reload of PBS shaders. We need to clear the microcode cache
-            // to prevent using old compiled versions.
             Ogre::Root *root = mGraphicsSystem->getRoot();
             Ogre::HlmsManager *hlmsManager = root->getHlmsManager();
 
@@ -119,7 +140,6 @@ namespace MaxDoF::Game
         else if( arg.keysym.scancode == SDL_SCANCODE_F2 &&
                  ( arg.keysym.mod & ( KMOD_LCTRL | KMOD_RCTRL ) ) )
         {
-            // Hot reload of Unlit shaders.
             Ogre::Root *root = mGraphicsSystem->getRoot();
             Ogre::HlmsManager *hlmsManager = root->getHlmsManager();
 
@@ -130,7 +150,6 @@ namespace MaxDoF::Game
         else if( arg.keysym.scancode == SDL_SCANCODE_F3 &&
                  ( arg.keysym.mod & ( KMOD_LCTRL | KMOD_RCTRL ) ) )
         {
-            // Hot reload of Compute shaders.
             Ogre::Root *root = mGraphicsSystem->getRoot();
             Ogre::HlmsManager *hlmsManager = root->getHlmsManager();
 
@@ -141,22 +160,17 @@ namespace MaxDoF::Game
         else if( arg.keysym.scancode == SDL_SCANCODE_F5 &&
                  ( arg.keysym.mod & ( KMOD_LCTRL | KMOD_RCTRL ) ) )
         {
-            // Force device reelection
             Ogre::Root *root = mGraphicsSystem->getRoot();
             root->getRenderSystem()->validateDevice( true );
         }
         else
         {
-            bool handledEvent = false;
-            handledEvent = mKeyboardController.keyReleased( arg );
-            if( !handledEvent )
-                GameState::keyReleased( arg );
+            mKeyboardController.keyReleased( arg );
         }
     }
 
     void MdfGame::mouseMoved( const SDL_Event &arg )
     {
         mMouseController.mouseMoved( arg );
-        GameState::mouseMoved( arg );
     }
 }

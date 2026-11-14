@@ -4,143 +4,155 @@
 // See LICENSE file in the project root for full license information
 
 #include "MaxDoFGraphicsSystem.h"
+#include "PlatformPaths.h"
+#include "OgreResourceSetup.h"
 
-#include <Compositor/OgreCompositorManager2.h>
+#include <fstream>
+#include <OgreAbiUtils.h>
+#include <OgreCamera.h>
 #include <OgreConfigFile.h>
+#include <OgreResourceGroupManager.h>
 #include <OgreRoot.h>
+#include <OgreSceneManager.h>
 #include <OgreWindow.h>
-#include <OgrePrerequisites.h>
-#include <OgreString.h>
-#if OGRE_PLATFORM == OGRE_PLATFORM_LINUX
-#    include <errno.h>
-#    include <pwd.h>
-#    include <sys/stat.h>
-#    include <sys/types.h>
-#    include <unistd.h>
-#elif OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-#    include "shlobj.h"
-#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE
-#    include <Foundation/Foundation.h>
-#    include "OSX/macUtils.h"
-#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
-#    include <Foundation/Foundation.h>
-#    include "iOS/macUtils.h"
-#endif
-
-#include "Game/PlatformPaths.h"
+#include <Compositor/OgreCompositorManager2.h>
+#include <OgreOverlayManager.h>
+#include <OgreOverlaySystem.h>
+#include <OgrePlatformInformation.h>
 
 namespace MaxDoF::Game
-{   /* class PlatformPaths final
+{
+    MaxDoFGraphicsSystem::MaxDoFGraphicsSystem()
+        : mResourcePath( PlatformPaths::getResourcePath() )
+        , mWriteAccessFolder( PlatformPaths::getWriteAccessFolder() )
     {
-    public:
-        static Ogre::String getResourcePath();
-        static Ogre::String getWriteAccessFolder();
-    };*/
-    MaxDoFGraphicsSystem::MaxDoFGraphicsSystem( Demo::GameState *gameState ) :
-        Demo::GraphicsSystem( gameState )
+    }
+
+    MaxDoFGraphicsSystem::~MaxDoFGraphicsSystem()
     {
-        mResourcePath = PlatformPaths::getResourcePath();
-        mWriteAccessFolder = PlatformPaths::getWriteAccessFolder();
+        deinitialize();
+    }
+
+    void MaxDoFGraphicsSystem::initialize( const Ogre::String &windowTitle )
+    {
+        Ogre::String pluginsPath = mResourcePath + "plugins.cfg";
+#if OGRE_DEBUG_MODE
+//#if defined( DEBUG ) || defined( _DEBUG ) || defined( OGRE_DEBUG_MODE )
+        std::ifstream debugCfg( ( mResourcePath + "plugins_d.cfg" ).c_str() );
+        if( debugCfg.good() )
+            pluginsPath = mResourcePath + "plugins_d.cfg";
+#endif
+        const Ogre::AbiCookie abiCookie = Ogre::generateAbiCookie();
+        mRoot = OGRE_NEW Ogre::Root( &abiCookie,
+                                     pluginsPath,
+                                     mWriteAccessFolder + "ogre.cfg",
+                                     mWriteAccessFolder + "Ogre.log" );
+
+        if( !mRoot->restoreConfig() && !mRoot->showConfigDialog() )
+        {
+            OGRE_EXCEPT( Ogre::Exception::ERR_INVALID_STATE,
+                         "Render system configuration was cancelled.",
+                         "MaxDoFGraphicsSystem::initialize" );
+        }
+
+        mRoot->initialise( false, windowTitle );
+
+        Ogre::ConfigOptionMap &cfgOpts = mRoot->getRenderSystem()->getConfigOptions();
+        int width = 1280;
+        int height = 720;
+
+        auto optIt = cfgOpts.find( "Video Mode" );
+        if( optIt != cfgOpts.end() && !optIt->second.currentValue.empty() )
+        {
+            const auto pos = optIt->second.currentValue.find( 'x' );
+            if( pos != Ogre::String::npos )
+            {
+                width = Ogre::StringConverter::parseInt( optIt->second.currentValue.substr( 0, pos ) );
+                height = Ogre::StringConverter::parseInt( optIt->second.currentValue.substr( pos + 1 ) );
+            }
+        }
+
+        optIt = cfgOpts.find( "Full Screen" );
+        const bool fullscreen = ( optIt != cfgOpts.end() && optIt->second.currentValue == "Yes" );
+
+        mWindowManager.createWindow( windowTitle, width, height, fullscreen );
+
+        Ogre::NameValuePairList params;
+        params["externalWindowHandle"] = mWindowManager.getExternalWindowHandle();
+        params["title"] = windowTitle;
+        params["gamma"] = cfgOpts["sRGB Gamma Conversion"].currentValue;
+        params["FSAA"] = cfgOpts["FSAA"].currentValue;
+        params["vsync"] = cfgOpts["VSync"].currentValue;
+
+        mRenderWindow = mRoot->createRenderWindow( windowTitle, width, height, fullscreen, &params );
+
+        OgreResourceSetup::setupResources( mResourcePath );
+        OgreResourceSetup::registerHlms( mRoot, mResourcePath );
+        mOverlaySystem = OGRE_NEW Ogre::v1::OverlaySystem();
+        Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups( true );
+
+        createSceneManager();
+        createCamera();
+        mWorkspace = setupCompositor();
+
+        mWindowManager.setRelativeMouseMode( true );
+    }
+
+    void MaxDoFGraphicsSystem::deinitialize()
+    {
+        if( mWorkspace )
+        {
+            mRoot->getCompositorManager2()->removeWorkspace( mWorkspace );
+            mWorkspace = nullptr;
+        }
+
+        if( mSceneManager )
+        {
+            if( mOverlaySystem )
+                mSceneManager->removeRenderQueueListener( mOverlaySystem );
+            mRoot->destroySceneManager( mSceneManager );
+            mSceneManager = nullptr;
+        }
+
+        OGRE_DELETE mOverlaySystem;
+        mOverlaySystem = nullptr;
+
+        if( mRoot )
+        {
+            OGRE_DELETE mRoot;
+            mRoot = nullptr;
+        }
+
+        mWindowManager.destroyWindow();
+    }
+
+    void MaxDoFGraphicsSystem::createSceneManager()
+    {
+        const size_t numThreads = std::max<size_t>( 1, Ogre::PlatformInformation::getNumLogicalCores() );
+        mSceneManager = mRoot->createSceneManager( Ogre::ST_GENERIC, numThreads, "MaxDoFSceneManager" );
+        mSceneManager->addRenderQueueListener( mOverlaySystem );
+        mSceneManager->getRenderQueue()->setSortRenderQueue(
+            Ogre::v1::OverlayManager::getSingleton().mDefaultRenderQueueId,
+            Ogre::RenderQueue::StableSort );
+    }
+
+    void MaxDoFGraphicsSystem::createCamera()
+    {
+        mCamera = mSceneManager->createCamera( "Main Camera" );
+        mCamera->setPosition( Ogre::Vector3( 0, 5, 15 ) );
+        mCamera->lookAt( Ogre::Vector3( 0, 0, 0 ) );
+        mCamera->setNearClipDistance( 0.05f );
+        mCamera->setFarClipDistance( 10000.0f );
+        mCamera->setAutoAspectRatio( true );
     }
 
     Ogre::CompositorWorkspace *MaxDoFGraphicsSystem::setupCompositor()
     {
         Ogre::CompositorManager2 *compositorManager = mRoot->getCompositorManager2();
-
         const Ogre::String workspaceName( "MaxDoFWorkspace" );
         if( !compositorManager->hasWorkspaceDefinition( workspaceName ) )
-        {
             compositorManager->createBasicWorkspaceDef( workspaceName, mBackgroundColour, Ogre::IdString() );
-        }
 
         return compositorManager->addWorkspace( mSceneManager, mRenderWindow->getTexture(), mCamera, workspaceName, true );
     }
-
-    void MaxDoFGraphicsSystem::setupResources()
-    {
-        GraphicsSystem::setupResources();
-
-        Ogre::ConfigFile cf;
-        cf.load( mResourcePath + "resources2.cfg" );
-
-        Ogre::String dataFolder = cf.getSetting( "DoNotUseAsResource", "Hlms", "" );
-
-        if( dataFolder.empty() )
-            dataFolder = "./";
-        else if( *( dataFolder.end() - 1 ) != '/' )
-            dataFolder += "/";
-
-        dataFolder += "2.0/scripts/materials/PbsMaterials";
-
-        addResourceLocation( dataFolder, "FileSystem", "General" );
-    }
-/*
-    void MaxDoFGraphicsSystem::initWriteAccessFolder()
-    {
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-        mWriteAccessFolder = "/";
-        TCHAR path[MAX_PATH];
-        if( SUCCEEDED( SHGetFolderPath( NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, path ) != S_OK ) )
-        {
-#    if defined( _UNICODE ) || defined( UNICODE )
-            int size_needed = WideCharToMultiByte( CP_OEMCP, 0, path, (int)wcslen( path ), NULL, 0, NULL, NULL );
-            mWriteAccessFolder = std::string( size_needed, 0 );
-            WideCharToMultiByte( CP_OEMCP, 0, path, (int)wcslen( path ), &mWriteAccessFolder[0], size_needed, NULL, NULL );
-#    else
-            TCHAR oemPath[MAX_PATH];
-            CharToOem( path, oemPath );
-            mWriteAccessFolder = std::string( oemPath );
-#    endif
-            mWriteAccessFolder += "/MaxDoF/";
-
-            if( !CreateDirectoryA( mWriteAccessFolder.c_str(), NULL ) &&
-                GetLastError() != ERROR_ALREADY_EXISTS )
-            {
-                mWriteAccessFolder = "";
-            }
-        }
-#elif OGRE_PLATFORM == OGRE_PLATFORM_LINUX
-        const char *homeDir = getenv( "HOME" );
-        if( homeDir == 0 )
-            homeDir = getpwuid( getuid() )->pw_dir;
-        mWriteAccessFolder = homeDir;
-        mWriteAccessFolder += "/.config";
-        int result = mkdir( mWriteAccessFolder.c_str(), S_IRWXU | S_IRWXG );
-        int errorReason = errno;
-
-        if( result && errorReason != EEXIST )
-        {
-            printf( "Error. Failing to create path '%s'. Do you have access rights?", mWriteAccessFolder.c_str() );
-            mWriteAccessFolder = "";
-        }
-        else
-        {
-            mWriteAccessFolder += "/MaxDoF/";
-            result = mkdir( mWriteAccessFolder.c_str(), S_IRWXU | S_IRWXG );
-            errorReason = errno;
-
-            if( result && errorReason != EEXIST )
-            {
-                printf( "Error. Failing to create path '%s'. Do you have access rights?", mWriteAccessFolder.c_str() );
-                mWriteAccessFolder = "";
-            }
-        }
-#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE || OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
-        NSURL *libUrl = [NSFileManager.defaultManager URLForDirectory:NSLibraryDirectory
-                                                             inDomain:NSUserDomainMask
-                                                    appropriateForURL:nil
-                                                               create:YES
-                                                                error:nil];
-        mWriteAccessFolder = Ogre::String( libUrl.absoluteURL.path.UTF8String ) + "/MaxDoF/";
-        const int result = mkdir( mWriteAccessFolder.c_str(), S_IRWXU | S_IRWXG );
-        const int errorReason = errno;
-
-        if( result && errorReason != EEXIST )
-        {
-            printf( "Error. Failing to create path '%s'. Do you have access rights?", mWriteAccessFolder.c_str() );
-            mWriteAccessFolder = "";
-        }
-#endif
-    }
-*/
 }

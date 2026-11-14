@@ -75,6 +75,11 @@ namespace MaxDoF::Game
 
     void SdlWindowManager::setRelativeMouseMode( bool enabled )
     {
+        if( mWindow )
+        {
+            SDL_RaiseWindow( mWindow );
+            SDL_SetWindowGrab( mWindow, enabled ? SDL_TRUE : SDL_FALSE );
+        }
         SDL_SetRelativeMouseMode( enabled ? SDL_TRUE : SDL_FALSE );
     }
 }

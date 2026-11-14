@@ -5,19 +5,19 @@
 
 #pragma once
 
-#include <GraphicsSystem.h>
-
+#include "Game/MaxDoFGraphicsSystem.h"
 #include "Game/TextOverleyManager.h"
 #include "Common/Types/Types3d.h"
 #include "Common/Types/Poses.h"
+
 namespace MaxDoF::Game::World
 {
     class Graphics
     {
     protected:
         TextOverleyManager mTextOverleyManager;
-        Demo::GraphicsSystem *mGraphicsSystem;
-        Ogre::SceneNode* globalStaticNode;
+        MaxDoF::Game::MaxDoFGraphicsSystem* mGraphicsSystem{ nullptr };
+        Ogre::SceneNode* globalStaticNode{ nullptr };
 
     public:
         const Ogre::String cOrtSphereMeshName{"MyV2Sphere"};
@@ -27,10 +27,10 @@ namespace MaxDoF::Game::World
         Graphics( const Ogre::String &helpDescription );
         ~Graphics();
 
-        Demo::GraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
-        void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
-        void destroyAllObjects(Ogre::SceneNode *node);
-        void destroyNodeRecursively(Ogre::SceneNode *node);
+        MaxDoF::Game::MaxDoFGraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
+        void _notifyGraphicsSystem(MaxDoF::Game::MaxDoFGraphicsSystem*);
+        void destroyAllObjects(Ogre::SceneNode*);
+        void destroyNodeRecursively(Ogre::SceneNode*);
         void initialize();
         void changeTexture(Ogre::Item*, const Ogre::String& newTextureFileName);
         void changeUniqueTexture(Ogre::Item*, const Ogre::String& newTextureFileName, const Ogre::String& uniqueMaterialName);
