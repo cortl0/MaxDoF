@@ -54,7 +54,7 @@ namespace MaxDoF::Common::Meshes
             meshData.indices.push_back(meshData.vertices.size() - 1);
         }
     }
-    
+
     void MeshBuilder::AddAntiprism(MaxDoF::Common::Types3d::MeshData& meshData,
         const Types::LevelGraphs::PureLevelGraph& graph,
         const Types::LevelGraphs::VolumeNode& pipeNode,

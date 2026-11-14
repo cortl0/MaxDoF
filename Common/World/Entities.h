@@ -21,7 +21,7 @@ namespace MaxDoF::Common::World
 
         // TODO: [Optimization] Заменить std::unordered_map в контейнере сущностей на Sparse Set.
         // Использовать 3 плоских вектора (mDense, mDenseToSparse, mSparse) вместо хэш-таблицы.
-        // Jolt выдаёт последовательные BodyID::GetIndex(), поэтому прямой доступ по индексу 
+        // Jolt выдаёт последовательные BodyID::GetIndex(), поэтому прямой доступ по индексу
         // уберёт аллокации в куче и ускорит поиск/удаление до O(1) без промахов кэша.
         EntitiesContainer mEntities;
         Index mIndex;
