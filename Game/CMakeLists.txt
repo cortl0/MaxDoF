@@ -11,14 +11,17 @@ find_package(SDL2 REQUIRED)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(OGRE_CFG_SUFFIX "_d")
-    set(OGRE_BUILD_SUBDIR "Debug")
+    set(BUILD_SUBDIR "Debug")
 else()
     set(OGRE_CFG_SUFFIX "")
-    set(OGRE_BUILD_SUBDIR "Release")
+    set(BUILD_SUBDIR "Release")
 endif()
 
+set(JOLT_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics" CACHE STRING "Path to Jolt Physics source code" FORCE)
+set(JOLT_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/build/${BUILD_SUBDIR}" CACHE STRING "Path to Jolt Physics build folder" FORCE)
+
 set(OGRE_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/ogre-next" CACHE STRING "Path to OGRE-Next source code" FORCE)
-set(OGRE_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/build/${OGRE_BUILD_SUBDIR}" CACHE STRING "Path to OGRE-Next build folder" FORCE)
+set(OGRE_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/build/${BUILD_SUBDIR}" CACHE STRING "Path to OGRE-Next build folder" FORCE)
 
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/MaxDoFWorkspace.compositor"
@@ -69,13 +72,12 @@ if(APPLE)
 endif()
 
 add_executable(${PROJECT_NAME} ${SRC_FILES_Game} ${SRC_FILES_Common})
-add_subdirectory(${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/Build ${CMAKE_CURRENT_BINARY_DIR}/JoltBuild)
 target_compile_definitions(${PROJECT_NAME} PRIVATE MAXDOF_CLIENT_BUILD)
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${MAXDOF_PATH_DEPENDENCIES}/jolt-physics
+    ${JOLT_SOURCE}
     ${SDL2_INCLUDE_DIRS}
     "${OGRE_BINARIES}/include"
     "${OGRE_BINARIES}/include/OGRE"
@@ -88,7 +90,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE
-    "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/Build"
+    "${JOLT_BINARIES}"
     "${OGRE_BINARIES}/lib"
 )
 
