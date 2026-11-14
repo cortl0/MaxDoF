@@ -40,7 +40,7 @@ namespace MaxDoF::Common::Maps
         {
             triangle.SetVertices(graph, graph.interfaces[interfacesBaseIndex + i]);
             auto normal = triangle.CalculateNormal();
-            triangle.RotateAroundPivot(triangle.CalculateMiddle(), triangle.CalculateRotationQuat(-normal, 15.0f));
+            triangle.RotateAroundPivot(triangle.CalculateMiddle(), triangle.CalculateRotationQuat(-normal, -15.0f));
             triangle.Translate(-normal * cArenaRadius * 1.0);
             triangle.FillGraphVerticesAndCreateInterface(graph);
             pipe.SetTriangleInterfaceKeys({

@@ -19,10 +19,10 @@
 namespace MaxDoF::Game
 {
     TextOverleyManager::TextOverleyManager( const Ogre::String &helpDescription ) :
-        mGraphicsSystem( 0 ),
+        mRoot( nullptr ),
         mHelpDescription( helpDescription ),
-        mDebugText( 0 ),
-        mDebugTextShadow( 0 ),
+        mDebugText( nullptr ),
+        mDebugTextShadow( nullptr ),
         mDisplayHelpMode( 1 ),
         mNumDisplayHelpModes( 2 )
     {
@@ -32,9 +32,9 @@ namespace MaxDoF::Game
     {
     }
 
-    void TextOverleyManager::_notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem )
+    void TextOverleyManager::_notifyRoot( Ogre::Root *root )
     {
-        mGraphicsSystem = graphicsSystem;
+        mRoot = root;
     }
 
     void TextOverleyManager::createDebugTextOverlay()
@@ -78,7 +78,8 @@ namespace MaxDoF::Game
         }
         else
         {
-            const Ogre::FrameStats *frameStats = mGraphicsSystem->getRoot()->getFrameStats();
+            Ogre::Root *root = mRoot ? mRoot : Ogre::Root::getSingletonPtr();
+            const Ogre::FrameStats *frameStats = root->getFrameStats();
             finalText.reserve( 128 );
             finalText = "Frame time:\t";
             finalText += Ogre::StringConverter::toString( timeSinceLast * 1000.0f );
@@ -115,7 +116,7 @@ namespace MaxDoF::Game
 
     void TextOverleyManager::createCrosshair()
     {
-        Ogre::Root* root = Ogre::Root::getSingletonPtr();
+        Ogre::Root* root = mRoot ? mRoot : Ogre::Root::getSingletonPtr();
         Ogre::HlmsManager* hlmsManager = root->getHlmsManager();
 
         // 1. ПРОГРАММНОЕ СОЗДАНИЕ МАТЕРИАЛА ДЛЯ ЛИНИЙ ПРИЦЕЛА

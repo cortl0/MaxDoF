@@ -13,6 +13,7 @@ namespace MaxDoF::Game::Ships
         : mSceneMgr(sceneMgr)
         , mGraphics(graphics)
     {
+        bool visible = true;
         mDashboardNode = parentNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         mDashboardNode->setPosition(position);
         mDashboardNode->pitch(-Ogre::Radian(position.y / position.z));
@@ -23,6 +24,7 @@ namespace MaxDoF::Game::Ships
         }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
         deskCube.node->setScale(0.05f, 0.03f, 0.001f);
         //deskCube.entity->setCastShadows(false);
+        deskCube.node->setVisible(visible);
 
         gyroscopeCube.node = mGraphics.createCube(MaxDoF::Common::Types::GraphPose{
             .position = {0.0f, 0.0f, 0.015f},
@@ -30,6 +32,7 @@ namespace MaxDoF::Game::Ships
         }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
         gyroscopeCube.node->setScale(0.01f, 0.01f, 0.01f);
         //gyroscopeCube.entity->setCastShadows(false);
+        gyroscopeCube.node->setVisible(visible);
 
         angularVelocityCube.node = mGraphics.createSphere(MaxDoF::Common::Types::GraphPose{
             .position = {-0.015f, 0.0f, 0.015f},
@@ -37,6 +40,7 @@ namespace MaxDoF::Game::Ships
         }, 0.5f, mDashboardNode);
         angularVelocityCube.node->setScale(0.01f, 0.01f, 0.01f);
         //angularVelocityCube.entity->setCastShadows(false);
+        angularVelocityCube.node->setVisible(visible);
 
         velocityCube.node = mGraphics.createSphere(MaxDoF::Common::Types::GraphPose{
             .position = {0.015f, 0.0f, 0.015f},
@@ -44,6 +48,7 @@ namespace MaxDoF::Game::Ships
         }, 0.5f, mDashboardNode);
         velocityCube.node->setScale(0.01f, 0.01f, 0.01f);
         //velocityCube.entity->setCastShadows(false);
+        velocityCube.node->setVisible(visible);
 
 /*
         lightNode = mDashboardNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);

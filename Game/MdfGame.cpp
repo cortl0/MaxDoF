@@ -28,7 +28,7 @@ namespace MaxDoF::Game
     {
         mGraphicsSystem = graphicsSystem;
         mWorldManager.getGraphics()._notifyGraphicsSystem( mGraphicsSystem );
-        mTextOverleyManager._notifyGraphicsSystem(graphicsSystem);
+        mTextOverleyManager._notifyRoot(mGraphicsSystem->getRoot());
     }
 #endif
 

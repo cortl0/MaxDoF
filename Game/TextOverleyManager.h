@@ -6,7 +6,7 @@
 #ifndef MaxDoF_Game_TextOverleyManager_H_
 #define MaxDoF_Game_TextOverleyManager_H_
 
-#include <GraphicsSystem.h>
+#include <OgreRoot.h>
 #include <OgreTextAreaOverlayElement.h>
 
 #include "Common/Types/Telemetry.h"
@@ -16,7 +16,7 @@ namespace MaxDoF::Game
     class TextOverleyManager
     {
     protected:
-        Demo::GraphicsSystem *mGraphicsSystem;
+        Ogre::Root *mRoot;
         Ogre::String mHelpDescription;
         Ogre::v1::TextAreaOverlayElement *mDebugText;
         Ogre::v1::TextAreaOverlayElement *mDebugTextShadow;
@@ -28,8 +28,8 @@ namespace MaxDoF::Game
         virtual void generateDebugText( float timeSinceLast, const Common::Types::Telemetry& );
 
         TextOverleyManager( const Ogre::String &helpDescription );
-        ~TextOverleyManager();
-        void _notifyGraphicsSystem( Demo::GraphicsSystem *graphicsSystem );
+        virtual ~TextOverleyManager();
+        void _notifyRoot( Ogre::Root *root );
         void createCrosshair();
     };
 }  // namespace MaxDoF::Game
