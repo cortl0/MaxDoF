@@ -4,18 +4,78 @@
 // See LICENSE file in the project root for full license information
 
 #include <iostream>
+#include <memory>
+
+#include <SDL.h>
 #include <OgreException.h>
+#include <OgreRoot.h>
+#include <OgreTimer.h>
+#include <OgreWindow.h>
 
 #include "version.h"
-#include "MainEntryPointHelper.h"
-#include "System/MainEntryPoints.h"
+#include "Game/MaxDoFGraphicsSystem.h"
+#include "Game/MdfGame.h"
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-INT WINAPI WinMainApp( HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR strCmdLine, INT nCmdShow )
-#else
-int mainApp( int argc, const char *argv[] )
-#endif
+int main( int argc, char *argv[] )
 {
     std::cout << "MaxDoF Game Version: " << MaxDoF_VERSION_STRING << std::endl;
-    return Demo::MainEntryPoints::mainAppSingleThreaded( DEMO_MAIN_ENTRY_PARAMS );
+
+    try
+    {
+        auto game = std::make_unique<MaxDoF::Game::MdfGame>( "MaxDoF Client" );
+        auto graphicsSystem = std::make_unique<MaxDoF::Game::MaxDoFGraphicsSystem>( game.get() );
+
+        game->_notifyGraphicsSystem( graphicsSystem.get() );
+
+        graphicsSystem->initialize( "MaxDoF" );
+        game->createScene01();
+
+        Ogre::Timer timer;
+        uint64_t startTime = timer.getMicroseconds();
+        double timeSinceLast = 1.0 / 60.0;
+
+        bool quit = false;
+        while( !quit )
+        {
+            SDL_Event evt;
+            while( SDL_PollEvent( &evt ) )
+            {
+                if( evt.type == SDL_QUIT )
+                {
+                    quit = true;
+                }
+                else
+                {
+                    // На 3-м этапе заменим это на единый game->handleEvent( evt )
+                    //graphicsSystem->handleSdlEvent( evt );
+                    graphicsSystem->beginFrameParallel();
+                    graphicsSystem->update( static_cast<float>( timeSinceLast ) );
+                    graphicsSystem->finishFrameParallel();
+                    graphicsSystem->finishFrame();
+                }
+            }
+
+            if( quit || graphicsSystem->getRenderWindow()->isClosed() )
+                break;
+
+            game->update( static_cast<float>( timeSinceLast ) );
+
+            if( !graphicsSystem->getRoot()->renderOneFrame() )
+                break;
+
+            uint64_t endTime = timer.getMicroseconds();
+            timeSinceLast = ( endTime - startTime ) / 1000000.0;
+            timeSinceLast = std::min( 1.0, timeSinceLast ); // Защита от скачков dt при паузе/отладке
+            startTime = endTime;
+        }
+
+        graphicsSystem->deinitialize();
+    }
+    catch( Ogre::Exception &e )
+    {
+        std::cerr << "An exception has occurred: " << e.getFullDescription() << std::endl;
+        return 1;
+    }
+
+    return 0;
 }

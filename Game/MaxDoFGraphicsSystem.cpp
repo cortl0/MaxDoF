@@ -9,7 +9,8 @@
 #include <OgreConfigFile.h>
 #include <OgreRoot.h>
 #include <OgreWindow.h>
-
+#include <OgrePrerequisites.h>
+#include <OgreString.h>
 #if OGRE_PLATFORM == OGRE_PLATFORM_LINUX
 #    include <errno.h>
 #    include <pwd.h>
@@ -27,20 +28,17 @@
 #endif
 
 namespace MaxDoF::Game
-{
+{    class PlatformPaths final
+    {
+    public:
+        static Ogre::String getResourcePath();
+        static Ogre::String getWriteAccessFolder();
+    };
     MaxDoFGraphicsSystem::MaxDoFGraphicsSystem( Demo::GameState *gameState ) :
         Demo::GraphicsSystem( gameState )
     {
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-        mResourcePath = "Data/";
-#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE
-        mResourcePath = Ogre::macBundlePath() + "/Contents/Resources/Data/";
-#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
-        mResourcePath = Ogre::macBundlePath() + "/Data/";
-#else
-        mResourcePath = "../Data/";
-#endif
-        initWriteAccessFolder();
+        mResourcePath = PlatformPaths::getResourcePath();
+        mWriteAccessFolder = PlatformPaths::getWriteAccessFolder();
     }
 
     Ogre::CompositorWorkspace *MaxDoFGraphicsSystem::setupCompositor()
@@ -74,7 +72,7 @@ namespace MaxDoF::Game
 
         addResourceLocation( dataFolder, "FileSystem", "General" );
     }
-
+/*
     void MaxDoFGraphicsSystem::initWriteAccessFolder()
     {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -142,4 +140,5 @@ namespace MaxDoF::Game
         }
 #endif
     }
+*/
 }

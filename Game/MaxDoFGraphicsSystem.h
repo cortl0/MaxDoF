@@ -13,7 +13,6 @@ namespace MaxDoF::Game
     {
         Ogre::CompositorWorkspace *setupCompositor() override;
         void setupResources() override;
-        void initWriteAccessFolder();
 
     public:
         explicit MaxDoFGraphicsSystem( Demo::GameState *gameState );
