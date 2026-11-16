@@ -14,7 +14,7 @@ else()
 endif()
 
 set(JOLT_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics" CACHE STRING "Path to Jolt Physics source code" FORCE)
-set(JOLT_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/build/${BUILD_SUBDIR}" CACHE STRING "Path to Jolt Physics build folder" FORCE)
+set(JOLT_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/build/${MAXDOF_TARGET_PLATFORM}/${BUILD_SUBDIR}" CACHE STRING "Path to Jolt Physics build folder" FORCE)
 
 file(GLOB_RECURSE SRC_FILES_Server "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE SRC_FILES_Common "${CMAKE_SOURCE_DIR}/Common/*.cpp")

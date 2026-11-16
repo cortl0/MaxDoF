@@ -18,16 +18,17 @@ else()
 endif()
 
 set(JOLT_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics" CACHE STRING "Path to Jolt Physics source code" FORCE)
-set(JOLT_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/build/${BUILD_SUBDIR}" CACHE STRING "Path to Jolt Physics build folder" FORCE)
+set(JOLT_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/build/${MAXDOF_TARGET_PLATFORM}/${BUILD_SUBDIR}" CACHE STRING "Path to Jolt Physics build folder" FORCE)
 
 set(OGRE_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/ogre-next" CACHE STRING "Path to OGRE-Next source code" FORCE)
-set(OGRE_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/build/${BUILD_SUBDIR}" CACHE STRING "Path to OGRE-Next build folder" FORCE)
+set(OGRE_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/build/${MAXDOF_TARGET_PLATFORM}/${BUILD_SUBDIR}" CACHE STRING "Path to OGRE-Next build folder" FORCE)
 
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/MaxDoFWorkspace.compositor"
     "${CMAKE_SOURCE_DIR}/bin/Data/MaxDoFWorkspace.compositor"
     COPYONLY
 )
+
 file(COPY "${OGRE_SOURCE}/Samples/Media/Hlms" DESTINATION "${CMAKE_SOURCE_DIR}/bin/Data")
 file(COPY "${OGRE_SOURCE}/Samples/Media/2.0" DESTINATION "${CMAKE_SOURCE_DIR}/bin/Data")
 file(COPY "${OGRE_SOURCE}/Samples/Media/packs/DebugPack.zip" DESTINATION "${CMAKE_SOURCE_DIR}/bin/Data")
@@ -38,12 +39,6 @@ if(WIN32)
     set(OGRE_PLUGIN_RS_GL3PLUS "Plugin=RenderSystem_GL3Plus${OGRE_CFG_SUFFIX}")
     set(OGRE_PLUGIN_RS_VULKAN "Plugin=RenderSystem_Vulkan${OGRE_CFG_SUFFIX}")
     set(OGRE_PLUGIN_RS_METAL "# Metal not available on Windows")
-elseif(APPLE)
-    set(OGRE_PLUGIN_DIR "${OGRE_BINARIES}/lib")
-    set(OGRE_PLUGIN_RS_D3D11 "# Direct3D11 not available on macOS")
-    set(OGRE_PLUGIN_RS_GL3PLUS "# GL3Plus deprecated on macOS")
-    set(OGRE_PLUGIN_RS_VULKAN "Plugin=RenderSystem_Vulkan${OGRE_CFG_SUFFIX}")
-    set(OGRE_PLUGIN_RS_METAL "Plugin=RenderSystem_Metal${OGRE_CFG_SUFFIX}")
 else()
     set(OGRE_PLUGIN_DIR "${OGRE_BINARIES}/lib")
     set(OGRE_PLUGIN_RS_D3D11 "# Direct3D11 not available on Linux")
@@ -54,22 +49,18 @@ endif()
 
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/Plugins.cfg.in"
-    "${CMAKE_SOURCE_DIR}/bin/Data/plugins${OGRE_CFG_SUFFIX}.cfg"
+    "${EXECUTABLE_OUTPUT_PATH}/plugins${OGRE_CFG_SUFFIX}.cfg"
     @ONLY
 )
 
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/Resources.cfg.in"
-    "${CMAKE_SOURCE_DIR}/bin/Data/resources2.cfg"
+    "${EXECUTABLE_OUTPUT_PATH}/resources2.cfg"
     @ONLY
 )
 
 file(GLOB_RECURSE SRC_FILES_Game "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE SRC_FILES_Common "${CMAKE_SOURCE_DIR}/Common/*.cpp")
-
-if(APPLE)
-    set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/PlatformPaths.cpp" PROPERTIES COMPILE_FLAGS "-x objective-c++")
-endif()
 
 add_executable(${PROJECT_NAME} ${SRC_FILES_Game} ${SRC_FILES_Common})
 

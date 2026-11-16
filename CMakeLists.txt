@@ -7,12 +7,20 @@ cmake_minimum_required(VERSION 3.16)
 
 project(MaxDoF VERSION 0.2.0)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type" FORCE)
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(NOT MAXDOF_TARGET_PLATFORM)
+    if(WIN32)
+        set(MAXDOF_TARGET_PLATFORM "windows-x86_64" CACHE STRING "Target platform" FORCE)
+    else()
+        set(MAXDOF_TARGET_PLATFORM "linux-x86_64" CACHE STRING "Target platform" FORCE)
+    endif()
+endif()
 
 add_compile_definitions(
     JPH_DOUBLE_PRECISION
@@ -40,7 +48,7 @@ configure_file("${CMAKE_SOURCE_DIR}/CMake/version.h.in" "${CMAKE_BINARY_DIR}/ver
 include_directories(${CMAKE_BINARY_DIR})
 
 set(MAXDOF_PATH_DEPENDENCIES "${CMAKE_SOURCE_DIR}/../MaxDoF-Dependencies")
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${MAXDOF_TARGET_PLATFORM}/${CMAKE_BUILD_TYPE}")
 
 if(MSVC)
     add_compile_options(/W3 /WX /arch:AVX2)

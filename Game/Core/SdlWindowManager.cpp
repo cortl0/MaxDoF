@@ -66,8 +66,6 @@ namespace MaxDoF::Game::Core
         return Ogre::StringConverter::toString( reinterpret_cast<size_t>( wmInfo.info.win.window ) );
 #elif OGRE_PLATFORM == OGRE_PLATFORM_LINUX
         return Ogre::StringConverter::toString( static_cast<size_t>( wmInfo.info.x11.window ) );
-#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE
-        return Ogre::StringConverter::toString( reinterpret_cast<size_t>( wmInfo.info.cocoa.window ) );
 #else
         return "";
 #endif
