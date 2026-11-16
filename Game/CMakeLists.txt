@@ -72,7 +72,11 @@ if(APPLE)
 endif()
 
 add_executable(${PROJECT_NAME} ${SRC_FILES_Game} ${SRC_FILES_Common})
-target_compile_definitions(${PROJECT_NAME} PRIVATE MAXDOF_CLIENT_BUILD)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    MAXDOF_CLIENT_BUILD
+    JPH_SHARED_LIBRARY
+)
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     ${CMAKE_SOURCE_DIR}

@@ -50,6 +50,7 @@ if [ ! -d "${MAXDOF_PATH_JOLT_PHYSICS}" ]; then
     cd Debug
     cmake ../../Build \
         -DCMAKE_BUILD_TYPE=Debug \
+        -DJPH_BUILD_SHARED_LIBS=ON \
         -DDOUBLE_PRECISION=ON \
         -DDEBUG_RENDERER_IN_DISTRIBUTION=OFF \
         -DPROFILER_IN_DISTRIBUTION=OFF \
@@ -115,6 +116,7 @@ if [ ! -d "${MAXDOF_PATH_OGRE_NEXT}" ]; then
     mkdir -p Debug
     cd Debug
     cmake -D OGRE_BUILD_SAMPLES2=1 \
+          -D OGRE_STATIC=OFF \
           -D OGRE_CONFIG_THREAD_PROVIDER=0 \
           -D OGRE_CONFIG_THREADS=0 \
           -D CMAKE_BUILD_TYPE=Debug \

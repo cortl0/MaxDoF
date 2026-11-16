@@ -21,6 +21,10 @@ file(GLOB_RECURSE SRC_FILES_Common "${CMAKE_SOURCE_DIR}/Common/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SRC_FILES_Server} ${SRC_FILES_Common})
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    JPH_SHARED_LIBRARY
+)
+
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     ${CMAKE_SOURCE_DIR}
     ${JOLT_SOURCE}

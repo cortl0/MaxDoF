@@ -100,7 +100,7 @@ namespace MaxDoF::Common::Ships
             bodyInterface->AddImpulse(bullet.physId, projectileImpulse);
 
             {
-                JPH::BodyLockWrite lock(mWorldManager.getPhysicsSystem()->GetBodyLockInterface(), mEntity.physId);
+                JPH::BodyLockWrite lock(mWorldManager.getPhysicsSystem()->GetBodyLockInterfaceNoLock(), mEntity.physId);
                 if (lock.Succeeded())
                 {
                     JPH::Body &body = lock.GetBody();
