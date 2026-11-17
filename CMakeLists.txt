@@ -66,5 +66,9 @@ else()
     )
 endif()
 
+if(MINGW)
+    add_link_options(-static-libgcc -static-libstdc++ -Wl,-Bstatic -lwinpthread -Wl,-Bdynamic)
+endif()
+
 add_subdirectory(Game)
 add_subdirectory(Server)

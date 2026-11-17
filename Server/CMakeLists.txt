@@ -37,3 +37,24 @@ target_link_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Jolt
 )
+
+if(WIN32)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${JOLT_BINARIES}/libJolt.dll"
+            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+        COMMENT "Copying Jolt DLL for Server"
+    )
+endif()
+
+if(MINGW)
+    execute_process(COMMAND ${CMAKE_CXX_COMPILER} -print-file-name=libstdc++-6.dll OUTPUT_VARIABLE MINGW_LIBSTDCPP OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${CMAKE_CXX_COMPILER} -print-file-name=libgcc_s_seh-1.dll OUTPUT_VARIABLE MINGW_LIBGCC OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${CMAKE_CXX_COMPILER} -print-file-name=libwinpthread-1.dll OUTPUT_VARIABLE MINGW_WINPTHREAD OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+    set(MINGW_RUNTIME_DLLS
+        "${MINGW_LIBSTDCPP}"
+        "${MINGW_LIBGCC}"
+        "${MINGW_WINPTHREAD}"
+    )
+endif()

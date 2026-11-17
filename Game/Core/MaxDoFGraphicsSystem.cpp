@@ -35,24 +35,115 @@ namespace MaxDoF::Game::Core
 
     void MaxDoFGraphicsSystem::initialize( const Ogre::String &windowTitle )
     {
+        const Ogre::AbiCookie abiCookie = Ogre::generateAbiCookie();
+
+        // 1. Создаем Root БЕЗ автоматической жесткой загрузки plugins.cfg (передаем "")
+        mRoot = new Ogre::Root(
+            &abiCookie,
+            "",
+            mWriteAccessFolder + "ogre.cfg",
+            mWriteAccessFolder + "Ogre.log"
+        );
+
+        // 2. Читаем plugins.cfg / plugins_d.cfg вручную и загружаем плагины как опциональные (bOptional = true)
         Ogre::String pluginsPath = mResourcePath + "plugins.cfg";
-#if defined( DEBUG ) || defined( _DEBUG ) || defined( OGRE_DEBUG_MODE )
         std::ifstream debugCfg( ( mResourcePath + "plugins_d.cfg" ).c_str() );
         if( debugCfg.good() )
-            pluginsPath = mResourcePath + "plugins_d.cfg";
-#endif
-        const Ogre::AbiCookie abiCookie = Ogre::generateAbiCookie();
-        mRoot = OGRE_NEW Ogre::Root( &abiCookie,
-                                     pluginsPath,
-                                     mWriteAccessFolder + "ogre.cfg",
-                                     mWriteAccessFolder + "Ogre.log" );
-
-        if( !mRoot->restoreConfig() && !mRoot->showConfigDialog() )
         {
-            OGRE_EXCEPT( Ogre::Exception::ERR_INVALID_STATE,
-                         "Render system configuration was cancelled.",
-                         "MaxDoFGraphicsSystem::initialize" );
+            pluginsPath = mResourcePath + "plugins_d.cfg";
         }
+
+        Ogre::ConfigFile cfg;
+        cfg.load( pluginsPath );
+
+        Ogre::String pluginDir = cfg.getSetting( "PluginFolder" );
+        if( !pluginDir.empty() && pluginDir.back() != '/' && pluginDir.back() != '\\' )
+        {
+            pluginDir += "/";
+        }
+
+        const Ogre::StringVector &plugins = cfg.getMultiSetting( "Plugin" );
+        for( const Ogre::String &pluginName : plugins )
+        {
+            // Второй параметр true = bOptional: если DLL или vulkan-1.dll не найдены, OGRE не упадет
+            mRoot->loadPlugin( pluginDir + pluginName, true, nullptr );
+        }
+
+        if( !mRoot->restoreConfig() )
+        {
+        #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+            const Ogre::RenderSystemList &renderers = mRoot->getAvailableRenderers();
+            if( renderers.empty() )
+            {
+                OGRE_EXCEPT( Ogre::Exception::ERR_RENDERINGAPI_ERROR,
+                            "No render systems available!",
+                            "MaxDoFGraphicsSystem::initialize" );
+            }
+
+            // Ищем предпочтительный рендер: сначала Vulkan, если его нет — OpenGL 3+, иначе первый доступный
+            Ogre::RenderSystem *selectedRenderer = nullptr;
+            for( Ogre::RenderSystem *rs : renderers )
+            {
+                if( rs->getName().find( "Vulkan" ) != Ogre::String::npos )
+                {
+                    selectedRenderer = rs;
+                    break;
+                }
+            }
+
+            if( !selectedRenderer )
+            {
+                for( Ogre::RenderSystem *rs : renderers )
+                {
+                    if( rs->getName().find( "OpenGL 3+" ) != Ogre::String::npos )
+                    {
+                        selectedRenderer = rs;
+                        break;
+                    }
+                }
+            }
+
+            if( !selectedRenderer )
+            {
+                selectedRenderer = renderers.front();
+            }
+
+            mRoot->setRenderSystem( selectedRenderer );
+
+            // Выставляем безопасные настройки по умолчанию
+            const Ogre::ConfigOptionMap &options = selectedRenderer->getConfigOptions();
+
+            if( options.find( "Full Screen" ) != options.end() )
+                selectedRenderer->setConfigOption( "Full Screen", "Yes" );
+
+            if( options.find( "VSync" ) != options.end() )
+                selectedRenderer->setConfigOption( "VSync", "Yes" );
+
+            // Подбираем разрешение 1280x720 из списка доступных у выбранного рендера
+            auto videoModeIt = options.find( "Video Mode" );
+            if( videoModeIt != options.end() )
+            {
+                for( const Ogre::String &mode : videoModeIt->second.possibleValues )
+                {
+                    if( mode.find( "1920 x 1080" ) != Ogre::String::npos )
+                    {
+                        selectedRenderer->setConfigOption( "Video Mode", mode );
+                        break;
+                    }
+                }
+            }
+
+            mRoot->saveConfig();
+        #else
+            if( !mRoot->showConfigDialog() )
+            {
+                OGRE_EXCEPT( Ogre::Exception::ERR_INVALID_STATE,
+                            "Render system configuration was cancelled.",
+                            "MaxDoFGraphicsSystem::initialize" );
+            }
+        #endif
+        }
+
 
         mRoot->initialise( false, windowTitle );
 
