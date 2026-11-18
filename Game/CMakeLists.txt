@@ -8,17 +8,6 @@ cmake_minimum_required(VERSION 3.16)
 project(MaxDoFGame)
 
 if(WIN32)
-    set(OGREDEPS_DIR "${MAXDOF_PATH_DEPENDENCIES}/ogre-next-deps/build/${MAXDOF_TARGET_PLATFORM}/ogredeps")
-    set(SDL2_INCLUDE_DIRS "${OGREDEPS_DIR}/include/SDL2")
-    set(SDL2_LIBRARIES
-        "${OGREDEPS_DIR}/lib/Release/libSDL2main.a"
-        "${OGREDEPS_DIR}/lib/Release/libSDL2.dll.a"
-    )
-else()
-    find_package(SDL2 REQUIRED)
-endif()
-
-if(WIN32)
     set(SDL2_DIR "${MAXDOF_PATH_DEPENDENCIES}/sdl2-windows/x86_64-w64-mingw32/lib/cmake/SDL2")
 endif()
 
@@ -93,7 +82,6 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${JOLT_SOURCE}
-    ${SDL2_INCLUDE_DIRS}
     "${OGRE_BINARIES}/include"
     "${OGRE_BINARIES}/include/OGRE"
     "${OGRE_BINARIES}/OgreMain/include"
@@ -122,15 +110,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 if(WIN32)
-    file(GLOB OGRE_DLLS "${OGRE_BINARIES}/bin/*.dll")
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "$<TARGET_FILE:SDL2::SDL2>"
-            "${JOLT_BINARIES}/libJolt.dll"
-            ${OGRE_DLLS}
-            "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
-        COMMENT "Copying runtime DLLs for Game"
-    )
     set(MINGW_RUNTIME_DLLS "")
     if(MINGW)
         execute_process(COMMAND ${CMAKE_CXX_COMPILER} -print-file-name=libstdc++-6.dll OUTPUT_VARIABLE MINGW_LIBSTDCPP OUTPUT_STRIP_TRAILING_WHITESPACE)

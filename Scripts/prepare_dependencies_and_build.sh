@@ -29,7 +29,7 @@ echo "MAXDOF_PATH_JOLT_PHYSICS: ${MAXDOF_PATH_JOLT_PHYSICS}"
 sudo apt update || exit $?
 echo "Installing dependencies of OGRE Next"
 sudo apt-get install -y \
-    git mingw-w64 wget tar wine64 cmake ninja-build doxygen graphviz python3-clang \
+    git tar wget cmake ninja-build doxygen python3-clang graphviz mingw-w64 mingw-w64-tools wine64 \
     libfreetype6-dev libfreeimage-dev libzzip-dev libxrandr-dev libxaw7-dev freeglut3-dev libgl1-mesa-dev \
     libglu1-mesa-dev libxcb-randr0-dev libx11-xcb-dev libxcb-keysyms1-dev libsdl2-dev \
     || exit $?
@@ -71,6 +71,15 @@ if [ ! -d "${MAXDOF_PATH_SDL2_WIN}" ]; then
     rm /tmp/SDL2-mingw.tar.gz
 fi
 
+MAXDOF_PATH_VULKAN_WIN="${MAXDOF_PATH_DEPENDENCIES}/vulkan-windows"
+if [ ! -d "${MAXDOF_PATH_VULKAN_WIN}" ]; then
+    echo "Preparing Vulkan headers and import library for MinGW"
+    mkdir -p "${MAXDOF_PATH_VULKAN_WIN}/lib"
+    git clone --depth 1 --branch v1.3.296 https://github.com/KhronosGroup/vulkan-headers "${MAXDOF_PATH_VULKAN_WIN}/headers" || exit $?
+    gendef - /usr/lib/x86_64-linux-gnu/wine/x86_64-windows/vulkan-1.dll > "${MAXDOF_PATH_VULKAN_WIN}/lib/vulkan-1.def" || exit $?
+    x86_64-w64-mingw32-dlltool -d "${MAXDOF_PATH_VULKAN_WIN}/lib/vulkan-1.def" -l "${MAXDOF_PATH_VULKAN_WIN}/lib/libvulkan-1.dll.a" || exit $?
+fi
+
 DXMATH_FILE="${MAXDOF_PATH_OGRE_NEXT}/OgreMain/src/WIN32/OgreOptimisedUtilDirectXMath.cpp"
 if [ -f "${DXMATH_FILE}" ] && ! grep -q "PATCHED_FOR_MINGW" "${DXMATH_FILE}"; then
     sed -i '1i // PATCHED_FOR_MINGW\n#ifdef _MSC_VER' "${DXMATH_FILE}"
@@ -81,6 +90,13 @@ namespace Ogre { class OptimisedUtil; extern OptimisedUtil* _getOptimisedUtilDir
 EOF
 fi
 
+MAXDOF_PATH_GLSLANG_WIN="${MAXDOF_PATH_DEPENDENCIES}/glslang-windows"
+if [ ! -d "${MAXDOF_PATH_GLSLANG_WIN}/src" ]; then
+    echo "Cloning glslang for Windows (MinGW)"
+    mkdir -p "${MAXDOF_PATH_GLSLANG_WIN}"
+    git clone --depth 1 --branch 14.3.0 https://github.com/khronosGroup/glslang "${MAXDOF_PATH_GLSLANG_WIN}/src" || exit $?
+fi
+
 # 2. Собираем зависимости и проект для всех целевых платформ
 for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
     echo "=========================================="
@@ -89,25 +105,34 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
 
     if [ "${TARGET_PLATFORM}" = "windows-x86_64" ]; then
         CMAKE_TOOLCHAIN_ARG=" \
-        -DCMAKE_TOOLCHAIN_FILE=${MAXDOF_PATH}/CMake/Toolchains/mingw-w64-x86_64.cmake
-    "
-        # PLATFORM_CXX_FLAGS="${SIMD_CXX_FLAGS} -U_WIN32_WINNT -D_WIN32_WINNT=0x0A00 -DWINVER=0x0A00"
+            -DCMAKE_TOOLCHAIN_FILE=${MAXDOF_PATH}/CMake/Toolchains/mingw-w64-x86_64.cmake \
+        "
         PLATFORM_CXX_FLAGS=" \
             ${SIMD_CXX_FLAGS} \
             -U_WIN32_WINNT \
             -D_WIN32_WINNT=0x0A00 \
             -DWINVER=0x0A00 \
-    "
+        "
+        OGREDEPS_WIN_DIR="${MAXDOF_PATH_OGRE_NEXT_DEPS}/build/windows-x86_64/ogredeps"
+        GLSLANG_LIBS="${OGREDEPS_WIN_DIR}/lib/libglslang.a;${OGREDEPS_WIN_DIR}/lib/libMachineIndependent.a;${OGREDEPS_WIN_DIR}/lib/libGenericCodeGen.a;${OGREDEPS_WIN_DIR}/lib/libOSDependent.a;${OGREDEPS_WIN_DIR}/lib/libSPIRV.a"
+
         OGRE_EXTRA_FLAGS=" \
             -DOGRE_BUILD_RENDERSYSTEM_D3D11:BOOL=OFF \
             -DOGRE_CONFIG_ENABLE_STBI:BOOL=ON \
             -DOGRE_BUILD_SAMPLES2:BOOL=OFF \
+            -DOGRE_CONFIG_ENABLE_FREEIMAGE:BOOL=OFF \
             -DOGRE_CONFIG_ENABLE_DIRECTXMATH:BOOL=OFF \
             -DOGRE_SIMD_DIRECTXMATH:BOOL=OFF \
             -DOGRE_PROFILING_PROVIDER:STRING=none \
             -DOGRE_PROFILING:BOOL=OFF \
-    "
-            #  -DOGRE_CONFIG_FREEIMAGE:BOOL=OFF
+            -DOGRE_BUILD_RENDERSYSTEM_VULKAN:BOOL=ON \
+            -DOGRE_BUILD_COMPONENT_OVERLAY:BOOL=ON \
+            -DVulkan_INCLUDE_DIR=${MAXDOF_PATH_VULKAN_WIN}/headers/include \
+            -DVulkan_LIBRARY=${MAXDOF_PATH_VULKAN_WIN}/lib/libvulkan-1.dll.a \
+            -DVulkan_SHADERC_INCLUDE_DIR=${OGREDEPS_WIN_DIR}/include \
+            -DVulkan_SHADERC_LIB_REL=${GLSLANG_LIBS} \
+            -DVulkan_SHADERC_LIB_DBG=${GLSLANG_LIBS} \
+        "
     else
         CMAKE_TOOLCHAIN_ARG=""
         PLATFORM_CXX_FLAGS="${SIMD_CXX_FLAGS}"
@@ -163,13 +188,43 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
         echo "Installing dependencies of OGRE Next"
         make install || exit $?
     fi
+    if [ "${TARGET_PLATFORM}" = "windows-x86_64" ]; then
+        GLSLANG_DIR="${MAXDOF_PATH_DEPENDENCIES}/glslang-windows"
+        OGREDEPS_DIR="${MAXDOF_PATH_OGRE_NEXT_DEPS}/build/windows-x86_64/ogredeps"
+        if [ ! -f "${OGREDEPS_DIR}/lib/libglslang.a" ]; then
+            mkdir -p "${GLSLANG_DIR}/build"
+            cd "${GLSLANG_DIR}/build"
+            cmake ../src \
+                ${CMAKE_TOOLCHAIN_ARG} \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_INSTALL_PREFIX="${OGREDEPS_DIR}" \
+                -DENABLE_OPT=OFF \
+                -DENABLE_GLSLANG_BINARIES=OFF \
+                -DENABLE_CTEST=OFF \
+                -DALLOW_EXTERNAL_SPIRV_TOOLS=OFF || exit $?
+            make -j12 || exit $?
+            make install || exit $?
+        fi
+        mkdir -p "${OGREDEPS_DIR}/lib/Debug" "${OGREDEPS_DIR}/lib/Release"
+        cp -n "${OGREDEPS_DIR}/lib/Release/"*.a "${OGREDEPS_DIR}/lib/Debug/" 2>/dev/null || true
+        cp -n "${OGREDEPS_DIR}/lib/Release/"*.a "${OGREDEPS_DIR}/lib/" 2>/dev/null || true
+        cp -n "${OGREDEPS_DIR}/lib/"*.a "${OGREDEPS_DIR}/lib/Debug/" 2>/dev/null || true
+        cp -n "${OGREDEPS_DIR}/lib/"*.a "${OGREDEPS_DIR}/lib/Release/" 2>/dev/null || true
+    fi
 
     # OGRE-Next
     OGRE_BUILD_DIR="${MAXDOF_PATH_OGRE_NEXT}/build/${TARGET_PLATFORM}/Debug"
-    if [ ! -d "${OGRE_BUILD_DIR}" ]; then
+    if [ "${TARGET_PLATFORM}" = "windows-x86_64" ]; then
+    OGRE_READY_CHECK="${OGRE_BUILD_DIR}/bin/RenderSystem_Vulkan_d.dll"
+    else
+        OGRE_READY_CHECK="${OGRE_BUILD_DIR}/lib/RenderSystem_Vulkan_d.so"
+    fi
+
+    if [ ! -f "${OGRE_READY_CHECK}" ]; then
         echo "Build OGRE Next (Debug) for ${TARGET_PLATFORM}"
         mkdir -p "${OGRE_BUILD_DIR}"
         cd "${OGRE_BUILD_DIR}"
+        rm -f CMakeCache.txt
         cmake \
             -D OGRE_STATIC=OFF \
             -D OGRE_CONFIG_THREAD_PROVIDER=0 \
@@ -192,7 +247,12 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
     make -j12 || exit $?
 done
 
-echo "Run MaxDoF (Linux)"
-cd ${MAXDOF_PATH}/bin/linux-x86_64/Debug
-./MaxDoFServer
-./MaxDoFGame
+# echo "Run MaxDoF (Linux)"
+# cd ${MAXDOF_PATH}/bin/linux-x86_64/Debug
+# ./MaxDoFServer
+# ./MaxDoFGame
+
+# echo "Run MaxDoF (Windows)"
+# cd ${MAXDOF_PATH}/bin/windows-x86_64/Debug
+# wine ./MaxDoFServer
+# wine ./MaxDoFGame

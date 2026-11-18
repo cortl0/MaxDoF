@@ -20,4 +20,5 @@ set(CMAKE_FIND_ROOT_PATH
     /usr/x86_64-w64-mingw32
     "${CMAKE_CURRENT_LIST_DIR}/../../../MaxDoF-Dependencies/sdl2-windows/x86_64-w64-mingw32"
     "${CMAKE_CURRENT_LIST_DIR}/../../../MaxDoF-Dependencies/ogre-next-deps/build/windows-x86_64/ogredeps"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../MaxDoF-Dependencies/vulkan-windows"
 )
