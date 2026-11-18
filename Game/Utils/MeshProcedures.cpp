@@ -227,10 +227,9 @@ namespace MaxDoF::Game::Utils
                 meshName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
             );
 
-            if (!meshResource.operator bool())
+            if (meshResource.operator bool())
             {
                 meshResource->unload();
-
                 meshManager.remove(meshResource);
             }
         }

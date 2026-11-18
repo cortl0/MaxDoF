@@ -5,9 +5,37 @@
 # Licensed under the GNU Affero General Public License v3.0 or later
 # See LICENSE file in the project root for full license information
 
-# Usage:
-# Note: This file must be run from the ./Scripts/ directory
-# ./prepare_dependencies__build__run.sh
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+cd "${SCRIPT_DIR}" || exit $?
+
+if [ "$#" -ne 2 ]; then
+    echo "Error: Invalid number of arguments."
+    echo "Usage: $0 <linux-x86_64|windows-x86_64> <Debug|Release>"
+    exit 1
+fi
+
+MAXDOF_TARGET_PLATFORM="$1"
+MAXDOF_BUILD_TYPE="$2"
+
+case "${MAXDOF_TARGET_PLATFORM}" in
+    linux-x86_64|windows-x86_64)
+        ;;
+    *)
+        echo "Error: Unsupported platform '${MAXDOF_TARGET_PLATFORM}'."
+        echo "Allowed values: linux-x86_64, windows-x86_64"
+        exit 1
+        ;;
+esac
+
+case "${MAXDOF_BUILD_TYPE}" in
+    Debug|Release)
+        ;;
+    *)
+        echo "Error: Unsupported build type '${MAXDOF_BUILD_TYPE}'."
+        echo "Allowed values: Debug, Release"
+        exit 1
+        ;;
+esac
 
 MAXDOF_PATH=$(pwd)/..
 MAXDOF_PATH_DEPENDENCIES=${MAXDOF_PATH}/../MaxDoF-Dependencies
@@ -25,18 +53,6 @@ SIMD_CXX_FLAGS="-msse4.1 -msse4.2 -mavx -mavx2 -mfma -mf16c -mlzcnt -mbmi"
 echo "MAXDOF_PATH_OGRE_NEXT: ${MAXDOF_PATH_OGRE_NEXT}"
 echo "MAXDOF_PATH_OGRE_NEXT_DEPS: ${MAXDOF_PATH_OGRE_NEXT_DEPS}"
 echo "MAXDOF_PATH_JOLT_PHYSICS: ${MAXDOF_PATH_JOLT_PHYSICS}"
-
-sudo apt update || exit $?
-echo "Installing dependencies of OGRE Next"
-sudo apt-get install -y \
-    git tar wget cmake ninja-build doxygen python3-clang graphviz mingw-w64 mingw-w64-tools wine64 \
-    libfreetype6-dev libfreeimage-dev libzzip-dev libxrandr-dev libxaw7-dev freeglut3-dev libgl1-mesa-dev \
-    libglu1-mesa-dev libxcb-randr0-dev libx11-xcb-dev libxcb-keysyms1-dev libsdl2-dev \
-    || exit $?
-
-echo "Switching MinGW-w64 to POSIX threads"
-sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix || exit $?
-sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix || exit $?
 
 mkdir -p ${MAXDOF_PATH_DEPENDENCIES}
 
@@ -98,12 +114,11 @@ if [ ! -d "${MAXDOF_PATH_GLSLANG_WIN}/src" ]; then
 fi
 
 # 2. Собираем зависимости и проект для всех целевых платформ
-for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
     echo "=========================================="
-    echo "Building for platform: ${TARGET_PLATFORM}"
+    echo "Building for platform: ${MAXDOF_TARGET_PLATFORM}"
     echo "=========================================="
 
-    if [ "${TARGET_PLATFORM}" = "windows-x86_64" ]; then
+    if [ "${MAXDOF_TARGET_PLATFORM}" = "windows-x86_64" ]; then
         CMAKE_TOOLCHAIN_ARG=" \
             -DCMAKE_TOOLCHAIN_FILE=${MAXDOF_PATH}/CMake/Toolchains/mingw-w64-x86_64.cmake \
         "
@@ -140,14 +155,20 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
     fi
 
     # Jolt Physics
-    JOLT_BUILD_DIR="${MAXDOF_PATH_JOLT_PHYSICS}/build/${TARGET_PLATFORM}/Debug"
+    JOLT_BUILD_DIR="${MAXDOF_PATH_JOLT_PHYSICS}/build/${MAXDOF_TARGET_PLATFORM}/${MAXDOF_BUILD_TYPE}"
     if [ ! -d "${JOLT_BUILD_DIR}" ]; then
-        echo "Build Jolt Physics (Debug) for ${TARGET_PLATFORM}"
+        echo "Build Jolt Physics (${MAXDOF_BUILD_TYPE}) for ${MAXDOF_TARGET_PLATFORM}"
         mkdir -p "${JOLT_BUILD_DIR}"
         cd "${JOLT_BUILD_DIR}"
+        if [ "${MAXDOF_BUILD_TYPE}" = "Debug" ]; then
+            JOLT_DEBUG_FLAGS="-DDEBUG_RENDERER_IN_DEBUG_AND_RELEASE=ON -DPROFILER_IN_DEBUG_AND_RELEASE=ON"
+        else
+            JOLT_DEBUG_FLAGS="-DDEBUG_RENDERER_IN_DEBUG_AND_RELEASE=OFF -DPROFILER_IN_DEBUG_AND_RELEASE=OFF"
+        fi
         cmake ../../../Build \
             ${CMAKE_TOOLCHAIN_ARG} \
-            -DCMAKE_BUILD_TYPE=Debug \
+            ${JOLT_DEBUG_FLAGS} \
+            -DCMAKE_BUILD_TYPE=${MAXDOF_BUILD_TYPE} \
             -DJPH_BUILD_SHARED_LIBS=ON \
             -DDOUBLE_PRECISION=ON \
             -DDEBUG_RENDERER_IN_DISTRIBUTION=OFF \
@@ -167,12 +188,12 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
     fi
 
     # OGRE-Next Dependencies
-    OGRE_DEPS_BUILD_DIR="${MAXDOF_PATH_OGRE_NEXT_DEPS}/build/${TARGET_PLATFORM}"
+    OGRE_DEPS_BUILD_DIR="${MAXDOF_PATH_OGRE_NEXT_DEPS}/build/${MAXDOF_TARGET_PLATFORM}"
     if [ ! -d "${OGRE_DEPS_BUILD_DIR}" ]; then
         mkdir -p "${OGRE_DEPS_BUILD_DIR}"
         cd "${OGRE_DEPS_BUILD_DIR}"
-        echo "Build dependencies of OGRE Next for ${TARGET_PLATFORM}"
-        if [ "${TARGET_PLATFORM}" = "windows-x86_64" ]; then
+        echo "Build dependencies of OGRE Next for ${MAXDOF_TARGET_PLATFORM}"
+        if [ "${MAXDOF_TARGET_PLATFORM}" = "windows-x86_64" ]; then
             sed -i 's/add_subdirectory(FreeImage)/if(NOT WIN32)\n  add_subdirectory(FreeImage)\nendif()/' "${MAXDOF_PATH_OGRE_NEXT_DEPS}/src/CMakeLists.txt"
             cmake ../.. \
                 ${CMAKE_TOOLCHAIN_ARG} \
@@ -188,7 +209,7 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
         echo "Installing dependencies of OGRE Next"
         make install || exit $?
     fi
-    if [ "${TARGET_PLATFORM}" = "windows-x86_64" ]; then
+    if [ "${MAXDOF_TARGET_PLATFORM}" = "windows-x86_64" ]; then
         GLSLANG_DIR="${MAXDOF_PATH_DEPENDENCIES}/glslang-windows"
         OGREDEPS_DIR="${MAXDOF_PATH_OGRE_NEXT_DEPS}/build/windows-x86_64/ogredeps"
         if [ ! -f "${OGREDEPS_DIR}/lib/libglslang.a" ]; then
@@ -213,15 +234,19 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
     fi
 
     # OGRE-Next
-    OGRE_BUILD_DIR="${MAXDOF_PATH_OGRE_NEXT}/build/${TARGET_PLATFORM}/Debug"
-    if [ "${TARGET_PLATFORM}" = "windows-x86_64" ]; then
-    OGRE_READY_CHECK="${OGRE_BUILD_DIR}/bin/RenderSystem_Vulkan_d.dll"
+    OGRE_BUILD_DIR="${MAXDOF_PATH_OGRE_NEXT}/build/${MAXDOF_TARGET_PLATFORM}/${MAXDOF_BUILD_TYPE}"
+    if [ "${BUILD_TYPE}" = "Debug" ]; then
+        OGRE_SUFFIX="_d"
     else
-        OGRE_READY_CHECK="${OGRE_BUILD_DIR}/lib/RenderSystem_Vulkan_d.so"
+        OGRE_SUFFIX=""
     fi
-
+    if [ "${TARGET_PLATFORM}" = "windows-x86_64" ]; then
+        OGRE_READY_CHECK="${OGRE_BUILD_DIR}/bin/RenderSystem_Vulkan${OGRE_SUFFIX}.dll"
+    else
+        OGRE_READY_CHECK="${OGRE_BUILD_DIR}/lib/RenderSystem_Vulkan${OGRE_SUFFIX}.so"
+    fi
     if [ ! -f "${OGRE_READY_CHECK}" ]; then
-        echo "Build OGRE Next (Debug) for ${TARGET_PLATFORM}"
+        echo "Build OGRE Next (${MAXDOF_BUILD_TYPE}) for ${MAXDOF_TARGET_PLATFORM}"
         mkdir -p "${OGRE_BUILD_DIR}"
         cd "${OGRE_BUILD_DIR}"
         rm -f CMakeCache.txt
@@ -230,7 +255,7 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
             -D OGRE_CONFIG_THREAD_PROVIDER=0 \
             -D OGRE_CONFIG_THREADS=0 \
             -D OGRE_DEPENDENCIES_DIR="${OGRE_DEPS_BUILD_DIR}/ogredeps" \
-            -D CMAKE_BUILD_TYPE=Debug \
+            -D CMAKE_BUILD_TYPE=${MAXDOF_BUILD_TYPE} \
             -D CMAKE_CXX_FLAGS="${PLATFORM_CXX_FLAGS}" \
             ${OGRE_EXTRA_FLAGS} \
             ${CMAKE_TOOLCHAIN_ARG} \
@@ -239,20 +264,9 @@ for TARGET_PLATFORM in "linux-x86_64" "windows-x86_64"; do
     fi
 
     # MaxDoF
-    echo "Build MaxDoF for ${TARGET_PLATFORM}"
-    MAXDOF_BUILD_DIR="${MAXDOF_PATH}/build/${TARGET_PLATFORM}/Debug"
+    echo "Build MaxDoF for ${MAXDOF_TARGET_PLATFORM}"
+    MAXDOF_BUILD_DIR="${MAXDOF_PATH}/build/${MAXDOF_TARGET_PLATFORM}/${MAXDOF_BUILD_TYPE}"
     mkdir -p "${MAXDOF_BUILD_DIR}"
     cd "${MAXDOF_BUILD_DIR}"
-    cmake -DCMAKE_BUILD_TYPE=Debug ${CMAKE_TOOLCHAIN_ARG} ../../.. || exit $?
+    cmake -DCMAKE_BUILD_TYPE=${MAXDOF_BUILD_TYPE} -DMAXDOF_TARGET_PLATFORM=${MAXDOF_TARGET_PLATFORM} ${CMAKE_TOOLCHAIN_ARG} ../../.. || exit $?
     make -j12 || exit $?
-done
-
-# echo "Run MaxDoF (Linux)"
-# cd ${MAXDOF_PATH}/bin/linux-x86_64/Debug
-# ./MaxDoFServer
-# ./MaxDoFGame
-
-# echo "Run MaxDoF (Windows)"
-# cd ${MAXDOF_PATH}/bin/windows-x86_64/Debug
-# wine ./MaxDoFServer
-# wine ./MaxDoFGame
