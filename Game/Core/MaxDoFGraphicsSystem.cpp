@@ -80,11 +80,11 @@ namespace MaxDoF::Game::Core
                             "MaxDoFGraphicsSystem::initialize" );
             }
 
-            // Ищем предпочтительный рендер: сначала Vulkan, если его нет — OpenGL 3+, иначе первый доступный
+            // Ищем предпочтительный рендер: сначала OpenGL 3+ (для максимальной совместимости), затем Vulkan
             Ogre::RenderSystem *selectedRenderer = nullptr;
             for( Ogre::RenderSystem *rs : renderers )
             {
-                if( rs->getName().find( "Vulkan" ) != Ogre::String::npos )
+                if( rs->getName().find( "OpenGL 3+" ) != Ogre::String::npos )
                 {
                     selectedRenderer = rs;
                     break;
@@ -95,7 +95,7 @@ namespace MaxDoF::Game::Core
             {
                 for( Ogre::RenderSystem *rs : renderers )
                 {
-                    if( rs->getName().find( "OpenGL 3+" ) != Ogre::String::npos )
+                    if( rs->getName().find( "Vulkan" ) != Ogre::String::npos )
                     {
                         selectedRenderer = rs;
                         break;
