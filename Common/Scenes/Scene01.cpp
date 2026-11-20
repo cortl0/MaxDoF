@@ -95,33 +95,34 @@ namespace MaxDoF::Common::Scenes
     }
 #endif
 
+    void Scene01::createBoxes(JPH::RVec3 offset)
+    {
+        int size = 2;
+
+        for(int i = -size; i <= size; ++i)
+            for(int j = -size; j <= size; ++j)
+                for(int k = -size; k <= size; ++k)
+                    mWorldManager.createCube(Common::Types3d::EntityType::cOtherObject,
+                        {
+                            .position = JPH::RVec3(offset.GetX() + i * 1.1f, offset.GetY() + j * 1.1f, offset.GetZ() + k * 1.1f),
+                            .orientation = JPH::Quat::sIdentity()
+                        },
+                        Types::cUnitScaleVector * 0.5f, 1000.0f);
+    }
+
     void Scene01::createScene()
     {
         // createMapBoundaries();
 #ifdef MAXDOF_CLIENT_BUILD
         // createStaticLights();
 #endif
-        int size = 2;
-        double offset = 30.0;
+        createBoxes({0.0, 0.0, -50.0});
 
-        for(int i = -size; i <= size; ++i)
-            for(int j = -size; j <= size; ++j)
-                for(int k = -size; k <= size; ++k)
-                {
-                    Types::PhysPose pose
-                    {
-                        .position = JPH::RVec3( i * 1.1f, j * 1.1f, -offset - k * 1.1f ),
-                        .orientation = JPH::Quat::sIdentity()
-                    };
-                    mWorldManager.createCube(Common::Types3d::EntityType::cOtherObject, pose, Types::cUnitScaleVector * 0.5f, 1000.0f);
-                }
-
-        Types::PhysPose pose
-        {
-            .position = JPH::RVec3( 0.0f, 0.0f, -12.0f ),
-            .orientation = JPH::Quat::sIdentity()
-        };
-        mWorldManager.createSphere(Common::Types3d::EntityType::cOtherObject, pose, 0.5f, 1000.0f);
+        mWorldManager.createSphere(Common::Types3d::EntityType::cOtherObject, Types::PhysPose
+            {
+                .position = JPH::RVec3( 0.0f, 0.0f, -30.0f ),
+                .orientation = JPH::Quat::sIdentity()
+            }, 0.5f, 1000.0f);
         auto& shipEntity = createShipEntity();
         mShip = new Common::Ships::Ship(mWorldManager,
 #ifdef MAXDOF_CLIENT_BUILD
@@ -134,16 +135,27 @@ namespace MaxDoF::Common::Scenes
         auto places = tetrahedron.GetVertices();
         const double pipePos = 15.0;
         const double pipePosZ = 75.0;
+
+        JPH::RVec3 tetrahedronOffset{places[0] * 100.0};
+        JPH::RVec3 deathmatchOffset{places[1] * 140.0};
+        JPH::RVec3 deathmatchSpaceOffset{places[2] * 100.0};
+        JPH::RVec3 deathmatchAsteroidOffset{places[3] * 100.0};
+
+        createBoxes(tetrahedronOffset);
+        createBoxes(deathmatchOffset);
+        createBoxes(deathmatchSpaceOffset);
+        createBoxes(deathmatchAsteroidOffset);
+
         Common::Types::LevelGraphs::PureLevelGraph levelGraph;
         Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, {false, true}, true, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f});
         Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, {false, true}, true, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f});
         Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, {true, false}, false, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f});
         Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, {true, false}, false, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f});
-        Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, places[0] * 100.0);
-        Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, places[1] * 140.0);
-        Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, places[2] * 100.0);
-        Common::Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, places[3] * 100.0);
-        Common::Maps::DeathmatchAsteroidRotGraphGenerator::GenerateGraph(levelGraph, {0.0, 0.0, 0.0});
+        Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, tetrahedronOffset);
+        Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, deathmatchOffset);
+        Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, deathmatchSpaceOffset);
+        Common::Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, deathmatchAsteroidOffset);
+        Common::Maps::DeathmatchAsteroidRotGraphGenerator::GenerateGraph(levelGraph, JPH::RVec3::sZero());
 
         Common::Types3d::MeshData meshData;
         MaxDoF::Common::Meshes::MeshBuilder::CreateMeshData(meshData, levelGraph);

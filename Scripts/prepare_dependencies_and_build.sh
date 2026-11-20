@@ -76,7 +76,7 @@ if [ ! -d "${MAXDOF_PATH_OGRE_NEXT_DEPS}" ]; then
     git clone --recurse-submodules --shallow-submodules https://github.com/OGRECave/ogre-next-deps "${MAXDOF_PATH_OGRE_NEXT_DEPS}" || exit $?
     cd ${MAXDOF_PATH_OGRE_NEXT_DEPS}
     git checkout 20dd36410a81a2b05214cf37f99e58e00810a291
-    git submodule update --init --recursive
+    git submodule update --init --recursive || exit $?
 fi
 
 if [ ! -d "${MAXDOF_PATH_OGRE_NEXT}" ]; then

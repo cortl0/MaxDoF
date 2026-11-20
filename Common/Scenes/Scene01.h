@@ -21,6 +21,7 @@ namespace MaxDoF::Common::Scenes
 #ifdef MAXDOF_CLIENT_BUILD
         void createStaticLights();
 #endif
+        void createBoxes(JPH::RVec3 offset);
         void createScene() override;
         Types::Entity& createShipEntity() override;
     };

@@ -79,7 +79,7 @@ namespace MaxDoF::Game
         if( mTextOverleyManager.mDisplayHelpMode != 0 )
         {
             auto telemetry = mShipController->getTelemetry( timeSinceLast );
-            mTextOverleyManager.generateDebugText( timeSinceLast, telemetry );
+            //mTextOverleyManager.generateDebugText( timeSinceLast, telemetry );
             mScene->getShip().update( timeSinceLast, telemetry );
         }
 #endif
