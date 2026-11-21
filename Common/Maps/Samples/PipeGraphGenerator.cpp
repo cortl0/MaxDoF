@@ -28,10 +28,7 @@ namespace MaxDoF::Common::Maps
         triangle1.Translate(pEnd + offset);
         triangle0.FillGraphVerticesAndCreateInterface(graph);
         triangle1.FillGraphVerticesAndCreateInterface(graph);
-        pipe.SetTriangleInterfaceKeys({
-            graph.interfaces[interfacesBaseIndex].id,
-            graph.interfaces[interfacesBaseIndex + 1].id
-        });
+        pipe.SetTriangleInterfaceKeys({graph.interfaces[interfacesBaseIndex].id, graph.interfaces[interfacesBaseIndex + 1].id});
         pipe.FillGraph(graph, invertInterfaces, invertPipe, {Types::LevelGraphs::InterfaceType::SolidRock, Types::LevelGraphs::InterfaceType::SolidRock});
     }
 }

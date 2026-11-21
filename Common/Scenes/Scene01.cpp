@@ -112,6 +112,8 @@ namespace MaxDoF::Common::Scenes
 
     void Scene01::createScene()
     {
+        mShip = new Common::Ships::Ship(mWorldManager);
+
         // createMapBoundaries();
 #ifdef MAXDOF_CLIENT_BUILD
         // createStaticLights();
@@ -123,12 +125,6 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3( 0.0f, 0.0f, -30.0f ),
                 .orientation = JPH::Quat::sIdentity()
             }, 0.5f, 1000.0f);
-        auto& shipEntity = createShipEntity();
-        mShip = new Common::Ships::Ship(mWorldManager,
-#ifdef MAXDOF_CLIENT_BUILD
-            mWorldManager.getGraphics(),
-#endif
-            shipEntity);
 
         Common::LevelGraphs::Tetrahedron tetrahedron;
         tetrahedron.GenerateVetrices(JPH::RVec3::sZero(), 1.0);
@@ -160,16 +156,5 @@ namespace MaxDoF::Common::Scenes
         Common::Types3d::MeshData meshData;
         MaxDoF::Common::Meshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
         mWorldManager.createMesh(meshData);
-    }
-
-    Types::Entity& Scene01::createShipEntity()
-    {
-        return mWorldManager.createSphere(Common::Types3d::EntityType::cShip,
-            Common::Types::PhysPose
-            {
-                .position = JPH::RVec3{0.0, 0.0, 0.0},
-                .orientation = JPH::Quat{0.0f, 0.0f, 0.0f, 1.0f}.Normalized()
-            }
-            , 0.5f, 1000.0f, true);
     }
 }

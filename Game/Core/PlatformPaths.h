@@ -16,4 +16,3 @@ namespace MaxDoF::Game::Core
         static Ogre::String getWriteAccessFolder();
     };
 }
-

@@ -12,10 +12,13 @@
 #include <OgreSceneManager.h>
 #include <OgreTextureGpuManager.h>
 
+#include "Game/Textures/Generator.h"
+#include "Game/Textures/ConfigFactory.h"
 #include "Game/Utils/MeshProcedures.h"
 
 namespace MaxDoF::Game::World
 {
+    const Ogre::String meshName{"asteroid_0.png"};
     Ogre::HlmsSamplerblock samplerblock;
 
     Graphics::Graphics( const Ogre::String &helpDescription ) :
@@ -128,9 +131,8 @@ namespace MaxDoF::Game::World
         Ogre::TextureGpuManager* textureGpuManager = renderSystem->getTextureGpuManager();
 
         // 2. Запрашиваем создание/получение текстуры по имени файла
-        Ogre::String textureName = "BeachStones.jpg"; // Укажите ваше имя файла
         Ogre::TextureGpu* texture = textureGpuManager->createOrRetrieveTexture(
-            textureName,
+            meshName,
             Ogre::GpuPageOutStrategy::Discard,
             Ogre::TextureFlags::AutomaticBatching, // Оставляем только этот флаг для обычной текстуры
             Ogre::TextureTypes::Type2D,
@@ -177,6 +179,7 @@ namespace MaxDoF::Game::World
 
     void Graphics::initialize()
     {
+        GenerateBatch();
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         createMaterials();
         Utils::createProceduralSphereV2(sceneManager, cOrtSphereMeshName, 0.5f, 16, 16);
@@ -190,7 +193,8 @@ namespace MaxDoF::Game::World
         // changeTexture(item, "rockwall.tga");
 
         changeUniqueTexture(sceneManager->createItem("Sphere1000.mesh"), "1d_SPIRAL.png", "MyWoodMaterial");
-        changeUniqueTexture(sceneManager->createItem("cube_d.mesh"), "BeachStones.jpg", "MyStoneMaterial");
+        // changeUniqueTexture(sceneManager->createItem("cube_d.mesh"), "BeachStones.jpg", "MyStoneMaterial");
+        changeUniqueTexture(sceneManager->createItem("cube_d.mesh"), meshName, "MyStoneMaterial");
         globalStaticNode = sceneManager->getRootSceneNode()->createChildSceneNode(Ogre::SceneMemoryMgrTypes::SCENE_DYNAMIC);
     }
 
@@ -258,6 +262,17 @@ namespace MaxDoF::Game::World
         return node;
     }
 
+    void Graphics::GenerateBatch()
+    {
+        Game::Textures::Generator generator;
+
+        for (uint32_t i = 0; i < 1; ++i)
+        {
+            Game::Textures::Config cfg = Game::Textures::ConfigFactory::CreateRandom(i, 10);
+            generator.SaveToPng(cfg, "Data/Textures/asteroid_" + std::to_string(i) + ".png");
+        }
+    }
+
     void Graphics::setPositionOfGlobalStaticNode(const Ogre::Vector3 & position)
     {
         globalStaticNode->setPosition(position);
@@ -296,5 +311,4 @@ void Graphics::printAllMaterials()
     }
     std::cout << "=================================================" << std::endl;
 }
-
 }

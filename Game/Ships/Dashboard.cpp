@@ -13,7 +13,7 @@ namespace MaxDoF::Game::Ships
         : mSceneMgr(sceneMgr)
         , mGraphics(graphics)
     {
-        bool visible = false;
+        bool visible = true;
         mDashboardNode = parentNode->createChildSceneNode(Ogre::SCENE_DYNAMIC);
         mDashboardNode->setPosition(position);
         mDashboardNode->pitch(-Ogre::Radian(position.y / position.z));

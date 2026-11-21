@@ -23,6 +23,5 @@ namespace MaxDoF::Common::Scenes
 #endif
         void createBoxes(JPH::RVec3 offset);
         void createScene() override;
-        Types::Entity& createShipEntity() override;
     };
 }

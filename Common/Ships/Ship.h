@@ -17,20 +17,15 @@ namespace MaxDoF::Common::Ships
 {
     class Ship {
         World::Manager& mWorldManager;
+        Types::Entity mEntity;
 #ifdef MAXDOF_CLIENT_BUILD
         Game::Ships::Dashboard mDashboard;
         Ogre::SceneNode* lightNode;
         Ogre::Light* light;
 #endif
-        Types::Entity mEntity;
 
     public:
-        Ship(
-            World::Manager&,
-#ifdef MAXDOF_CLIENT_BUILD
-            Game::World::Graphics&,
-#endif
-            const Types::Entity&);
+        Ship(World::Manager&);
         ~Ship();
 #ifdef MAXDOF_CLIENT_BUILD
         void connectCameraToShip(Ogre::Camera*);
@@ -38,5 +33,6 @@ namespace MaxDoF::Common::Ships
         const Types::Entity& getEntity() const { return mEntity; }
         void update(float timeSinceLastFrame, const Types::Telemetry&);
         void CreateBullet(float timeSinceLast, bool needCreate);
+        Types::Entity& createShipEntity();
     };
 }

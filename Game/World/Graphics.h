@@ -39,6 +39,7 @@ namespace MaxDoF::Game::World
         Ogre::SceneNode* createPointLight(Ogre::Vector3 position);
         Ogre::SceneNode* createShape( const Ogre::String& meshName, const Common::Types::GraphPose&, Ogre::SceneNode* parent = nullptr);
         Ogre::SceneNode* createSphere(const Common::Types::GraphPose&, float radius, Ogre::SceneNode* parent = nullptr);
+        void GenerateBatch();
         void setPositionOfGlobalStaticNode(const Ogre::Vector3&);
         void printAllMaterials();
     };

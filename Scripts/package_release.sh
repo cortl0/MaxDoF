@@ -12,9 +12,10 @@ MAXDOF_PATH=$(cd "${SCRIPT_DIR}/.." && pwd)
 MAXDOF_PATH_DEPENDENCIES=$(cd "${MAXDOF_PATH}/.." && pwd)/MaxDoF-Dependencies
 
 # Читаем версию проекта из корневого CMakeLists.txt
-PROJECT_VERSION=$(grep -E "project\(MaxDoF VERSION" "${MAXDOF_PATH}/CMakeLists.txt" | sed -E 's/.*VERSION ([0-9.]+).*/\1/')
+PROJECT_VERSION="v$(grep -E "project\(MaxDoF VERSION" "${MAXDOF_PATH}/CMakeLists.txt" | sed -E 's/.*VERSION ([0-9.]+).*/\1/')"
 if [ -z "${PROJECT_VERSION}" ]; then
-    PROJECT_VERSION="0.2.0"
+    echo "PROJECT_VERSION [${PROJECT_VERSION}] is wrong"
+    exit 1
 fi
 
 DIST_ROOT="${MAXDOF_PATH}/ReleasePackages"
@@ -49,7 +50,7 @@ for PLATFORM in "linux-x86_64" "windows-x86_64"; do
     cp -r "${MAXDOF_PATH}/bin/Data/"* "${PKG_DIR}/Data/" || exit $?
     mkdir -p "${PKG_DIR}/Data/Media"
     cp -r "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/Samples/Media/models" "${PKG_DIR}/Data/Media/" || exit $?
-    cp -r "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/Samples/Media/materials" "${PKG_DIR}/Data/Media/" || exit $?
+    mkdir -p "${PKG_DIR}/Data/Textures"
 
     # 2. Генерируем автономный resources2.cfg (без ссылок за пределы папки игры)
     cat << 'EOF' > "${PKG_DIR}/resources2.cfg"
@@ -64,7 +65,7 @@ FileSystem=Data/2.0/scripts/Materials/Common/GLSL
 FileSystem=Data/2.0/scripts/Materials/Common/HLSL
 FileSystem=Data/2.0/scripts/Materials/Common/Metal
 FileSystem=Data/Media/models
-FileSystem=Data/Media/materials/textures
+FileSystem=Data/Textures
 
 [Hlms]
 DoNotUseAsResource=Data

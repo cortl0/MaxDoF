@@ -28,12 +28,15 @@ set(JOLT_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/jolt-physics/build/${MAXDOF_TARGE
 set(OGRE_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/ogre-next" CACHE STRING "Path to OGRE-Next source code" FORCE)
 set(OGRE_BINARIES "${MAXDOF_PATH_DEPENDENCIES}/ogre-next/build/${MAXDOF_TARGET_PLATFORM}/${BUILD_SUBDIR}" CACHE STRING "Path to OGRE-Next build folder" FORCE)
 
+set(STBI_SOURCE "${MAXDOF_PATH_DEPENDENCIES}/stbi" CACHE STRING "Path to STBI source code" FORCE)
+
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/CMake/Templates/MaxDoFWorkspace.compositor"
     "${CMAKE_SOURCE_DIR}/bin/Data/MaxDoFWorkspace.compositor"
     COPYONLY
 )
 
+file(MAKE_DIRECTORY "${EXECUTABLE_OUTPUT_PATH}/Data/Textures")
 file(COPY "${OGRE_SOURCE}/Samples/Media/Hlms" DESTINATION "${CMAKE_SOURCE_DIR}/bin/Data")
 file(COPY "${OGRE_SOURCE}/Samples/Media/2.0" DESTINATION "${CMAKE_SOURCE_DIR}/bin/Data")
 file(COPY "${OGRE_SOURCE}/Samples/Media/packs/DebugPack.zip" DESTINATION "${CMAKE_SOURCE_DIR}/bin/Data")
@@ -90,6 +93,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${OGRE_SOURCE}/Components/Hlms/Pbs/include"
     "${OGRE_SOURCE}/Components/Hlms/Unlit/include"
     "${OGRE_SOURCE}/Components/Overlay/include"
+    "${STBI_SOURCE}"
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE

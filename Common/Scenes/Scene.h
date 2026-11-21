@@ -20,7 +20,6 @@ namespace MaxDoF::Common::Scenes
         Scene(World::Manager&);
         virtual ~Scene();
         virtual void createScene() = 0;
-        virtual Types::Entity& createShipEntity() = 0;
         Common::Ships::Ship& getShip() { return *mShip; }
     };
 }

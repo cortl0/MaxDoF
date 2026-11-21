@@ -11,17 +11,12 @@
 
 namespace MaxDoF::Common::Ships
 {
-    Ship::Ship(
-        World::Manager& worldManager,
-#ifdef MAXDOF_CLIENT_BUILD
-        Game::World::Graphics& graphics,
-#endif
-        const Types::Entity& entity)
+    Ship::Ship(World::Manager& worldManager)
         : mWorldManager(worldManager)
+        , mEntity(createShipEntity())
 #ifdef MAXDOF_CLIENT_BUILD
-        , mDashboard(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), entity.graphNode, Ogre::Vector3(0.0f, -0.1f, -0.3f), graphics)
+        , mDashboard(Game::Ships::Dashboard(mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager(), mEntity.graphNode, Ogre::Vector3(0.0f, -0.1f, -0.3f), mWorldManager.getGraphics()))
 #endif
-        , mEntity(entity)
     {
 #ifdef MAXDOF_CLIENT_BUILD
         auto* mSceneMgr = mWorldManager.getGraphics().getGraphicsSystem()->getSceneManager();
@@ -119,5 +114,18 @@ namespace MaxDoF::Common::Ships
 
             bodyInterface->AddImpulse(mEntity.physId, -projectileImpulse);
         }
+    }
+
+    Types::Entity& Ship::createShipEntity()
+    {
+        return mWorldManager.createSphere(
+            Common::Types3d::EntityType::cShip,
+            Common::Types::PhysPose
+            {
+                .position = JPH::RVec3{0.0, 0.0, 0.0},
+                .orientation = JPH::Quat{0.0f, 0.0f, 0.0f, 1.0f}.Normalized()
+            }
+            , 0.5f, 1000.0f, true
+        );
     }
 }

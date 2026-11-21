@@ -129,6 +129,15 @@ if [ ! -d "${MAXDOF_PATH_GLSLANG_WIN}/src" ]; then
     git clone --depth 1 --branch 14.3.0 https://github.com/khronosGroup/glslang "${MAXDOF_PATH_GLSLANG_WIN}/src" || exit $?
 fi
 
+MAXDOF_PATH_STBI="${MAXDOF_PATH_DEPENDENCIES}/stbi"
+if [ ! -d "${MAXDOF_PATH_STBI}" ]; then
+    echo "Downloading STBI"
+    mkdir -p "${MAXDOF_PATH_STBI}"
+    wget -qO /tmp/stbi.tar.gz https://github.com/nothings/stb/archive/6b5799bae8a1fe3792691ef4b72ae26434c3e799.tar.gz || exit $?
+    tar -xzf /tmp/stbi.tar.gz -C "${MAXDOF_PATH_STBI}" --strip-components=1 || exit $?
+    rm /tmp/stbi.tar.gz
+fi
+
 # Building
 if [ "${MAXDOF_TARGET_PLATFORM}" = "windows-x86_64" ]; then
     CMAKE_TOOLCHAIN_ARG=" \
