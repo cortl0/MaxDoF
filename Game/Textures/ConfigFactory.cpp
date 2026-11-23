@@ -53,6 +53,8 @@ namespace MaxDoF::Game::Textures
         // cfg.base_hue    = hueDist(rng);
         // cfg.hue_step    = stepDist(rng);
 
+        cfg.Print();
+
         return cfg;
     }
 }

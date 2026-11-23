@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iostream>
 
 namespace MaxDoF::Game::Textures
 {
@@ -39,5 +40,30 @@ namespace MaxDoF::Game::Textures
         int32_t hue_step     = 25;  // Шаг сдвига тона: [-180 .. 180]
 
         constexpr uint32_t GetSize() const noexcept { return 1u << size_power; }
+
+        void Print() const
+        {
+            const char* formulaName = "UNKNOWN";
+            switch (formula)
+            {
+                case FormulaType::XOR_CRYSTAL:    formulaName = "XOR_CRYSTAL";    break;
+                case FormulaType::TECH_MASK:      formulaName = "TECH_MASK";      break;
+                case FormulaType::CONCENTRIC:     formulaName = "CONCENTRIC";     break;
+                case FormulaType::DIAGONAL_SLICE: formulaName = "DIAGONAL_SLICE"; break;
+            }
+
+            std::cout
+                << "======================================================================================\n"
+                << "MaxDoF::Game::Textures::Config {\n"
+                << "  size_power  : " << size_power << " (" << GetSize() << "x" << GetSize() << ")\n"
+                << "  formula     : " << formulaName << " (" << static_cast<uint32_t>(formula) << ")\n"
+                << "  offset_a    : " << offset_a << "\n"
+                << "  offset_b    : " << offset_b << "\n"
+                << "  quant_shift : " << quant_shift << "\n"
+                << "  base_hue    : " << base_hue << "\n"
+                << "  hue_step    : " << hue_step << "\n"
+                << "}\n"
+                << "======================================================================================\n";
+        }
     };
 }

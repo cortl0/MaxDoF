@@ -9,6 +9,8 @@
 
 #ifdef MAXDOF_CLIENT_BUILD
 #include "Game/World/Graphics.h"
+#include "Game/Audio/AcousticWorld.h"
+#include "AudioEngine.h"
 #endif
 
 #include "Common/World/Physics.h"
@@ -24,14 +26,19 @@ namespace MaxDoF::Common::World
 
 #ifdef MAXDOF_CLIENT_BUILD
         MaxDoF::Game::World::Graphics mGraphics;
+        
+        Game::Audio::AudioEngine m_audio;
+        std::vector<int> m_staticAudioMeshIds;
+        Game::Audio::SourceId m_ambientSource = Game::Audio::cInvalidSourceId;
 #endif
-
     public:
         Manager();
         ~Manager();
 
 #ifdef MAXDOF_CLIENT_BUILD
         MaxDoF::Game::World::Graphics& getGraphics(){ return mGraphics; }
+        void addMeshToAudio(const Common::Types3d::MeshData &meshData);
+        void initAudio();
 #endif
         JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysics.getPhysicsSystem(); }
         void initialize(unsigned int maxBodies);

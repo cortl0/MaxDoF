@@ -13,7 +13,6 @@ endif()
 
 find_package(SDL2 REQUIRED)
 
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(OGRE_CFG_SUFFIX "_d")
     set(BUILD_SUBDIR "Debug")
@@ -75,6 +74,10 @@ file(GLOB_RECURSE SRC_FILES_Game "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 file(GLOB_RECURSE SRC_FILES_Common "${CMAKE_SOURCE_DIR}/Common/*.cpp")
 
 add_executable(${PROJECT_NAME} ${SRC_FILES_Game} ${SRC_FILES_Common})
+
+include("${CMAKE_CURRENT_SOURCE_DIR}/CMake/AudioSystem.cmake")
+setup_audio_system(${PROJECT_NAME} ${MAXDOF_PATH_DEPENDENCIES})
+add_faust_dsp(${PROJECT_NAME} "Game/Audio/Dsp/SineTest.dsp" "SineTest")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     MAXDOF_CLIENT_BUILD

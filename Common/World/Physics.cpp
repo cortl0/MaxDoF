@@ -147,11 +147,6 @@ namespace MaxDoF::Common::World
 
     JPH::BodyID Physics::createMesh(const Types3d::MeshData &meshData)
     {
-        if (meshData.vertices.empty() || meshData.indices.empty())
-        {
-            MaxDoF_LOG_AND_ABORT("bad data")
-        }
-
         JPH::VertexList joltVertices;
         joltVertices.reserve(meshData.vertices.size());
         for (const auto& v : meshData.vertices)

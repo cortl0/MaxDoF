@@ -144,7 +144,6 @@ namespace MaxDoF::Game::Core
         #endif
         }
 
-
         mRoot->initialise( false, windowTitle );
 
         Ogre::ConfigOptionMap &cfgOpts = mRoot->getRenderSystem()->getConfigOptions();

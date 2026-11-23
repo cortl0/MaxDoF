@@ -138,6 +138,17 @@ if [ ! -d "${MAXDOF_PATH_STBI}" ]; then
     rm /tmp/stbi.tar.gz
 fi
 
+MAXDOF_PATH_STEAM_AUDIO="${MAXDOF_PATH_DEPENDENCIES}/steam-audio"
+if [ ! -d "${MAXDOF_PATH_STEAM_AUDIO}" ]; then
+    echo "Downloading https://github.com/valvesoftware/steam-audio"
+    mkdir -p "${MAXDOF_PATH_STEAM_AUDIO}"
+    wget -qO /tmp/steam-audio.zip https://github.com/ValveSoftware/steam-audio/releases/download/v4.8.1/steamaudio_4.8.1.zip || exit $?
+    unzip /tmp/steam-audio.zip -d ${MAXDOF_PATH_STEAM_AUDIO}
+    mv ${MAXDOF_PATH_STEAM_AUDIO}/steamaudio/* ${MAXDOF_PATH_STEAM_AUDIO}
+    rm -r ${MAXDOF_PATH_STEAM_AUDIO}/steamaudio
+    rm /tmp/steam-audio.zip
+fi
+
 # Building
 if [ "${MAXDOF_TARGET_PLATFORM}" = "windows-x86_64" ]; then
     CMAKE_TOOLCHAIN_ARG=" \

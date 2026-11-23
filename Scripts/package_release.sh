@@ -104,6 +104,7 @@ EOF
         # Копируем .so библиотеки Jolt и OGRE-Next (включая симлинки с версиями)
         cp -a "${JOLT_BIN}/libJolt.so"* "${PKG_DIR}/" || exit $?
         cp -a "${OGRE_BIN}/lib/"*.so* "${PKG_DIR}/" || exit $?
+        cp -a "${MAXDOF_PATH_DEPENDENCIES}/steam-audio/lib/linux-x64/libphonon.so"* "${PKG_DIR}/" || exit $?
 
         # Срезаем отладочные символы
         strip "${PKG_DIR}/MaxDoFGame" "${PKG_DIR}/MaxDoFServer" "${PKG_DIR}/"*.so* 2>/dev/null || true
