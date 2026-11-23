@@ -14,7 +14,6 @@
 #include "Input/MouseController.h"
 #include "Input/KeyboardController.h"
 #include "Input/ControllerTranslator.h"
-#include "Common/GameLogic/BattleLogic.h"
 #include "Game/Ships/ShipController.h"
 #include "Common/Scenes/Scene01.h"
 #include "Common/World/Manager.h"
@@ -41,7 +40,6 @@ namespace MaxDoF::Game
         Input::MouseController mMouseController;
         Input::KeyboardController mKeyboardController;
         std::unique_ptr<Common::Scenes::Scene> mScene;
-        Common::GameLogic::BattleLogic mBattleLogic{ mWorldManager };
 
     public:
         explicit MdfGame( const Ogre::String &helpDescription );

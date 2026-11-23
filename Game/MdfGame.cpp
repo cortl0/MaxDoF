@@ -35,20 +35,19 @@ namespace MaxDoF::Game
 
     void MdfGame::connectControllerToShip()
     {
-        mShipController = std::make_unique<Ships::ShipController>( mScene->getShip(), mWorldManager.getBodyInterface() );
+        mShipController = std::make_unique<Ships::ShipController>( mScene->GetShip(), mWorldManager.getBodyInterface() );
     }
 
     void MdfGame::createScene01()
     {
         mScene = std::make_unique<Common::Scenes::Scene01>( mWorldManager );
         mWorldManager.initialize( mMaxBodiesLimit );
-        mWorldManager.getPhysicsSystem()->SetContactListener( &mBattleLogic.GetMyContactListener() );
-        mScene->createScene();
+        mScene->CreateScene();
 #ifdef MAXDOF_CLIENT_BUILD
         mTextOverleyManager.createCrosshair();
         mTextOverleyManager.createDebugTextOverlay();
 #endif
-        mScene->getShip().connectCameraToShip( mGraphicsSystem->getCamera() );
+        mScene->GetShip().connectCameraToShip( mGraphicsSystem->getCamera() );
         connectControllerToShip();
 
         mGraphicsSystem->getSceneManager()->setForwardClustered(
@@ -72,15 +71,15 @@ namespace MaxDoF::Game
         if( mShipController )
             mShipController->update( timeSinceLast, data );
 
-        mWorldManager.update( timeSinceLast, mScene->getShip().getEntity().physId );
-        mBattleLogic.Update();
+        mWorldManager.update( timeSinceLast, mScene->GetShip().getEntity().physId );
+        mScene->Update();
 
 #ifdef MAXDOF_CLIENT_BUILD
         if( mTextOverleyManager.mDisplayHelpMode != 0 )
         {
             auto telemetry = mShipController->getTelemetry( timeSinceLast );
             //mTextOverleyManager.generateDebugText( timeSinceLast, telemetry );
-            mScene->getShip().update( timeSinceLast, telemetry );
+            mScene->GetShip().update( timeSinceLast, telemetry );
         }
 #endif
     }

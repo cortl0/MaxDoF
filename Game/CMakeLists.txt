@@ -78,6 +78,7 @@ add_executable(${PROJECT_NAME} ${SRC_FILES_Game} ${SRC_FILES_Common})
 include("${CMAKE_CURRENT_SOURCE_DIR}/CMake/AudioSystem.cmake")
 setup_audio_system(${PROJECT_NAME} ${MAXDOF_PATH_DEPENDENCIES})
 add_faust_dsp(${PROJECT_NAME} "Game/Audio/Dsp/SineTest.dsp" "SineTest")
+add_faust_dsp(${PROJECT_NAME} "Game/Audio/Dsp/Explosion.dsp" "Explosion")
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     MAXDOF_CLIENT_BUILD

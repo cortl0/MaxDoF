@@ -18,6 +18,9 @@ namespace MaxDoF::Common::GameLogic
     public:
         BattleLogic(Common::World::Manager&);
         ~BattleLogic();
+#ifdef MAXDOF_CLIENT_BUILD
+        void CreateSound(uint64_t userData, const JPH::RVec3 &contactPoint, const JPH::BodyID &bodyId);
+#endif
         Common::World::MyContactListener& GetMyContactListener(){ return mMyContactListener; }
         void Update();
     };

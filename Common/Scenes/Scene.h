@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "Common/GameLogic/BattleLogic.h"
 #include "Common/Ships/Ship.h"
 #include "Common/World/Manager.h"
 
@@ -15,11 +16,14 @@ namespace MaxDoF::Common::Scenes
     protected:
         World::Manager& mWorldManager;
         Common::Ships::Ship* mShip;
+        Common::GameLogic::BattleLogic mBattleLogic;
 
     public:
         Scene(World::Manager&);
         virtual ~Scene();
-        virtual void createScene() = 0;
-        Common::Ships::Ship& getShip() { return *mShip; }
+
+        virtual void CreateScene() = 0;
+        Common::Ships::Ship& GetShip() { return *mShip; }
+        void Update();
     };
 }

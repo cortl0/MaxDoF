@@ -8,6 +8,7 @@
 #ifdef MAXDOF_CLIENT_BUILD
 #include <faust/gui/meta.h>
 #include "SineTest.h"
+#include "Explosion.h"
 #include "Game/Utils/Converters.h"
 #endif
 
@@ -41,6 +42,8 @@ namespace MaxDoF::Common::World
 
     void Manager::update(float timeSinceLast, const JPH::BodyID& shipBodyId)
     {
+        //TODO
+        mShipBodyId = shipBodyId;
         if (!mPhysics.getPhysicsSystem())
             return;
 
@@ -64,9 +67,9 @@ namespace MaxDoF::Common::World
         }
         mGraphics.setPositionOfGlobalStaticNode(Game::Utils::JphRVec3ToOgreVector3(-shipPosition));
 
-        if (!m_staticAudioMeshIds.empty())
+        if (!staticAudioMeshIds.empty())
         {
-            IPLMatrix4x4 t = m_audio.GetAcousticWorld().MakeIPLTransform(
+            IPLMatrix4x4 t = mAudioEngine.GetAcousticWorld().MakeIPLTransform(
                 -static_cast<float>(shipPosition.GetX()),
                 -static_cast<float>(shipPosition.GetY()),
                 -static_cast<float>(shipPosition.GetZ()),
@@ -74,24 +77,44 @@ namespace MaxDoF::Common::World
                 1.0f, 1.0f, 1.0f
             );
 
-            for (int id : m_staticAudioMeshIds)
-                m_audio.GetAcousticWorld().UpdateDynamicMeshTransform(id, t);
+            for (int id : staticAudioMeshIds)
+                mAudioEngine.GetAcousticWorld().UpdateDynamicMeshTransform(id, t);
 
-            m_audio.CommitScene();
+            mAudioEngine.CommitScene();
         }
 
-        if (m_ambientSource != Game::Audio::cInvalidSourceId)
+        if (ambientSource != Game::Audio::cInvalidSourceId)
         {
-            m_audio.SetSourcePosition(m_ambientSource, {
+            mAudioEngine.SetSourcePosition(ambientSource, {
                 static_cast<float>(-shipPosition.GetX()),
                 static_cast<float>(-shipPosition.GetY()),
                 static_cast<float>(-shipPosition.GetZ())
             });
         }
 
+        for (auto it = mOneShotAudios.begin(); it != mOneShotAudios.end(); )
+        {
+            it->remainingTime -= timeSinceLast;
+            if (it->remainingTime <= 0.0f)
+            {
+                mAudioEngine.DestroySource(it->id);
+                it = mOneShotAudios.erase(it);
+            }
+            else
+            {
+                JPH::Vec3 relPos = JPH::Vec3(it->worldPosition - shipPosition);
+                mAudioEngine.SetSourcePosition(it->id, {
+                    relPos.GetX(),
+                    relPos.GetY(),
+                    relPos.GetZ()
+                });
+                ++it;
+            }
+        }
+
         auto forward = shipOrientation * -JPH::Vec3::sAxisZ();
         auto up = shipOrientation * JPH::Vec3::sAxisY();
-        m_audio.Update(
+        mAudioEngine.Update(
             {0.0f, 0.0f, 0.0f},
             {forward.GetX(), forward.GetY(), forward.GetZ()},
             {up.GetX(), up.GetY(), up.GetZ()}
@@ -128,10 +151,10 @@ namespace MaxDoF::Common::World
 
         // TODO: Когда код будет готов и я буду уверен, что этот объект обладает звуком надо будет удалить звук
         if(0)
-        if (m_ambientSource != Game::Audio::cInvalidSourceId)
+        if (ambientSource != Game::Audio::cInvalidSourceId)
         {
-            m_audio.DestroySource(m_ambientSource);
-            m_ambientSource = Game::Audio::cInvalidSourceId;
+            mAudioEngine.DestroySource(ambientSource);
+            ambientSource = Game::Audio::cInvalidSourceId;
         }
 #endif
     }
@@ -198,27 +221,56 @@ namespace MaxDoF::Common::World
             }
         }
 
-         IPLMatrix4x4 t = m_audio.GetAcousticWorld().MakeIPLTransform(
+         IPLMatrix4x4 t = mAudioEngine.GetAcousticWorld().MakeIPLTransform(
             0.0f, 0.0f, 0.0f,
             0.0f, 0.0f, 0.0f, 1.0f,
             1.0f, 1.0f, 1.0f
         );
 
-        int meshId = m_audio.GetAcousticWorld().AddDynamicMesh(wallVerts, wallTris, Game::Audio::AcousticMaterials::cHeavyHull, t);
-        m_staticAudioMeshIds.push_back(meshId);
-        m_audio.CommitScene();
+        int meshId = mAudioEngine.GetAcousticWorld().AddDynamicMesh(wallVerts, wallTris, Game::Audio::AcousticMaterials::cHeavyHull, t);
+        staticAudioMeshIds.push_back(meshId);
+        mAudioEngine.CommitScene();
+    }
+
+    void Manager::CreateSound(const JPH::RVec3& position, int soundId)
+    {
+        auto shipPosition = mPhysics.getBodyInterface()->GetPosition(mShipBodyId);
+        JPH::Vec3 diff = JPH::Vec3(position - shipPosition);
+
+        Game::Audio::SourceId sourceId{Game::Audio::cInvalidSourceId};
+        switch (soundId)
+        {
+        case 0:
+            sourceId = mAudioEngine.SpawnSource(std::make_unique<Explosion>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
+            break;
+        case 1:
+            sourceId = mAudioEngine.SpawnSource(std::make_unique<SineTest>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
+            break;
+        
+        default:
+            return;
+        }
+
+        mAudioEngine.SetSourceParam(sourceId, "gain", 0.9f);
+        mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
+
+        mOneShotAudios.push_back(OneShotAudio{
+            .id = sourceId,
+            .worldPosition = position,
+            .remainingTime = 2.5f // Чуть больше длительности огибающей (2.2 сек)
+        });
     }
 
     void Manager::initAudio()
     {
-        m_audio.CommitScene();
+        mAudioEngine.CommitScene();
 
-        m_ambientSource = m_audio.SpawnSource(std::make_unique<SineTest>(), {0.0f, 0.0f, 0.0f});
-        m_audio.SetSourceParam(m_ambientSource, "freq", 1000.0f);
-        m_audio.SetSourceParam(m_ambientSource, "gain", 0.25f);
+        // ambientSource = mAudioEngine.SpawnSource(std::make_unique<SineTest>(), {0.0f, 0.0f, 0.0f});
+        // mAudioEngine.SetSourceParam(ambientSource, "freq", 1000.0f);
+        // mAudioEngine.SetSourceParam(ambientSource, "gain", 0.25f);
 
-        m_audio.Update({0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
-        m_audio.Start();
+        mAudioEngine.Update({0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
+        mAudioEngine.Start();
     }
 #endif
 }

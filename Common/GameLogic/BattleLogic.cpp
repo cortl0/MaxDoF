@@ -20,6 +20,25 @@ namespace MaxDoF::Common::GameLogic
         return !(type == Types3d::EntityType::cAsteroid || type == Types3d::EntityType::cShip);
     }
 
+#ifdef MAXDOF_CLIENT_BUILD
+    void BattleLogic::CreateSound(uint64_t userData, const JPH::RVec3& contactPoint, const JPH::BodyID& bodyId)
+    {
+        if(static_cast<Types3d::EntityType>(userData) == Types3d::EntityType::cBullet)
+        {
+            auto position = mWorldManager.getBodyInterface()->GetPosition(bodyId);
+            mWorldManager.CreateSound(position, 0);
+            return;
+        }
+
+        if(static_cast<Types3d::EntityType>(userData) == Types3d::EntityType::cShip)
+        {
+            auto position = (contactPoint + mWorldManager.getBodyInterface()->GetPosition(bodyId)) / 2.0f;
+            mWorldManager.CreateSound(position, 1);
+            return;
+        }
+    }
+#endif
+
     std::pair<bool, bool> NeedDestroy(const Types3d::EntityType type1, const Types3d::EntityType type2)
     {
         if(type1 == Types3d::EntityType::cBullet)
@@ -47,6 +66,10 @@ namespace MaxDoF::Common::GameLogic
                 static_cast<Types3d::EntityType>(contact.userData2)
             );
 
+#ifdef MAXDOF_CLIENT_BUILD
+            CreateSound(contact.userData1, contact.contactPoint, contact.body1);
+            CreateSound(contact.userData2, contact.contactPoint, contact.body2);
+#endif
             if(needDestroy.first)
                 mWorldManager.destroyEntity(index1);
 

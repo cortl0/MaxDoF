@@ -110,8 +110,9 @@ namespace MaxDoF::Common::Scenes
                         Types::cUnitScaleVector * 0.5f, 1000.0f);
     }
 
-    void Scene01::createScene()
+    void Scene01::CreateScene()
     {
+        mWorldManager.getPhysicsSystem()->SetContactListener( &mBattleLogic.GetMyContactListener() );
         mShip = new Common::Ships::Ship(mWorldManager);
 
         // createMapBoundaries();

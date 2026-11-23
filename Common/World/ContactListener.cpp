@@ -20,36 +20,41 @@ namespace MaxDoF::Common::World
 {
     void MyContactListener::OnContactAdded(const JPH::Body &inBody1, const JPH::Body &inBody2, const JPH::ContactManifold &inManifold, JPH::ContactSettings &ioSettings)
     {
+        JPH::Vec3 localAvg = JPH::Vec3::sZero();
+        const auto& points = inManifold.mRelativeContactPointsOn1;
+
+        if (!points.empty())
+        {
+            for (const JPH::Vec3& p : points)
+                localAvg += p;
+
+            localAvg /= static_cast<float>(points.size());
+        }
+
+        JPH::RVec3 worldPoint = inManifold.mBaseOffset + localAvg;
+
         std::lock_guard<std::mutex> lock(mMutex);
 
         mContacts.push_back({
             inBody1.GetID(),
             inBody2.GetID(),
             inBody1.GetUserData(),
-            inBody2.GetUserData()
+            inBody2.GetUserData(),
+            worldPoint
         });
     }
 
     void optimize(std::vector<ContactData>& data)
     {
-        // std::cout << "Количество контактов за кадр до оптимизации: " << std::to_string(data.size()) << std::endl;
-
-        // 1. Нормализация
-        // Jolt может вернуть (Тело_А, Тело_Б), а в другой точке контакта (Тело_Б, Тело_А).
-        // Переворачиваем их так, чтобы меньший ID всегда был первым.
         for (auto& contact : data) {
             if (contact.body1.GetIndex() > contact.body2.GetIndex()) {
                 std::swap(contact.body1, contact.body2);
+                std::swap(contact.userData1, contact.userData2);
             }
         }
 
-        // 2. Сортировка (Группирует одинаковые пары рядом друг с другом)
         std::sort(data.begin(), data.end());
-
-        // 3. Удаление дубликатов (Сдвигает уникальные элементы в начало, а хвост стирает)
         data.erase(std::unique(data.begin(), data.end()), data.end());
-
-        // std::cout << "Количество контактов за кадр после оптимизации: " << std::to_string(data.size()) << std::endl;
     }
 
     std::vector<ContactData> MyContactListener::FlushContacts()

@@ -19,6 +19,7 @@ namespace MaxDoF::Common::World
         JPH::BodyID body2;
         uint64_t userData1;
         uint64_t userData2;
+        JPH::RVec3 contactPoint{JPH::RVec3::sZero()};
 
         bool operator<(const ContactData& other) const {
             return std::tie(body1, body2) < std::tie(other.body1, other.body2);

@@ -21,16 +21,27 @@ namespace MaxDoF::Common::World
 {
     class Manager
     {
+#ifdef MAXDOF_CLIENT_BUILD
+        struct OneShotAudio
+        {
+            Game::Audio::SourceId id = Game::Audio::cInvalidSourceId;
+            JPH::RVec3 worldPosition = JPH::RVec3::sZero();
+            float remainingTime = 0.0f;
+        };
+        std::vector<OneShotAudio> mOneShotAudios;
+#endif
+
         World::Entites mEntities;
         Physics mPhysics;
 
 #ifdef MAXDOF_CLIENT_BUILD
         MaxDoF::Game::World::Graphics mGraphics;
         
-        Game::Audio::AudioEngine m_audio;
-        std::vector<int> m_staticAudioMeshIds;
-        Game::Audio::SourceId m_ambientSource = Game::Audio::cInvalidSourceId;
+        Game::Audio::AudioEngine mAudioEngine;
+        std::vector<int> staticAudioMeshIds;
+        Game::Audio::SourceId ambientSource = Game::Audio::cInvalidSourceId;
 #endif
+        JPH::BodyID mShipBodyId{JPH::BodyID::cInvalidBodyID};
     public:
         Manager();
         ~Manager();
@@ -38,6 +49,7 @@ namespace MaxDoF::Common::World
 #ifdef MAXDOF_CLIENT_BUILD
         MaxDoF::Game::World::Graphics& getGraphics(){ return mGraphics; }
         void addMeshToAudio(const Common::Types3d::MeshData &meshData);
+        void CreateSound(const JPH::RVec3& position, int soundId);
         void initAudio();
 #endif
         JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysics.getPhysicsSystem(); }

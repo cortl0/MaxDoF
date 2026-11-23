@@ -8,11 +8,17 @@
 namespace MaxDoF::Common::Scenes
 {
     Scene::Scene(World::Manager& worldManager) :
-        mWorldManager(worldManager)
+        mWorldManager(worldManager),
+        mBattleLogic(worldManager)
     {
     }
 
     Scene::~Scene()
     {
+    }
+
+    void Scene::Update()
+    {
+        mBattleLogic.Update();
     }
 }

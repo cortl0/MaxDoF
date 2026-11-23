@@ -21,8 +21,8 @@ namespace MaxDoF::Server
     {
         mScene = std::make_unique<Common::Scenes::Scene01>(mWorldManager);
         // mWorldManager.initialize( mMaxBodiesLimit );
-        mScene->createScene();
+        mScene->CreateScene();
         // mShip = mScene->createShip();
     }
 
-}  // namespace MaxDoF::Server
+}
