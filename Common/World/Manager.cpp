@@ -280,4 +280,19 @@ namespace MaxDoF::Common::World
         mAudioEngine.Start();
     }
 #endif
+
+    bool Manager::PhysicsHavePlace()
+    {
+        bool result = mPhysics.getPhysicsSystem()->GetMaxBodies() > mPhysics.getPhysicsSystem()->GetNumBodies();
+
+#if(false)
+        printf("bool Manager::PhysicsHavePlace() %d\n", static_cast<int>
+            (mPhysics.getPhysicsSystem()->GetMaxBodies() - mPhysics.getPhysicsSystem()->GetNumBodies()));
+
+        if(!result)
+            printf("bool Manager::PhysicsHavePlace() warning: Physics Have Not Place!\n");
+#endif
+
+        return result;
+    }
 }

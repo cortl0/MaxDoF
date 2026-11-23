@@ -63,6 +63,7 @@ namespace MaxDoF::Common::World
             JPH::BodyID bodyId);
 
         void destroyEntity(JPH::uint32 bodyIndex);
+        bool PhysicsHavePlace();
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
         Types::Entity& createCube(Common::Types3d::EntityType userData, const Types::PhysPose&, const JPH::Vec3& halfSize, float mass, bool dynamic = true, bool onCCD = false);

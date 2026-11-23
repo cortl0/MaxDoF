@@ -69,6 +69,8 @@ namespace MaxDoF::Common::World
             mBodyInterface->DeactivateBody(bodyID);
 
         mBodyInterface->RemoveBody(bodyID);
+        mBodyInterface->DestroyBody(bodyID);
+        bodyID = JPH::BodyID();
     }
 
     void Physics::initialize(unsigned int maxBodies)

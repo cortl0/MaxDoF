@@ -30,6 +30,9 @@ namespace MaxDoF::Common::Scenes
         static constexpr float mapWallHalfThickness{0.5f};
 
         {
+            if(!mWorldManager.PhysicsHavePlace())
+                return;
+
             Types::PhysPose pose{
                 .position = JPH::RVec3(-mapHalfSize, 0.0f, 0.0f),
                 .orientation = JPH::Quat::sIdentity()
@@ -38,6 +41,9 @@ namespace MaxDoF::Common::Scenes
         }
 
         {
+            if(!mWorldManager.PhysicsHavePlace())
+                return;
+
             Types::PhysPose pose{
                 .position = JPH::RVec3(mapHalfSize, 0.0f, 0.0f), // Смещение вправо по X
                 .orientation = JPH::Quat::sIdentity()
@@ -46,6 +52,9 @@ namespace MaxDoF::Common::Scenes
         }
 
         {
+            if(!mWorldManager.PhysicsHavePlace())
+                return;
+
             Types::PhysPose pose{
                 .position = JPH::RVec3(0.0f, -mapHalfSize, 0.0f), // Смещение вниз по Y
                 .orientation = JPH::Quat::sIdentity()
@@ -54,6 +63,9 @@ namespace MaxDoF::Common::Scenes
         }
 
         {
+            if(!mWorldManager.PhysicsHavePlace())
+                return;
+
             Types::PhysPose pose{
                 .position = JPH::RVec3(0.0f, mapHalfSize, 0.0f), // Смещение вверх по Y
                 .orientation = JPH::Quat::sIdentity()
@@ -62,6 +74,9 @@ namespace MaxDoF::Common::Scenes
         }
 
         {
+            if(!mWorldManager.PhysicsHavePlace())
+                return;
+
             Types::PhysPose pose{
                 .position = JPH::RVec3(0.0f, 0.0f, -mapHalfSize), // Смещение назад по Z
                 .orientation = JPH::Quat::sIdentity()
@@ -70,6 +85,9 @@ namespace MaxDoF::Common::Scenes
         }
 
         {
+            if(!mWorldManager.PhysicsHavePlace())
+                return;
+
             Types::PhysPose pose{
                 .position = JPH::RVec3(0.0f, 0.0f, mapHalfSize), // Смещение вперед по Z
                 .orientation = JPH::Quat::sIdentity()
@@ -102,17 +120,27 @@ namespace MaxDoF::Common::Scenes
         for(int i = -size; i <= size; ++i)
             for(int j = -size; j <= size; ++j)
                 for(int k = -size; k <= size; ++k)
+                {
+                    if(!mWorldManager.PhysicsHavePlace())
+                        return;
+
                     mWorldManager.createCube(Common::Types3d::EntityType::cOtherObject,
                         {
                             .position = JPH::RVec3(offset.GetX() + i * 1.1f, offset.GetY() + j * 1.1f, offset.GetZ() + k * 1.1f),
                             .orientation = JPH::Quat::sIdentity()
                         },
-                        Types::cUnitScaleVector * 0.5f, 1000.0f);
+                        Types::cUnitScaleVector * 0.5f, 1000.0f
+                    );
+                }
     }
 
     void Scene01::CreateScene()
     {
         mWorldManager.getPhysicsSystem()->SetContactListener( &mBattleLogic.GetMyContactListener() );
+
+        if(!mWorldManager.PhysicsHavePlace())
+            return;
+
         mShip = new Common::Ships::Ship(mWorldManager);
 
         // createMapBoundaries();
@@ -120,6 +148,9 @@ namespace MaxDoF::Common::Scenes
         // createStaticLights();
 #endif
         createBoxes({0.0, 0.0, -50.0});
+
+        if(!mWorldManager.PhysicsHavePlace())
+            return;
 
         mWorldManager.createSphere(Common::Types3d::EntityType::cOtherObject, Types::PhysPose
             {
@@ -156,6 +187,10 @@ namespace MaxDoF::Common::Scenes
 
         Common::Types3d::MeshData meshData;
         MaxDoF::Common::Meshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
+
+        if(!mWorldManager.PhysicsHavePlace())
+            return;
+
         mWorldManager.createMesh(meshData);
     }
 }

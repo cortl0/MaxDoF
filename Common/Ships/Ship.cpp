@@ -79,6 +79,10 @@ namespace MaxDoF::Common::Ships
         {
             --numBullets;
             fireCooldown = 0.1f;
+
+            if(!mWorldManager.PhysicsHavePlace())
+                return;
+
             JPH::BodyInterface* bodyInterface = mWorldManager.getBodyInterface();
 
             JPH::RVec3 shipPos = bodyInterface->GetPosition(mEntity.physId);

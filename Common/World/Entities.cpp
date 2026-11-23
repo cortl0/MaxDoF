@@ -31,13 +31,19 @@ namespace MaxDoF::Common::World
     {
         std::optional<Types::Entity> entity;
 
-        if (mEntities.empty()) [[unlikely]]
-            return {};
+        // if (mEntities.empty()) [[unlikely]]
+        //     return {};
 
         auto it = mIndex.find(entitiesIndexKey);
 
         if (it == mIndex.end())
+        {
+#if(false)
+            printf("std::optional<Types::Entity> Entites::RemoveEntity(EntitiesIndexKey entitiesIndexKey) warning: entity [%d] not found\n",
+                static_cast<int>(entitiesIndexKey));
+#endif
             return {};
+        }
 
         auto targetIndex = it->second;
         auto lastIndex = mEntities.size() - 1;

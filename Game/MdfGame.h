@@ -33,7 +33,7 @@ namespace MaxDoF::Game
     protected:
         Core::MaxDoFGraphicsSystem *mGraphicsSystem{ nullptr };
         UI::TextOverleyManager mTextOverleyManager;
-        const unsigned int mMaxBodiesLimit{ 2048 };
+        const unsigned int mMaxBodiesLimit{ 1024 };
         Common::World::Manager mWorldManager;
         std::unique_ptr<Ships::ShipController> mShipController;
         Input::ControllerTranslator mInputTranslator;
