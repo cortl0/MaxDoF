@@ -26,14 +26,14 @@ namespace MaxDoF::Common::GameLogic
         if(static_cast<Types3d::EntityType>(userData) == Types3d::EntityType::cBullet)
         {
             auto position = mWorldManager.getBodyInterface()->GetPosition(bodyId);
-            mWorldManager.CreateSound(position, 0);
+            mWorldManager.CreateSound(position, Game::Types::Sounds::cExplosion);
             return;
         }
 
         if(static_cast<Types3d::EntityType>(userData) == Types3d::EntityType::cShip)
         {
             auto position = (contactPoint + mWorldManager.getBodyInterface()->GetPosition(bodyId)) / 2.0f;
-            mWorldManager.CreateSound(position, 1);
+            mWorldManager.CreateSound(position, Game::Types::Sounds::cBarrel);
             return;
         }
     }

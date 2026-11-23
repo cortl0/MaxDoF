@@ -10,7 +10,8 @@
 #ifdef MAXDOF_CLIENT_BUILD
 #include "Game/World/Graphics.h"
 #include "Game/Audio/AcousticWorld.h"
-#include "AudioEngine.h"
+#include "Game/Audio/AudioEngine.h"
+#include "Game/Types/Sounds.h"
 #endif
 
 #include "Common/World/Physics.h"
@@ -49,7 +50,7 @@ namespace MaxDoF::Common::World
 #ifdef MAXDOF_CLIENT_BUILD
         MaxDoF::Game::World::Graphics& getGraphics(){ return mGraphics; }
         void addMeshToAudio(const Common::Types3d::MeshData &meshData);
-        void CreateSound(const JPH::RVec3& position, int soundId);
+        void CreateSound(const JPH::RVec3& position, Game::Types::Sounds);
         void initAudio();
 #endif
         JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysics.getPhysicsSystem(); }

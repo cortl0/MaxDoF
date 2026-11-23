@@ -23,6 +23,7 @@ namespace MaxDoF::Common::Ships
         Ogre::SceneNode* lightNode;
         Ogre::Light* light;
 #endif
+        int numBullets{250};
 
     public:
         Ship(World::Manager&);

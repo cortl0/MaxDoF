@@ -24,5 +24,4 @@ namespace MaxDoF::Server
         mScene->CreateScene();
         // mShip = mScene->createShip();
     }
-
 }

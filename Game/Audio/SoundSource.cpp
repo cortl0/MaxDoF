@@ -165,6 +165,12 @@ namespace MaxDoF::Game::Audio
         // Синтез Faust
         mDsp->compute(cAudioFrameSize, nullptr, &inPtr);
 
+#if(0)
+        for (int i = 0; i < cAudioFrameSize; ++i)
+            if (!std::isfinite(inPtr[i]))
+                inPtr[i] = 0.0f;
+#endif
+
         // Direct эффект
         iplDirectEffectApply(mIPLDirectEffect, &smoothDirect, &inBuf, &directBuf);
 

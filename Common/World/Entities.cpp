@@ -13,6 +13,12 @@ namespace MaxDoF::Common::World
 #endif
     )
     {
+        if(mEntities.size() == mEntities.capacity())
+        {
+            printf("void Entites::AddEntity() error\n");
+            return;
+        }
+
         mIndex[bodyId.GetIndex()] = mEntities.size();
         mEntities.emplace_back(bodyId
 #ifdef MAXDOF_CLIENT_BUILD

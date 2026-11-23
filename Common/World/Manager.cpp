@@ -7,8 +7,9 @@
 
 #ifdef MAXDOF_CLIENT_BUILD
 #include <faust/gui/meta.h>
-#include "SineTest.h"
+#include "Barrel.h"
 #include "Explosion.h"
+#include "Launch.h"
 #include "Game/Utils/Converters.h"
 #endif
 
@@ -29,7 +30,7 @@ namespace MaxDoF::Common::World
 
     void Manager::initialize(unsigned int maxBodies)
     {
-        mPhysics.initialize();
+        mPhysics.initialize(maxBodies);
         mPhysics.setBodyInterface(&mPhysics.getPhysicsSystem()->GetBodyInterface());
         mPhysics.getPhysicsSystem()->SetGravity(JPH::Vec3::sZero());
         mEntities.Reserve(maxBodies);
@@ -232,43 +233,49 @@ namespace MaxDoF::Common::World
         mAudioEngine.CommitScene();
     }
 
-    void Manager::CreateSound(const JPH::RVec3& position, int soundId)
+    void Manager::CreateSound(const JPH::RVec3& position, Game::Types::Sounds soundId)
     {
         auto shipPosition = mPhysics.getBodyInterface()->GetPosition(mShipBodyId);
         JPH::Vec3 diff = JPH::Vec3(position - shipPosition);
+        float duration = 1.0f;
 
         Game::Audio::SourceId sourceId{Game::Audio::cInvalidSourceId};
         switch (soundId)
         {
-        case 0:
+        case Game::Types::Sounds::cExplosion:
             sourceId = mAudioEngine.SpawnSource(std::make_unique<Explosion>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
+            mAudioEngine.SetSourceParam(sourceId, "gain", 0.9f);
+            mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
+            duration = 2.5f;
             break;
-        case 1:
-            sourceId = mAudioEngine.SpawnSource(std::make_unique<SineTest>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
+        case Game::Types::Sounds::cBarrel:
+            sourceId = mAudioEngine.SpawnSource(std::make_unique<Barrel>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
+            mAudioEngine.SetSourceParam(sourceId, "gain", 0.9f);
+            mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
+            duration = 1.0f;
+            break;
+        case Game::Types::Sounds::cLaunch:
+            sourceId = mAudioEngine.SpawnSource(std::make_unique<Launch>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
+            mAudioEngine.SetSourceParam(sourceId, "pitch", 3860.0f);
+            mAudioEngine.SetSourceParam(sourceId, "gain", 0.15f);
+            mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
+            duration = 0.5f;
             break;
         
         default:
             return;
         }
 
-        mAudioEngine.SetSourceParam(sourceId, "gain", 0.9f);
-        mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
-
         mOneShotAudios.push_back(OneShotAudio{
             .id = sourceId,
             .worldPosition = position,
-            .remainingTime = 2.5f // Чуть больше длительности огибающей (2.2 сек)
+            .remainingTime = duration
         });
     }
 
     void Manager::initAudio()
     {
         mAudioEngine.CommitScene();
-
-        // ambientSource = mAudioEngine.SpawnSource(std::make_unique<SineTest>(), {0.0f, 0.0f, 0.0f});
-        // mAudioEngine.SetSourceParam(ambientSource, "freq", 1000.0f);
-        // mAudioEngine.SetSourceParam(ambientSource, "gain", 0.25f);
-
         mAudioEngine.Update({0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
         mAudioEngine.Start();
     }

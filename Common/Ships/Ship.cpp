@@ -7,6 +7,7 @@
 
 #ifdef MAXDOF_CLIENT_BUILD
 #include <OgreItem.h>
+#include "Game/Types/Sounds.h"
 #endif
 
 namespace MaxDoF::Common::Ships
@@ -64,21 +65,20 @@ namespace MaxDoF::Common::Ships
     void Ship::CreateBullet(float timeSinceLast, bool needCreate)
     {
         const float bulletMass{1.0f};
+        const float bulletRadius{0.1f};
         static float fireCooldown = 0.0f;
         fireCooldown -= timeSinceLast;
 
-        if(!needCreate)
-        {
-            if (fireCooldown <= 0.0f)
-                fireCooldown = 0.0f;
-
+        if(numBullets <= 0)
             return;
-        }
+
+        if(!needCreate)
+            return;
 
         if (fireCooldown <= 0.0f)
         {
+            --numBullets;
             fireCooldown = 0.1f;
-
             JPH::BodyInterface* bodyInterface = mWorldManager.getBodyInterface();
 
             JPH::RVec3 shipPos = bodyInterface->GetPosition(mEntity.physId);
@@ -88,9 +88,9 @@ namespace MaxDoF::Common::Ships
             JPH::Vec3 localForward = -JPH::Vec3::sAxisZ();
             JPH::Vec3 globalForwardDirection = shipRot * localForward;
 
-            Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * 1.5f, shipRot};
+            Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * (0.5f + bulletRadius + 0.1f), shipRot};
 
-            auto& bullet = mWorldManager.createSphere(Types3d::EntityType::cBullet, projectilePose, 0.1f, bulletMass, true);
+            auto& bullet = mWorldManager.createSphere(Types3d::EntityType::cBullet, projectilePose, bulletRadius, bulletMass, true);
             JPH::Vec3 projectileImpulse = shipVelocity + (globalForwardDirection * bulletMass * 100.0f);
             bodyInterface->AddImpulse(bullet.physId, projectileImpulse);
 
@@ -113,6 +113,9 @@ namespace MaxDoF::Common::Ships
             }
 
             bodyInterface->AddImpulse(mEntity.physId, -projectileImpulse);
+#ifdef MAXDOF_CLIENT_BUILD
+            mWorldManager.CreateSound(projectilePose.position, Game::Types::Sounds::cLaunch);
+#endif
         }
     }
 
