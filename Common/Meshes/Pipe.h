@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Common/Types/Types3d.h"
-#include "Common/Types/LevelGraphStructures.h"
+#include "Common/Types/LevelGraph.h"
 #include "Primitive.h"
 
  namespace MaxDoF::Common::LevelGraphs
@@ -16,8 +16,8 @@
     public:
         using Vertices = std::array<Types3d::TriangleVertices, 2>;
         using TrianglesVerticesIndices = std::array<Types3d::TriangleVerticesIndices, 2>;
-        using TriangleInterfaceKeys = std::array<Types::LevelGraphs::TriangleInterfaceKey, 2>;
-        using InterfaceTypes = std::array<Types::LevelGraphs::InterfaceType, 2>;
+        using TriangleInterfaceKeys = std::array<Types::Level::Graph::Triangle::Key, 2>;
+        using InterfaceTypes = std::array<Types::Level::Graph::OrientedTriangle::Type, 2>;
         using InvertInterfaces = std::array<bool, 2>;
 
         struct Config
@@ -41,6 +41,6 @@
         // void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
         void SetTriangleInterfaceKeys(const TriangleInterfaceKeys& Keys){ mTriangleInterfaceKeys = Keys; }
         // void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
-        void FillGraph(Types::LevelGraphs::PureLevelGraph&, const Config&);
+        void FillGraph(Types::Level::Graph&, const Config&);
     };
 }

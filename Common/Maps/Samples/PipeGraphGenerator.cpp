@@ -12,13 +12,13 @@
 namespace MaxDoF::Common::Maps
 {
     void PipeGraphGenerator::GenerateGraph(
-        Types::LevelGraphs::PureLevelGraph& graph,
+        Types::Level::Graph& graph,
         JPH::RVec3 halfSize,
         JPH::Quat endRotation,
         const Common::LevelGraphs::Pipe::Config& config
     )
     {
-        const auto& interfacesBaseIndex = graph.interfaces.size();
+        const auto& interfacesBaseIndex = graph.triangles.size();
         LevelGraphs::Triangle triangle0, triangle1;
         LevelGraphs::Pipe pipe;
         const float cPipeRadius = LevelGraph::cMinTriangleEdgeLength * 2.0;
@@ -32,7 +32,7 @@ namespace MaxDoF::Common::Maps
         triangle1.Translate(pEnd + halfSize);
         triangle0.FillGraphVerticesAndCreateInterface(graph);
         triangle1.FillGraphVerticesAndCreateInterface(graph);
-        pipe.SetTriangleInterfaceKeys({graph.interfaces[interfacesBaseIndex].id, graph.interfaces[interfacesBaseIndex + 1].id});
+        pipe.SetTriangleInterfaceKeys({graph.triangles[interfacesBaseIndex].id, graph.triangles[interfacesBaseIndex + 1].id});
         pipe.FillGraph(graph, config);
     }
 }

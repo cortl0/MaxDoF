@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "Common/Types/LevelGraphStructures.h"
+#include "Common/Types/LevelGraph.h"
 
 namespace MaxDoF::Common::Maps
 {
@@ -14,7 +14,7 @@ namespace MaxDoF::Common::Maps
     public:
         TetrahedronGraphGenerator() = delete;
 
-        static void GenerateGraph(Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset);
-        static void GenerateInvertedGraph(Common::Types::LevelGraphs::PureLevelGraph &graph, JPH::RVec3 offset);
+        static void GenerateGraph(Types::Level::Graph&, JPH::RVec3 offset);
+        static void GenerateInvertedGraph(Common::Types::Level::Graph&, JPH::RVec3 offset);
     };
 }

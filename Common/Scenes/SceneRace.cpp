@@ -5,7 +5,7 @@
 
 #include "Common/Scenes/SceneRace.h"
 
-#include "Common/Maps/Samples/PipeGraphGenerator.h"
+#include "Common/Maps/RaceGenerator.h"
 #include "Common/Meshes/MeshBuilder.h"
 
 namespace MaxDoF::Common::Scenes
@@ -28,14 +28,14 @@ namespace MaxDoF::Common::Scenes
 
         mShip = new Common::Ships::Ship(mWorldManager);
 
-        Common::Types::LevelGraphs::PureLevelGraph graph;
-        Common::Maps::PipeGraphGenerator::GenerateGraph(graph,
+        Common::Types::Level::Graph graph;
+        Common::Maps::RaceGenerator::GenerateGraph(graph,
             {0.0f, 0.0f, 0.0f}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
             {
                 {false, true}, true,
                 {
-                    Common::Types::LevelGraphs::InterfaceType::OpenSpace,
-                    Common::Types::LevelGraphs::InterfaceType::OpenSpace
+                    Common::Types::Level::Graph::Graph::OrientedTriangle::Type::OpenSpace,
+                    Common::Types::Level::Graph::Graph::OrientedTriangle::Type::OpenSpace
                 }
             }
         );

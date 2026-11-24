@@ -10,30 +10,33 @@
 
 namespace MaxDoF::Common::LevelGraphs
 {
-    void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, const Config& config)
+    void Pipe::FillGraph(Types::Level::Graph& graph, const Config& config)
     {
         graph.nodes.push_back(
-            Types::LevelGraphs::VolumeNode
+            Types::Level::Graph::Node
             {
                 .id = graph.nodes.size(),
-                .type = Types::LevelGraphs::NodeType::PipeTunnel,
-                .orientedInterfaces = Types::LevelGraphs::VolumeNode::OrientedInterfaces
+                .type = Types::Level::Graph::Node::Type::PipeTunnel,
+                .orientedInterfacesKeys = Types::Level::Graph::Node::OrientedTriangleKeys
                 {
-                    Types::LevelGraphs::OrientedInterface
-                    {
-                        .interfaceId = mTriangleInterfaceKeys.front(),
-                        .interfaceType = config.interfaceTypes.front(),
-                        .inverted = config.invertInterfaces.front()
-                    },
-                    Types::LevelGraphs::OrientedInterface
-                    {
-                        .interfaceId = mTriangleInterfaceKeys.back(),
-                        .interfaceType = config.interfaceTypes.back(),
-                        .inverted = config.invertInterfaces.back()
-                    }
+                    graph.orientedTriangles.size(),
+                    graph.orientedTriangles.size() + 1
                 },
                 .inverted = config.invertPipe
             }
         );
+
+        for(std::size_t i = 0; i < 4; ++i)
+        {
+            graph.orientedTriangles.push_back
+            (
+                Types::Level::Graph::OrientedTriangle
+                {
+                    .id = mTriangleInterfaceKeys[i],
+                    .type = config.interfaceTypes[i],
+                    .inverted = config.invertInterfaces[i]
+                }
+            );
+        }
     }
 }

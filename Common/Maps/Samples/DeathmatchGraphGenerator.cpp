@@ -12,10 +12,10 @@
 
 namespace MaxDoF::Common::Maps
 {
-    void DeathmatchGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
+    void DeathmatchGraphGenerator::GenerateGraph(Common::Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 50.0f;
-        const auto& interfacesBaseIndex = graph.interfaces.size();
+        const auto& interfacesBaseIndex = graph.triangles.size();
         Common::LevelGraphs::Tetrahedron tetrahedron;
         Common::LevelGraphs::Triangle triangle;
         Common::LevelGraphs::Pipe pipe;
@@ -24,10 +24,10 @@ namespace MaxDoF::Common::Maps
         tetrahedron.FillGraph(graph,
             {
                 {
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined
                 },
                 { false, false, false, false }
             }
@@ -35,19 +35,19 @@ namespace MaxDoF::Common::Maps
 
         for (size_t i = 0; i < 4; ++i)
         {
-            triangle.SetVertices(graph, graph.interfaces[interfacesBaseIndex + i]);
+            triangle.SetVertices(graph, graph.triangles[interfacesBaseIndex + i]);
             triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);
             triangle.FillGraphVerticesAndCreateInterface(graph);
             pipe.SetTriangleInterfaceKeys({
-                graph.interfaces[interfacesBaseIndex + i].id,
-                graph.interfaces[graph.interfaces.size() - 1].id
+                graph.triangles[interfacesBaseIndex + i].id,
+                graph.triangles[graph.triangles.size() - 1].id
             });
             pipe.FillGraph(graph,
                 {
                     {true, false}, false,
                     {
-                        Types::LevelGraphs::InterfaceType::UnDefined,
-                        Types::LevelGraphs::InterfaceType::SolidRock
+                        Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                        Types::Level::Graph::OrientedTriangle::Type::SolidRock
                     }
                 }
             );

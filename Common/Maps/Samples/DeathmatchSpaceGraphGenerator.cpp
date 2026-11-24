@@ -11,10 +11,10 @@
 
 namespace MaxDoF::Common::Maps
 {
-    void DeathmatchSpaceGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
+    void DeathmatchSpaceGraphGenerator::GenerateGraph(Common::Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 10.0f;
-        const auto& interfacesBaseIndex = graph.interfaces.size();
+        const auto& interfacesBaseIndex = graph.triangles.size();
         Common::LevelGraphs::Tetrahedron tetrahedron;
         Common::LevelGraphs::Pipe pipe;
 
@@ -22,10 +22,10 @@ namespace MaxDoF::Common::Maps
         tetrahedron.FillGraph(graph,
             {
                 {
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined
                 },
                 { false, false, false, false }
             }
@@ -35,10 +35,10 @@ namespace MaxDoF::Common::Maps
         tetrahedron.FillGraph(graph,
             {
                 {
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined,
-                    Types::LevelGraphs::InterfaceType::UnDefined
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                    Types::Level::Graph::OrientedTriangle::Type::UnDefined
                 },
                 { false, false, false, false }
             }
@@ -47,15 +47,15 @@ namespace MaxDoF::Common::Maps
         for (size_t i = 0; i < 4; ++i)
         {
             pipe.SetTriangleInterfaceKeys({
-                graph.interfaces[interfacesBaseIndex + i].id,
-                graph.interfaces[interfacesBaseIndex + i + 4].id
+                graph.triangles[interfacesBaseIndex + i].id,
+                graph.triangles[interfacesBaseIndex + i + 4].id
             });
             pipe.FillGraph(graph,
                 {
                     {false, true}, true,
                     {
-                        Types::LevelGraphs::InterfaceType::UnDefined,
-                        Types::LevelGraphs::InterfaceType::UnDefined
+                        Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                        Types::Level::Graph::OrientedTriangle::Type::UnDefined
                     }
                 }
             );

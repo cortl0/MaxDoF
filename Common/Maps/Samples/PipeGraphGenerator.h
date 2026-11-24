@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Common/Meshes/Pipe.h"
-#include "Common/Types/LevelGraphStructures.h"
+#include "Common/Types/LevelGraph.h"
 
 namespace MaxDoF::Common::Maps
 {
@@ -16,7 +16,7 @@ namespace MaxDoF::Common::Maps
         PipeGraphGenerator() = delete;
 
         static void GenerateGraph(
-            Types::LevelGraphs::PureLevelGraph& graph,
+            Types::Level::Graph&,
             JPH::RVec3 halfSize,
             JPH::Quat endRotation,
             const Common::LevelGraphs::Pipe::Config&

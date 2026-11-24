@@ -50,19 +50,19 @@ namespace MaxDoF::Common::Meshes
             v.u  = pts[i].u;
             v.v  = pts[i].v;
 #endif
+            meshData.indices.push_back(meshData.vertices.size());
             meshData.vertices.push_back(v);
-            meshData.indices.push_back(meshData.vertices.size() - 1);
         }
     }
 
     void MeshBuilder::AddAntiprism(MaxDoF::Common::Types3d::MeshData& meshData,
-        const Types::LevelGraphs::PureLevelGraph& graph,
-        const Types::LevelGraphs::VolumeNode& pipeNode,
-        const Types::LevelGraphs::TriangleInterface& begin,
-        const Types::LevelGraphs::TriangleInterface& end)
+        const Types::Level::Graph& graph,
+        const Types::Level::Graph::Node& pipeNode,
+        const Types::Level::Graph::Triangle& begin,
+        const Types::Level::Graph::Triangle& end)
     {
-        const auto& interface = graph.interfaces[begin.id];
-        const auto& interfaceEnd = graph.interfaces[end.id];
+        const auto& interface = graph.triangles[begin.id];
+        const auto& interfaceEnd = graph.triangles[end.id];
 
         // 1. Заполняем позиции вершин для обоих торцов
         std::array<JPH::DVec3, 3> posA, rawPosB;
@@ -152,26 +152,24 @@ namespace MaxDoF::Common::Meshes
         }
     }
 
-    void MeshBuilder::CreateMeshData(
-        Common::Types3d::MeshData& meshData,
-        const Common::Types::LevelGraphs::PureLevelGraph& graph)
+    void MeshBuilder::CreateMeshData(Common::Types3d::MeshData& meshData, const Common::Types::Level::Graph& graph)
     {
-        using namespace Common::Types::LevelGraphs;
+        using namespace Common::Types::Level;
 
         for(const auto& node : graph.nodes)
         {
             // =========================================================================
             // ЭТАП 1: СБОРКА СЛОЖНОЙ ОБЪЕМНОЙ ГЕОМЕТРИИ (СТЕНЫ ТРУБ)
             // =========================================================================
-            if(node.type == NodeType::PipeTunnel)
+            if(node.type == Graph::Node::Type::PipeTunnel)
             {
-                if(node.orientedInterfaces.size() < 2)
+                if(node.orientedInterfacesKeys.size() < 2)
                     MaxDoF_LOG_AND_ABORT("bad data")
 
                 // Натягиваем 6 боковых прямоугольников-складок
                 AddAntiprism(meshData, graph, node,
-                    graph.interfaces[node.orientedInterfaces[0].interfaceId],
-                    graph.interfaces[node.orientedInterfaces[1].interfaceId]
+                    graph.triangles[graph.orientedTriangles[node.orientedInterfacesKeys[0]].id],
+                    graph.triangles[graph.orientedTriangles[node.orientedInterfacesKeys[1]].id]
                 );
             }
             // Для тетраэдра на этом этапе ничего делать не нужно — у него нет боковых складок,
@@ -182,11 +180,12 @@ namespace MaxDoF::Common::Meshes
             // =========================================================================
             // Проходим по всем узлам еще раз и заставляем каждый из них честно
             // проверить свои интерфейсы на наличие глухих тупиков
-            for (const auto& orientedInterface : node.orientedInterfaces)
+            for (const auto& orientedInterfaceKey : node.orientedInterfacesKeys)
             {
-                const auto& face = graph.interfaces[orientedInterface.interfaceId];
+                const auto& orientedInterface = graph.orientedTriangles[orientedInterfaceKey];
+                const auto& face = graph.triangles[orientedInterface.id];
                 // Если грань официально ведет в монолитный камень — строим заглушку!
-                if (orientedInterface.interfaceType == static_cast<Types::LevelGraphs::InterfaceType>(Types::LevelGraphs::InterfaceType::SolidRock))
+                if (orientedInterface.type == Types::Level::Graph::OrientedTriangle::Type::SolidRock)
                 {
                     const auto& pos0 = graph.vertices[face.verticesIndices[0]];
                     const auto& pos1 = graph.vertices[face.verticesIndices[1]];
@@ -215,15 +214,10 @@ namespace MaxDoF::Common::Meshes
                     MeshBuilder::UVVertex p1{ pos1, len1, 0.0f };
                     MeshBuilder::UVVertex p2{ pos2, u2,   v2   };
 
-                    // Единое пуленепробиваемое правило для труб, тетраэдров и комнат:
                     if (orientedInterface.inverted)
-                    {
                         AddTriangle(meshData, p0, p2, p1);
-                    }
                     else
-                    {
                         AddTriangle(meshData, p0, p1, p2);
-                    }
                 }
             }
         }

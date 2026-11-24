@@ -10,7 +10,7 @@
 
 namespace MaxDoF::Common::Maps
 {
-    void TetrahedronGraphGenerator::GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
+    void TetrahedronGraphGenerator::GenerateGraph(Common::Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 50.0f;
         Common::LevelGraphs::Tetrahedron tetrahedron;
@@ -18,17 +18,17 @@ namespace MaxDoF::Common::Maps
         tetrahedron.FillGraph(graph,
             {
                 {
-                    Types::LevelGraphs::InterfaceType::SolidRock,
-                    Types::LevelGraphs::InterfaceType::SolidRock,
-                    Types::LevelGraphs::InterfaceType::SolidRock,
-                    Types::LevelGraphs::InterfaceType::SolidRock
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
                 },
                 { false, false, false, false }
             }
         );
     }
 
-    void TetrahedronGraphGenerator::GenerateInvertedGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
+    void TetrahedronGraphGenerator::GenerateInvertedGraph(Common::Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 10.0f;
         Common::LevelGraphs::Tetrahedron tetrahedron;
@@ -36,10 +36,10 @@ namespace MaxDoF::Common::Maps
         tetrahedron.FillGraph(graph,
             {
                 {
-                    Types::LevelGraphs::InterfaceType::SolidRock,
-                    Types::LevelGraphs::InterfaceType::SolidRock,
-                    Types::LevelGraphs::InterfaceType::SolidRock,
-                    Types::LevelGraphs::InterfaceType::SolidRock
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
                 },
                 { true, true, true, true }
             }

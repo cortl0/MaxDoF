@@ -8,7 +8,7 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Vec3.h>
 
-#include "Common/Types/LevelGraphStructures.h"
+#include "Common/Types/LevelGraph.h"
 
 namespace MaxDoF::Common::Meshes
 {
@@ -26,22 +26,11 @@ namespace MaxDoF::Common::Meshes
             const std::array<UVVertex, 3> &begin, const std::array<UVVertex, 3> &end);
         static void AddTriangle(Common::Types3d::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2);
         static void AddAntiprism(Common::Types3d::MeshData& meshData,
-            const Types::LevelGraphs::PureLevelGraph& graph,
-            const Types::LevelGraphs::VolumeNode& pipeNode,
-            const Types::LevelGraphs::TriangleInterface& begin,
-            const Types::LevelGraphs::TriangleInterface& end);
-        /**
-         * @brief Главная функция трансляции графа в полигональный меш уровня.
-         *
-         * Проходит по всем объемным узлам (Nodes) графа и последовательно генерирует
-         * для них физическую и визуальную геометрию с честными флэт-нормалями и UV.
-         *
-         * @param meshData Контейнер вершин и индексов, куда будет записан итоговый меш уровня.
-         * @param graph Сгенерированный процедурный или шаблонный граф структуры уровня.
-         */
-        static void CreateMeshData(
-            Common::Types3d::MeshData& meshData,
-            const Common::Types::LevelGraphs::PureLevelGraph& graph
-        );
+            const Types::Level::Graph&,
+            const Types::Level::Graph::Node& pipeNode,
+            const Types::Level::Graph::Triangle& begin,
+            const Types::Level::Graph::Triangle& end);
+
+        static void CreateMeshData(Common::Types3d::MeshData&, const Common::Types::Level::Graph&);
     };
 }

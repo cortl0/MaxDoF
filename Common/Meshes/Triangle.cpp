@@ -9,7 +9,7 @@
 
 namespace MaxDoF::Common::LevelGraphs
 {
-    void Triangle::SetVertices(const Types::LevelGraphs::PureLevelGraph& graph, const Types::LevelGraphs::TriangleInterface& triangleInterface)
+    void Triangle::SetVertices(const Types::Level::Graph& graph, const Types::Level::Graph::Triangle& triangleInterface)
     {
         for(std::size_t i = 0; i < 3; ++i)
             vertices[i] = graph.vertices[triangleInterface.verticesIndices[i]];
@@ -59,20 +59,20 @@ namespace MaxDoF::Common::LevelGraphs
         return JPH::Quat::sRotation(normalized_axis, radians);
     }
 
-    void Triangle::FillGraphVertices(Types::LevelGraphs::PureLevelGraph& graph) const
+    void Triangle::FillGraphVertices(Types::Level::Graph& graph) const
     {
         for(const auto vertex : vertices)
             graph.vertices.push_back(vertex);
     }
 
-    void Triangle::FillGraphVerticesAndCreateInterface(Types::LevelGraphs::PureLevelGraph& graph) const
+    void Triangle::FillGraphVerticesAndCreateInterface(Types::Level::Graph& graph) const
     {
         const auto baseVertexIndex = graph.vertices.size();
         FillGraphVertices(graph);
 
-        graph.interfaces.push_back(Types::LevelGraphs::TriangleInterface
+        graph.triangles.push_back(Types::Level::Graph::Triangle
             {
-                .id = graph.interfaces.size(),
+                .id = graph.triangles.size(),
                 .verticesIndices = {baseVertexIndex, baseVertexIndex + 1, baseVertexIndex + 2}
             }
         );

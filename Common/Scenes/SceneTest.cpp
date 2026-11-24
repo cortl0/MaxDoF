@@ -174,15 +174,35 @@ namespace MaxDoF::Common::Scenes
         createBoxes(deathmatchSpaceOffset);
         createBoxes(deathmatchAsteroidOffset);
 
-        Common::Types::LevelGraphs::PureLevelGraph levelGraph;
+        Common::Types::Level::Graph levelGraph;
         Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
-            {{false, true}, true, {Common::Types::LevelGraphs::InterfaceType::SolidRock, Common::Types::LevelGraphs::InterfaceType::SolidRock}});
+            {{false, true}, true,
+            {
+                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock
+            }}
+        );
         Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
-            {{false, true}, true, {Common::Types::LevelGraphs::InterfaceType::SolidRock, Common::Types::LevelGraphs::InterfaceType::SolidRock}});
+            {{false, true}, true,
+            {
+                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock
+            }}
+        );
         Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
-            {{true, false}, false, {Common::Types::LevelGraphs::InterfaceType::SolidRock, Common::Types::LevelGraphs::InterfaceType::SolidRock}});
+            {{true, false}, false,
+            {
+                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock
+            }}
+        );
         Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
-            {{true, false}, false, {Common::Types::LevelGraphs::InterfaceType::SolidRock, Common::Types::LevelGraphs::InterfaceType::SolidRock}});
+            {{true, false}, false,
+            {
+                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock
+            }}
+        );
         Common::Maps::TetrahedronGraphGenerator::GenerateInvertedGraph(levelGraph, -tetrahedronOffset);
         Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, tetrahedronOffset);
         Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, deathmatchOffset);

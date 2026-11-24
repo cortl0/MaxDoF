@@ -38,54 +38,47 @@ namespace MaxDoF::Common::LevelGraphs
         };
     }
 
-    void Tetrahedron::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, const Config& config)
+    void Tetrahedron::FillGraph(Types::Level::Graph& graph, const Config& config)
     {
         const auto baseVertexIndex = graph.vertices.size();
-        const auto baseInterfaceIndex = graph.interfaces.size();
+        const auto baseInterfaceIndex = graph.triangles.size();
 
         for(const auto& vertex : vertices)
             graph.vertices.push_back(vertex);
 
         for(const auto& interface : interfaces)
-            graph.interfaces.push_back(Types::LevelGraphs::TriangleInterface{
-                .id = graph.interfaces.size(),
+            graph.triangles.push_back(Types::Level::Graph::Triangle{
+                .id = graph.triangles.size(),
                 .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex}
             }
         );
 
         graph.nodes.push_back(
-            Types::LevelGraphs::VolumeNode
+            Types::Level::Graph::Node
             {
                 .id = graph.nodes.size(),
-                .type = Types::LevelGraphs::NodeType::Tetrahedron,
-                .orientedInterfaces = Types::LevelGraphs::VolumeNode::OrientedInterfaces
+                .type = Types::Level::Graph::Node::Type::Tetrahedron,
+                .orientedInterfacesKeys = Types::Level::Graph::Node::OrientedTriangleKeys
                 {
-                    Types::LevelGraphs::OrientedInterface
-                    {
-                        .interfaceId = baseInterfaceIndex + 0,
-                        .interfaceType = config.interfaceTypes[0],
-                        .inverted = config.invertInterfaces[0]
-                    },
-                    Types::LevelGraphs::OrientedInterface
-                    {
-                        .interfaceId = baseInterfaceIndex + 1,
-                        .interfaceType = config.interfaceTypes[1],
-                        .inverted = config.invertInterfaces[1]
-                    },
-                    Types::LevelGraphs::OrientedInterface
-                    {
-                        .interfaceId = baseInterfaceIndex + 2,
-                        .interfaceType = config.interfaceTypes[2],
-                        .inverted = config.invertInterfaces[2]
-                    },
-                    Types::LevelGraphs::OrientedInterface
-                    {
-                        .interfaceId = baseInterfaceIndex + 3,
-                        .interfaceType = config.interfaceTypes[3],
-                        .inverted = config.invertInterfaces[3]
-                    }
+                    graph.orientedTriangles.size(),
+                    graph.orientedTriangles.size() + 1,
+                    graph.orientedTriangles.size() + 2,
+                    graph.orientedTriangles.size() + 3
                 }
             }
         );
+
+        for(std::size_t i = 0; i < 4; ++i)
+        {
+            graph.orientedTriangles.push_back
+            (
+                Types::Level::Graph::OrientedTriangle
+                {
+                    .id = baseInterfaceIndex + i,
+                    .type = config.interfaceTypes[i],
+                    .inverted = config.invertInterfaces[i]
+                }
+            );
+        }
     }
 }
