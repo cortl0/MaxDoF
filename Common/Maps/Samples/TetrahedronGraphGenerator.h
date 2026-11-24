@@ -12,14 +12,9 @@ namespace MaxDoF::Common::Maps
     class TetrahedronGraphGenerator
     {
     public:
-        // Запрещаем создавать экземпляры класса, так как это чистый генератор-утилита
         TetrahedronGraphGenerator() = delete;
 
-        /**
-         * @brief Генератор идеального симметричного графа для режима Deathmatch (Бой на смерть).
-         *
-         * @param graph Ссылка на структуру графа уровня, куда будут записаны узлы и интерфейсы.
-         */
         static void GenerateGraph(Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset);
+        static void GenerateInvertedGraph(Common::Types::LevelGraphs::PureLevelGraph &graph, JPH::RVec3 offset);
     };
 }

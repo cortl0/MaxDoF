@@ -38,7 +38,7 @@ namespace MaxDoF::Common::LevelGraphs
         };
     }
 
-    void Tetrahedron::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<Types::LevelGraphs::InterfaceType, 4> interfaceTypes)
+    void Tetrahedron::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, const Config& config)
     {
         const auto baseVertexIndex = graph.vertices.size();
         const auto baseInterfaceIndex = graph.interfaces.size();
@@ -63,26 +63,26 @@ namespace MaxDoF::Common::LevelGraphs
                     Types::LevelGraphs::OrientedInterface
                     {
                         .interfaceId = baseInterfaceIndex + 0,
-                        .interfaceType = interfaceTypes[0],
-                        .inverted = false
+                        .interfaceType = config.interfaceTypes[0],
+                        .inverted = config.invertInterfaces[0]
                     },
                     Types::LevelGraphs::OrientedInterface
                     {
                         .interfaceId = baseInterfaceIndex + 1,
-                        .interfaceType = interfaceTypes[1],
-                        .inverted = false
+                        .interfaceType = config.interfaceTypes[1],
+                        .inverted = config.invertInterfaces[1]
                     },
                     Types::LevelGraphs::OrientedInterface
                     {
                         .interfaceId = baseInterfaceIndex + 2,
-                        .interfaceType = interfaceTypes[2],
-                        .inverted = false
+                        .interfaceType = config.interfaceTypes[2],
+                        .inverted = config.invertInterfaces[2]
                     },
                     Types::LevelGraphs::OrientedInterface
                     {
                         .interfaceId = baseInterfaceIndex + 3,
-                        .interfaceType = interfaceTypes[3],
-                        .inverted = false
+                        .interfaceType = config.interfaceTypes[3],
+                        .inverted = config.invertInterfaces[3]
                     }
                 }
             }

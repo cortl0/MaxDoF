@@ -5,7 +5,7 @@
 
 #include "Server/MdfServer.h"
 
-#include "Common/Scenes/Scene01.h"
+#include "Common/Scenes/SceneTest.h"
 
 namespace MaxDoF::Server
 {
@@ -19,7 +19,7 @@ namespace MaxDoF::Server
 
     void MdfServer::createScene01()
     {
-        mScene = std::make_unique<Common::Scenes::Scene01>(mWorldManager);
+        mScene = std::make_unique<Common::Scenes::SceneTest>(mWorldManager);
         // mWorldManager.initialize( mMaxBodiesLimit );
         mScene->CreateScene();
         // mShip = mScene->createShip();

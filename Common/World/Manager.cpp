@@ -199,9 +199,9 @@ namespace MaxDoF::Common::World
 #ifdef MAXDOF_CLIENT_BUILD
     void Manager::addMeshToAudio(const Common::Types3d::MeshData& meshData)
     {
-        std::vector<IPLVector3> wallVerts;
+        Game::Audio::AcousticWorld::Vertices wallVerts;
         wallVerts.reserve(meshData.vertices.size());
-        std::vector<IPLTriangle> wallTris;
+        Game::Audio::AcousticWorld::Triangles wallTris;
         wallTris.reserve(meshData.indices.size() / 3);
 
         for (const auto& v : meshData.vertices)
@@ -228,7 +228,7 @@ namespace MaxDoF::Common::World
             1.0f, 1.0f, 1.0f
         );
 
-        int meshId = mAudioEngine.GetAcousticWorld().AddDynamicMesh(wallVerts, wallTris, Game::Audio::AcousticMaterials::cHeavyHull, t);
+        int meshId = mAudioEngine.GetAcousticWorld().AddDynamicMesh(wallVerts, wallTris, Game::Audio::AcousticMaterials::cIdealMiror, t);
         staticAudioMeshIds.push_back(meshId);
         mAudioEngine.CommitScene();
     }

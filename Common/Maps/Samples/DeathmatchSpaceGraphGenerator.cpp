@@ -19,20 +19,30 @@ namespace MaxDoF::Common::Maps
         Common::LevelGraphs::Pipe pipe;
 
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
-        tetrahedron.FillGraph(graph, {
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined
-        });
+        tetrahedron.FillGraph(graph,
+            {
+                {
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined
+                },
+                { false, false, false, false }
+            }
+        );
 
         tetrahedron.GenerateVetrices(offset, cArenaRadius * 5);
-        tetrahedron.FillGraph(graph,{
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined
-        });
+        tetrahedron.FillGraph(graph,
+            {
+                {
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined
+                },
+                { false, false, false, false }
+            }
+        );
 
         for (size_t i = 0; i < 4; ++i)
         {
@@ -40,7 +50,15 @@ namespace MaxDoF::Common::Maps
                 graph.interfaces[interfacesBaseIndex + i].id,
                 graph.interfaces[interfacesBaseIndex + i + 4].id
             });
-            pipe.FillGraph(graph, {false, true}, true, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::UnDefined});
+            pipe.FillGraph(graph,
+                {
+                    {false, true}, true,
+                    {
+                        Types::LevelGraphs::InterfaceType::UnDefined,
+                        Types::LevelGraphs::InterfaceType::UnDefined
+                    }
+                }
+            );
         }
     }
 }

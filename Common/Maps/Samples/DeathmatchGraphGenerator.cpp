@@ -21,12 +21,17 @@ namespace MaxDoF::Common::Maps
         Common::LevelGraphs::Pipe pipe;
 
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
-        tetrahedron.FillGraph(graph, {
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined,
-            Types::LevelGraphs::InterfaceType::UnDefined
-        });
+        tetrahedron.FillGraph(graph,
+            {
+                {
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined,
+                    Types::LevelGraphs::InterfaceType::UnDefined
+                },
+                { false, false, false, false }
+            }
+        );
 
         for (size_t i = 0; i < 4; ++i)
         {
@@ -37,7 +42,15 @@ namespace MaxDoF::Common::Maps
                 graph.interfaces[interfacesBaseIndex + i].id,
                 graph.interfaces[graph.interfaces.size() - 1].id
             });
-            pipe.FillGraph(graph, {true, false}, false, {Types::LevelGraphs::InterfaceType::UnDefined, Types::LevelGraphs::InterfaceType::SolidRock});
+            pipe.FillGraph(graph,
+                {
+                    {true, false}, false,
+                    {
+                        Types::LevelGraphs::InterfaceType::UnDefined,
+                        Types::LevelGraphs::InterfaceType::SolidRock
+                    }
+                }
+            );
         }
     }
 }

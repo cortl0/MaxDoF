@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "Common/Meshes/Pipe.h"
 #include "Common/Types/LevelGraphStructures.h"
 
 namespace MaxDoF::Common::Maps
@@ -14,16 +15,12 @@ namespace MaxDoF::Common::Maps
     public:
         PipeGraphGenerator() = delete;
 
-        /**
-         * @brief Генератор изолированной тупиковой трубы с глухими торцами.
-         *
-         * Строит одиночный коридор-антипризму длиной 10 метров вдоль оси Z.
-         * Выходной торец закручен на 30 градусов, образуя в центре идеальный шестигранник.
-         * Торцы запечатаны глухими стенами.
-         *
-         * @param graph Ссылка на структуру графа уровня для записи.
-         */
-        static void GenerateGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset, std::array<bool, 2> invertInterfaces, bool invertPipe, JPH::Quat rotation);
+        static void GenerateGraph(
+            Types::LevelGraphs::PureLevelGraph& graph,
+            JPH::RVec3 halfSize,
+            JPH::Quat endRotation,
+            const Common::LevelGraphs::Pipe::Config&
+        );
     };
 }
 

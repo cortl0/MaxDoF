@@ -15,7 +15,7 @@
 #include "Input/KeyboardController.h"
 #include "Input/ControllerTranslator.h"
 #include "Game/Ships/ShipController.h"
-#include "Common/Scenes/Scene01.h"
+#include "Common/Scenes/Scene.h"
 #include "Common/World/Manager.h"
 
 namespace MaxDoF::Game

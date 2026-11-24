@@ -29,7 +29,7 @@ namespace MaxDoF::Game::Audio
         if (mSDL_AudioDeviceID != 0)
             SDL_LockAudioDevice(mSDL_AudioDeviceID);
 
-        sources.clear();
+        mSources.clear();
 
         if (mSDL_AudioDeviceID != 0)
             SDL_UnlockAudioDevice(mSDL_AudioDeviceID);
@@ -47,14 +47,14 @@ namespace MaxDoF::Game::Audio
         if (id == cInvalidSourceId)
             return;
 
-        auto it = sources.find(id);
-        if (it == sources.end())
+        auto it = mSources.find(id);
+        if (it == mSources.end())
             return;
 
         if (mSDL_AudioDeviceID != 0)
             SDL_LockAudioDevice(mSDL_AudioDeviceID);
 
-        sources.erase(it);
+        mSources.erase(it);
 
         if (mSDL_AudioDeviceID != 0)
             SDL_UnlockAudioDevice(mSDL_AudioDeviceID);
@@ -66,7 +66,7 @@ namespace MaxDoF::Game::Audio
     {
         std::fill(masterMixMem.begin(), masterMixMem.end(), 0.0f);
 
-        for (auto& src : sources)
+        for (auto& src : mSources)
             src.second->RenderAndMix(masterMixBuf);
 
         for (float& sample : masterMixMem)
@@ -83,15 +83,15 @@ namespace MaxDoF::Game::Audio
 
         constexpr size_t blockFloats = cAudioFrameSize * 2;
 
-        if (floatsNeeded == blockFloats && engine->fifoCount == 0)
+        if (floatsNeeded == blockFloats && engine->mFifoBuffer.count == 0)
         {
             engine->RenderAudio(out);
             return;
         }
 
-        while (engine->fifoCount < floatsNeeded)
+        while (engine->mFifoBuffer.count < floatsNeeded)
         {
-            if (engine->fifoCount + blockFloats > cFifoCapacity)
+            if (engine->mFifoBuffer.count + blockFloats > cFifoCapacity)
                 break;
 
             float tempBlock[blockFloats];
@@ -99,19 +99,19 @@ namespace MaxDoF::Game::Audio
 
             for (size_t i = 0; i < blockFloats; ++i)
             {
-                engine->fifoBuffer[engine->fifoWrite] = tempBlock[i];
-                engine->fifoWrite = (engine->fifoWrite + 1) % cFifoCapacity;
+                engine->mFifoBuffer.buffer[engine->mFifoBuffer.write] = tempBlock[i];
+                engine->mFifoBuffer.write = (engine->mFifoBuffer.write + 1) % cFifoCapacity;
             }
-            engine->fifoCount += blockFloats;
+            engine->mFifoBuffer.count += blockFloats;
         }
 
-        size_t toCopy = std::min(floatsNeeded, engine->fifoCount);
+        size_t toCopy = std::min(floatsNeeded, engine->mFifoBuffer.count);
         for (size_t i = 0; i < toCopy; ++i)
         {
-            out[i] = engine->fifoBuffer[engine->fifoRead];
-            engine->fifoRead = (engine->fifoRead + 1) % cFifoCapacity;
+            out[i] = engine->mFifoBuffer.buffer[engine->mFifoBuffer.read];
+            engine->mFifoBuffer.read = (engine->mFifoBuffer.read + 1) % cFifoCapacity;
         }
-        engine->fifoCount -= toCopy;
+        engine->mFifoBuffer.count -= toCopy;
 
         if (toCopy < floatsNeeded)
             std::fill(out + toCopy, out + floatsNeeded, 0.0f);
@@ -119,22 +119,22 @@ namespace MaxDoF::Game::Audio
 
     void AudioEngine::SetSourceActive(SourceId id, bool active)
     {
-        auto it = sources.find(id);
-        if (it != sources.end())
+        auto it = mSources.find(id);
+        if (it != mSources.end())
             it->second->SetActive(active);
     }
 
     void AudioEngine::SetSourceParam(SourceId id, const std::string& name, float value)
     {
-        auto it = sources.find(id);
-        if (it != sources.end())
+        auto it = mSources.find(id);
+        if (it != mSources.end())
             it->second->SetParam(name, value);
     }
 
     void AudioEngine::SetSourcePosition(SourceId id, IPLVector3 pos)
     {
-        auto it = sources.find(id);
-        if (it != sources.end())
+        auto it = mSources.find(id);
+        if (it != mSources.end())
             it->second->SetPosition(pos);
     }
 
@@ -149,7 +149,7 @@ namespace MaxDoF::Game::Audio
         if (mSDL_AudioDeviceID != 0)
             SDL_LockAudioDevice(mSDL_AudioDeviceID);
 
-        sources.emplace(id, std::move(src));
+        mSources.emplace(id, std::move(src));
 
         if (mSDL_AudioDeviceID != 0)
             SDL_UnlockAudioDevice(mSDL_AudioDeviceID);
@@ -216,12 +216,12 @@ namespace MaxDoF::Game::Audio
             listenerAhead.x * listenerUp.y - listenerAhead.y * listenerUp.x
         };
 
-        for (auto& src : sources)
+        for (auto& src : mSources)
             src.second->SetSimulationInputs();
 
         mAcousticWorld.RunDirectSimulation(listener);
 
-        for (auto& src : sources)
+        for (auto& src : mSources)
             src.second->ReadSimulationOutputs(listener);
     }
 }

@@ -9,7 +9,8 @@
 
 #define MaxDoF_LOG_AND_ABORT(msg) \
 { \
-    std::cout << std::endl \
+    std::cout \
+        << std::endl \
         << "Error in file: " << __FILE__ << std::endl \
         << "line: " << __LINE__ << std::endl \
         << "message: " << msg << std::endl << std::endl; \

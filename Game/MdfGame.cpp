@@ -13,6 +13,10 @@
 #include <OgreRoot.h>
 #include <OgreSceneManager.h>
 
+#include "Common/Scenes/SceneRace.h"
+#include "Common/Scenes/SceneTest.h"
+#include "Common/Utils/SystemUtils.h"
+
 namespace MaxDoF::Game
 {
     MdfGame::MdfGame( const Ogre::String &helpDescription )
@@ -40,7 +44,20 @@ namespace MaxDoF::Game
 
     void MdfGame::createScene01()
     {
-        mScene = std::make_unique<Common::Scenes::Scene01>( mWorldManager );
+        const int scene{0};
+        switch (scene)
+        {
+        case 0:
+            mScene = std::make_unique<Common::Scenes::SceneTest>(mWorldManager);
+            break;
+        case 1:
+            mScene = std::make_unique<Common::Scenes::SceneRace>(mWorldManager);
+            break;
+        
+        default:
+            MaxDoF_LOG_AND_ABORT("scene not found")
+            break;
+        }
         mWorldManager.initialize( mMaxBodiesLimit );
         mScene->CreateScene();
 #ifdef MAXDOF_CLIENT_BUILD

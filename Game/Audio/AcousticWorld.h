@@ -21,20 +21,27 @@ namespace MaxDoF::Game::Audio
     class AcousticWorld
     {
     public:
+        using Vertices = std::vector<IPLVector3>;
+        using Triangles = std::vector<IPLTriangle>;
+
         AcousticWorld();
         ~AcousticWorld();
 
         AcousticWorld(const AcousticWorld&) = delete;
         AcousticWorld& operator=(const AcousticWorld&) = delete;
 
-        int AddDynamicMesh(const std::vector<IPLVector3>& vertices,
-                        const std::vector<IPLTriangle>& triangles,
-                        const IPLMaterial& material,
-                        const IPLMatrix4x4& initialTransform);
+        int AddDynamicMesh(
+            const Vertices&,
+            const Triangles&,
+            const IPLMaterial& material,
+            const IPLMatrix4x4& initialTransform
+        );
 
-        void AddStaticMesh(const std::vector<IPLVector3>& vertices,
-                        const std::vector<IPLTriangle>& triangles,
-                        const IPLMaterial& material);
+        void AddStaticMesh(
+            const Vertices&,
+            const Triangles&,
+            const IPLMaterial& material
+        );
 
         void ClearScene();
         void CommitScene();
@@ -52,13 +59,16 @@ namespace MaxDoF::Game::Audio
         void UpdateDynamicMeshTransform(int meshId, const IPLMatrix4x4& transform);
 
     private:
+        using IPLStaticMeshes = std::vector<IPLStaticMesh>;
+        using DynamicMeshes = std::vector<DynamicMesh>;
+
         void ReleaseAllMeshes();
 
         IPLContext mIPLContext = nullptr;
         IPLHRTF mIPLHRTF = nullptr;
         IPLScene mIPLScene = nullptr;
         IPLSimulator mIPLSimulator = nullptr;
-        std::vector<IPLStaticMesh> mIPLStaticMeshes;
-        std::vector<DynamicMesh> DynamicMeshes;
+        IPLStaticMeshes mIPLStaticMeshes;
+        DynamicMeshes mDynamicMeshes;
     };
 }

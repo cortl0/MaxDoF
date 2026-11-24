@@ -3,7 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#include "Common/Scenes/Scene01.h"
+#include "Common/Scenes/SceneTest.h"
 
 #include "Common/Maps/Samples/DeathmatchGraphGenerator.h"
 #include "Common/Maps/Samples/DeathmatchAsteroidGraphGenerator.h"
@@ -16,16 +16,16 @@
 
 namespace MaxDoF::Common::Scenes
 {
-    Scene01::Scene01(World::Manager& worldManager) :
+    SceneTest::SceneTest(World::Manager& worldManager) :
         Scene(worldManager)
     {
     }
 
-    Scene01::~Scene01()
+    SceneTest::~SceneTest()
     {
     }
 
-    void Scene01::createMapBoundaries()
+    void SceneTest::createMapBoundaries()
     {
         static constexpr float mapWallHalfThickness{0.5f};
 
@@ -97,7 +97,7 @@ namespace MaxDoF::Common::Scenes
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
-    void Scene01::createStaticLights()
+    void SceneTest::createStaticLights()
     {
         constexpr double mapLightHalfSize{mapHalfSize * 0.9f};
 
@@ -113,7 +113,7 @@ namespace MaxDoF::Common::Scenes
     }
 #endif
 
-    void Scene01::createBoxes(JPH::RVec3 offset)
+    void SceneTest::createBoxes(JPH::RVec3 offset)
     {
         int size = 2;
 
@@ -134,7 +134,7 @@ namespace MaxDoF::Common::Scenes
                 }
     }
 
-    void Scene01::CreateScene()
+    void SceneTest::CreateScene()
     {
         mWorldManager.getPhysicsSystem()->SetContactListener( &mBattleLogic.GetMyContactListener() );
 
@@ -175,10 +175,15 @@ namespace MaxDoF::Common::Scenes
         createBoxes(deathmatchAsteroidOffset);
 
         Common::Types::LevelGraphs::PureLevelGraph levelGraph;
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, {false, true}, true, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f});
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, {false, true}, true, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f});
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, {true, false}, false, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f});
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, {true, false}, false, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f});
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+            {{false, true}, true, {Common::Types::LevelGraphs::InterfaceType::SolidRock, Common::Types::LevelGraphs::InterfaceType::SolidRock}});
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
+            {{false, true}, true, {Common::Types::LevelGraphs::InterfaceType::SolidRock, Common::Types::LevelGraphs::InterfaceType::SolidRock}});
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+            {{true, false}, false, {Common::Types::LevelGraphs::InterfaceType::SolidRock, Common::Types::LevelGraphs::InterfaceType::SolidRock}});
+        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
+            {{true, false}, false, {Common::Types::LevelGraphs::InterfaceType::SolidRock, Common::Types::LevelGraphs::InterfaceType::SolidRock}});
+        Common::Maps::TetrahedronGraphGenerator::GenerateInvertedGraph(levelGraph, -tetrahedronOffset);
         Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, tetrahedronOffset);
         Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, deathmatchOffset);
         Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, deathmatchSpaceOffset);

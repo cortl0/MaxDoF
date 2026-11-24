@@ -40,8 +40,8 @@ namespace MaxDoF::Game::Audio
         if (mIPLContext) iplContextRelease(&mIPLContext);
     }
 
-    int AcousticWorld::AddDynamicMesh(const std::vector<IPLVector3>& vertices,
-                                    const std::vector<IPLTriangle>& triangles,
+    int AcousticWorld::AddDynamicMesh(const Vertices& vertices,
+                                    const Triangles& triangles,
                                     const IPLMaterial& material,
                                     const IPLMatrix4x4& initialTransform)
     {
@@ -75,13 +75,15 @@ namespace MaxDoF::Game::Audio
         iplInstancedMeshCreate(mIPLScene, &instSettings, &dyn.instancedMesh);
         iplInstancedMeshAdd(dyn.instancedMesh, mIPLScene);
 
-        DynamicMeshes.push_back(dyn);
-        return static_cast<int>(DynamicMeshes.size() - 1);
+        mDynamicMeshes.push_back(dyn);
+        return static_cast<int>(mDynamicMeshes.size() - 1);
     }
 
-    void AcousticWorld::AddStaticMesh(const std::vector<IPLVector3>& vertices,
-                                    const std::vector<IPLTriangle>& triangles,
-                                    const IPLMaterial& material)
+    void AcousticWorld::AddStaticMesh(
+        const Vertices& vertices,
+        const Triangles& triangles,
+        const IPLMaterial& material
+    )
     {
         IPLStaticMeshSettings meshSettings{};
         meshSettings.numVertices = static_cast<IPLint32>(vertices.size());
@@ -177,7 +179,7 @@ namespace MaxDoF::Game::Audio
 
         mIPLStaticMeshes.clear();
 
-        for (auto& dyn : DynamicMeshes)
+        for (auto& dyn : mDynamicMeshes)
         {
             if (dyn.instancedMesh)
             {
@@ -196,7 +198,7 @@ namespace MaxDoF::Game::Audio
             if (dyn.subScene)
                 iplSceneRelease(&dyn.subScene);
         }
-        DynamicMeshes.clear();
+        mDynamicMeshes.clear();
     }
 
     void AcousticWorld::RunDirectSimulation(const IPLCoordinateSpace3& listener)
@@ -209,7 +211,7 @@ namespace MaxDoF::Game::Audio
 
     void AcousticWorld::UpdateDynamicMeshTransform(int meshId, const IPLMatrix4x4& transform)
     {
-        if (meshId < 0 || meshId >= static_cast<int>(DynamicMeshes.size())) return;
-        iplInstancedMeshUpdateTransform(DynamicMeshes.at(meshId).instancedMesh, mIPLScene, transform);
+        if (meshId < 0 || meshId >= static_cast<int>(mDynamicMeshes.size())) return;
+        iplInstancedMeshUpdateTransform(mDynamicMeshes.at(meshId).instancedMesh, mIPLScene, transform);
     }
 }

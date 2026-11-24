@@ -10,8 +10,7 @@
 
 namespace MaxDoF::Common::LevelGraphs
 {
-    void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, std::array<bool, 2> invertInterfaces, bool invertPipe,
-        std::array<Types::LevelGraphs::InterfaceType, 2> interfaceTypes)
+    void Pipe::FillGraph(Types::LevelGraphs::PureLevelGraph& graph, const Config& config)
     {
         graph.nodes.push_back(
             Types::LevelGraphs::VolumeNode
@@ -23,17 +22,17 @@ namespace MaxDoF::Common::LevelGraphs
                     Types::LevelGraphs::OrientedInterface
                     {
                         .interfaceId = mTriangleInterfaceKeys.front(),
-                        .interfaceType = interfaceTypes.front(),
-                        .inverted = invertInterfaces.front()
+                        .interfaceType = config.interfaceTypes.front(),
+                        .inverted = config.invertInterfaces.front()
                     },
                     Types::LevelGraphs::OrientedInterface
                     {
                         .interfaceId = mTriangleInterfaceKeys.back(),
-                        .interfaceType = interfaceTypes.back(),
-                        .inverted = invertInterfaces.back()
+                        .interfaceType = config.interfaceTypes.back(),
+                        .inverted = config.invertInterfaces.back()
                     }
                 },
-                .inverted = invertPipe
+                .inverted = config.invertPipe
             }
         );
     }

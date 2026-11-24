@@ -17,10 +17,31 @@ namespace MaxDoF::Common::Maps
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
             {
-                Types::LevelGraphs::InterfaceType::SolidRock,
-                Types::LevelGraphs::InterfaceType::SolidRock,
-                Types::LevelGraphs::InterfaceType::SolidRock,
-                Types::LevelGraphs::InterfaceType::SolidRock
+                {
+                    Types::LevelGraphs::InterfaceType::SolidRock,
+                    Types::LevelGraphs::InterfaceType::SolidRock,
+                    Types::LevelGraphs::InterfaceType::SolidRock,
+                    Types::LevelGraphs::InterfaceType::SolidRock
+                },
+                { false, false, false, false }
+            }
+        );
+    }
+
+    void TetrahedronGraphGenerator::GenerateInvertedGraph(Common::Types::LevelGraphs::PureLevelGraph& graph, JPH::RVec3 offset)
+    {
+        const float cArenaRadius = 10.0f;
+        Common::LevelGraphs::Tetrahedron tetrahedron;
+        tetrahedron.GenerateVetrices(offset, cArenaRadius);
+        tetrahedron.FillGraph(graph,
+            {
+                {
+                    Types::LevelGraphs::InterfaceType::SolidRock,
+                    Types::LevelGraphs::InterfaceType::SolidRock,
+                    Types::LevelGraphs::InterfaceType::SolidRock,
+                    Types::LevelGraphs::InterfaceType::SolidRock
+                },
+                { true, true, true, true }
             }
         );
     }

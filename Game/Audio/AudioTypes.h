@@ -19,13 +19,16 @@ namespace MaxDoF::Game::Audio
     constexpr SourceId cInvalidSourceId = 0;
 
     namespace AcousticMaterials
-    {
-        constexpr IPLMaterial cBrick      { {0.03f, 0.04f, 0.07f}, 0.050f, {0.025f, 0.005f, 0.002f} };
-        constexpr IPLMaterial cConcrete   { {0.05f, 0.07f, 0.08f}, 0.015f, {0.015f, 0.002f, 0.001f} };
-        constexpr IPLMaterial cHeavyHull  { {0.10f, 0.10f, 0.10f}, 0.010f, {0.0005f, 0.0001f, 0.0000f} };
-        constexpr IPLMaterial cGlass      { {0.18f, 0.06f, 0.04f}, 0.010f, {0.400f, 0.250f, 0.150f} };
-        constexpr IPLMaterial cSoundproof { {0.50f, 0.50f, 0.50f}, 0.010f, {0.0000f, 0.0000f, 0.0000f} };
-        constexpr IPLMaterial cWood       { {0.11f, 0.08f, 0.06f}, 0.050f, {0.200f, 0.080f, 0.030f} };
+    {   //                                        Поглощение                    Рассеивание в разные        Пропускание
+        //                                        {   low,    mid,   high},     стороны при отражении       {   low,    mid,   high}
+        constexpr IPLMaterial cIdealMiror       { {0.000f, 0.000f, 0.000f},     0.000f,                     {0.000f, 0.000f, 0.000f} };
+        constexpr IPLMaterial cIdealTransparent { {0.000f, 0.000f, 0.000f},     0.000f,                     {1.000f, 1.000f, 1.000f} };
+        constexpr IPLMaterial cIdealSoundproof  { {1.000f, 1.000f, 1.000f},     1.000f,                     {0.000f, 0.000f, 0.000f} };
+        constexpr IPLMaterial cBrick            { {0.030f, 0.040f, 0.070f},     0.050f,                     {0.025f, 0.005f, 0.002f} };
+        constexpr IPLMaterial cConcrete         { {0.050f, 0.070f, 0.080f},     0.015f,                     {0.015f, 0.002f, 0.001f} };
+        constexpr IPLMaterial cGlass            { {0.180f, 0.060f, 0.040f},     0.010f,                     {0.400f, 0.250f, 0.150f} };
+        constexpr IPLMaterial cSoundproof       { {0.500f, 0.500f, 0.500f},     0.010f,                     {0.000f, 0.000f, 0.000f} };
+        constexpr IPLMaterial cWood             { {0.110f, 0.080f, 0.060f},     0.050f,                     {0.200f, 0.080f, 0.030f} };
     }
 
     struct DspParamEntry

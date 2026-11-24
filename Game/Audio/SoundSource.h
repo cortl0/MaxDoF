@@ -28,7 +28,6 @@ namespace MaxDoF::Game::Audio
         IPLVector3 GetPosition() const { return position; }
         void Init(IPLContext ctx, IPLHRTF hrtf, IPLSimulator simulator, std::unique_ptr<dsp> faustDsp);
         bool IsActive() const { return isActive; }
-
         void ReadSimulationOutputs(const IPLCoordinateSpace3& listener);
         void RenderAndMix(IPLAudioBuffer& stereoMixOut);
         void SetActive(bool active);

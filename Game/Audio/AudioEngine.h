@@ -37,17 +37,23 @@ namespace MaxDoF::Game::Audio
         void Stop();
         void Update(IPLVector3 listenerPos, IPLVector3 listenerAhead, IPLVector3 listenerUp);
     private:
+        static constexpr size_t cFifoCapacity = 8192;
+        using Sources = std::unordered_map<SourceId, std::unique_ptr<SoundSource>>;
+
         void RenderAudio(float* interleavedOut);
         static void SdlCallback(void* userdata, Uint8* stream, int len);
 
-        static constexpr size_t cFifoCapacity = 8192;
-        std::array<float, cFifoCapacity> fifoBuffer{};
-        size_t fifoRead = 0;
-        size_t fifoWrite = 0;
-        size_t fifoCount = 0;
+        struct FifoBuffer
+        {
+            using Buffer = std::array<float, cFifoCapacity>;
+            Buffer buffer{};
+            size_t read = 0;
+            size_t write = 0;
+            size_t count = 0;
+        } mFifoBuffer;
 
         AcousticWorld mAcousticWorld;
-        std::unordered_map<SourceId, std::unique_ptr<SoundSource>> sources;
+        Sources mSources;
 
         SDL_AudioDeviceID mSDL_AudioDeviceID = 0;
         SourceId mSourceId = 1;
