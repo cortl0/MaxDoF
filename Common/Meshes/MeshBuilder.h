@@ -5,10 +5,8 @@
 
 #pragma once
 
-#include <Jolt/Jolt.h>
-#include <Jolt/Math/Vec3.h>
-
 #include "Common/Types/LevelGraph.h"
+#include "Common/Types/MeshData.h"
 
 namespace MaxDoF::Common::Meshes
 {

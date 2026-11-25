@@ -5,15 +5,12 @@
 
 #pragma once
 
-#include <vector>
 #include <cstdint>
-
-#include <Jolt/Jolt.h>
-#include <Jolt/Math/Vec3.h>
-#include "Common/Types/Types3d.h"
+#include <vector>
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Real.h>
+#include <Jolt/Math/Vec3.h>
 
 namespace MaxDoF::Common::Types::Level
 {
@@ -21,24 +18,14 @@ namespace MaxDoF::Common::Types::Level
     {
         using Vertex = JPH::RVec3;
         using VertexKey = std::size_t;
-        using TriangleVertices = std::array<Vertex, 3>;
-        using TriangleVertexKeys = std::array<VertexKey, 3>;
-        using UserDataType = JPH::uint64;
-
-        enum class EntityType : UserDataType
-        {
-            cUndefined,
-            cAsteroid,
-            cShip,
-            cBullet,
-            cOtherObject
-        };
 
         struct Triangle
         {
             using Key = std::size_t;
+            using VertexKeys = std::array<VertexKey, 3>;
+            using Vertices = std::array<Vertex, 3>;
 
-            TriangleVertexKeys verticesIndices;
+            VertexKeys vertexKeys;
         };
 
         struct OrientedTriangle

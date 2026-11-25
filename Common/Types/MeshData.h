@@ -11,8 +11,6 @@ namespace MaxDoF::Common::Types
 {
     struct MeshData
     {
-        using VertexKey = std::size_t;
-
         struct Vertex
         {
             double x, y, z;
@@ -21,8 +19,10 @@ namespace MaxDoF::Common::Types
 #endif
         };
 
+        using VertexKey = std::size_t;
         using Vertices = std::vector<Vertex>;
         using VertexKeys = std::vector<VertexKey>;
+
         Vertices vertices;
         VertexKeys vertexKeys;
     };

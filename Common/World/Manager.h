@@ -68,13 +68,13 @@ namespace MaxDoF::Common::World
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
         Types::Entity& createCube(
-            Types::Level::Graph::EntityType userData,
+            Types::Entity::Type userData,
             const Types::PhysPose&, const JPH::Vec3& halfSize,
             float mass, bool dynamic = true, bool onCCD = false
         );
         Types::Entity& createMesh(const Types::MeshData& meshData);
         Types::Entity& createSphere(
-            Types::Level::Graph::EntityType userData,
+            Types::Entity::Type userData,
             const Types::PhysPose&, float radius, float mass, bool onCCD = false
         );
     };

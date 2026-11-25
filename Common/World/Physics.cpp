@@ -105,7 +105,7 @@ namespace MaxDoF::Common::World
     }
 
     JPH::BodyID Physics::setBodySettings(
-        Types::Level::Graph::EntityType userData,
+        Types::Entity::Type userData,
         const JPH::ShapeSettings::ShapeResult &shapeResult,
         const Types::PhysPose &pose, float mass, bool dynamic, bool onCCD)
     {
@@ -130,7 +130,7 @@ namespace MaxDoF::Common::World
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createBox(Types::Level::Graph::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
+    JPH::BodyID Physics::createBox(Types::Entity::Type userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
         shapeSettings.mUserData = static_cast<JPH::uint64>(userData);
@@ -182,13 +182,13 @@ namespace MaxDoF::Common::World
         JPH::Shape::ShapeResult shapeResult = meshSettings.Create();
         JPH::ShapeRefC mapShape = shapeResult.Get();
         auto bodySettings = CreateMeshBodySettings(mapShape);
-        bodySettings.mUserData = static_cast<JPH::uint64>(Types::Level::Graph::EntityType::cAsteroid);
+        bodySettings.mUserData = static_cast<JPH::uint64>(Types::Entity::Type::cAsteroid);
 
         // Возвращаем ID тела статического уровня для контроля памяти (очистки при смене карты)
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createSphere(Types::Level::Graph::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
+    JPH::BodyID Physics::createSphere(Types::Entity::Type userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
         shapeSettings.mUserData = static_cast<JPH::uint64>(userData);

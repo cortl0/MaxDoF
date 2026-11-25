@@ -95,7 +95,7 @@ namespace MaxDoF::Common::Ships
             Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * (0.5f + bulletRadius + 0.1f), shipRot};
 
             auto& bullet = mWorldManager.createSphere(
-                Types::Level::Graph::EntityType::cBullet,
+                Types::Entity::Type::cBullet,
                 projectilePose, bulletRadius, bulletMass, true
             );
 
@@ -130,7 +130,7 @@ namespace MaxDoF::Common::Ships
     Types::Entity& Ship::createShipEntity()
     {
         return mWorldManager.createSphere(
-            Types::Level::Graph::EntityType::cShip,
+            Types::Entity::Type::cShip,
             {
                 .position = JPH::RVec3{0.0, 0.0, 0.0},
                 .orientation = JPH::Quat{0.0f, 0.0f, 0.0f, 1.0f}.Normalized()

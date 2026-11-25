@@ -49,7 +49,7 @@ namespace MaxDoF::Common::LevelGraphs
         for(const auto& interface : interfaces)
             graph.triangles.push_back
             ({
-                .verticesIndices =
+                .vertexKeys =
                 {
                     interface[0] + baseVertexIndex,
                     interface[1] + baseVertexIndex,

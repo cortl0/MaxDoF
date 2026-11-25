@@ -69,8 +69,8 @@ namespace MaxDoF::Common::Meshes
 
         for (int i = 0; i < 3; ++i)
         {
-            posA[i] = graph.vertices[interface.verticesIndices[i]];
-            rawPosB[i] = graph.vertices[interfaceEnd.verticesIndices[i]];
+            posA[i] = graph.vertices[interface.vertexKeys[i]];
+            rawPosB[i] = graph.vertices[interfaceEnd.vertexKeys[i]];
         }
 
     if (pipeNode.inverted)
@@ -187,9 +187,9 @@ namespace MaxDoF::Common::Meshes
             // Если грань официально ведет в монолитный камень — строим заглушку!
             if (orientedInterface.type == Types::Level::Graph::OrientedTriangle::Type::SolidRock)
             {
-                const auto& pos0 = graph.vertices[face.verticesIndices[0]];
-                const auto& pos1 = graph.vertices[face.verticesIndices[1]];
-                const auto& pos2 = graph.vertices[face.verticesIndices[2]];
+                const auto& pos0 = graph.vertices[face.vertexKeys[0]];
+                const auto& pos1 = graph.vertices[face.vertexKeys[1]];
+                const auto& pos2 = graph.vertices[face.vertexKeys[2]];
 
                 // 1. Строим ортонормированный базис (оси U и V в плоскости треугольника)
                 auto edge1 = pos1 - pos0;

@@ -161,7 +161,7 @@ namespace MaxDoF::Common::World
     }
 
     Types::Entity& Manager::createCube(
-        Types::Level::Graph::EntityType userData,
+        Types::Entity::Type userData,
         const Types::PhysPose& pose, const JPH::Vec3& halfSize,
         float mass, bool dynamic, bool onCCD
     )
@@ -192,7 +192,7 @@ namespace MaxDoF::Common::World
     }
 
     Types::Entity& Manager::createSphere(
-        Types::Level::Graph::EntityType userData,
+        Types::Entity::Type userData,
         const Types::PhysPose& pose, float radius, float mass, bool onCCD
     )
     {

@@ -16,6 +16,16 @@ namespace MaxDoF::Common::Types
 {
     struct Entity
     {
+        using UserDataType = JPH::uint64;
+        enum class Type : UserDataType
+        {
+                cUndefined,
+                cAsteroid,
+                cShip,
+                cBullet,
+                cOtherObject
+        };
+
         Entity(const JPH::BodyID& physId
 #ifdef MAXDOF_CLIENT_BUILD
             , Ogre::SceneNode* graphNode

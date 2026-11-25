@@ -7,7 +7,7 @@
 
 #include <OgrePrerequisites.h>
 
-#include "Common/Types/Types3d.h"
+#include "Common/Types/MeshData.h"
 
 namespace MaxDoF::Game::Utils
 {

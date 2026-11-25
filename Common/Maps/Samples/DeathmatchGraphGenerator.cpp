@@ -35,7 +35,7 @@ namespace MaxDoF::Common::Maps
             }
         );
 
-        for (size_t i = 0; i < 4; ++i)
+        for (size_t i = 0; i < 1; ++i)
         {
             triangle.SetVertices(graph, graph.triangles[graph.orientedTriangles[interfacesBaseIndex + i].triangleId]);
             triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);

@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "Common/Types/Types3d.h"
 #include "Common/Types/LevelGraph.h"
 
  namespace MaxDoF::Common::LevelGraphs
@@ -13,7 +12,7 @@
     class Triangle
     {
     private:
-        Types::Level::Graph::TriangleVertices vertices;
+        Types::Level::Graph::Triangle::Vertices vertices;
 
     public:
         struct Config
@@ -22,13 +21,13 @@
             bool inverted;
         };
 
-        const Types::Level::Graph::TriangleVertices& GetVertices() const noexcept { return vertices; }
-        void SetVertices(const Types::Level::Graph::TriangleVertices& vertices){ this->vertices = vertices; }
+        const Types::Level::Graph::Triangle::Vertices& GetVertices() const noexcept { return vertices; }
+        void SetVertices(const Types::Level::Graph::Triangle::Vertices& vertices){ this->vertices = vertices; }
         void SetVertices(const Types::Level::Graph&, const Types::Level::Graph::Triangle&);
         JPH::RVec3 CalculateMiddle() const;
-        JPH::RVec3 CalculateMiddle(const Types::Level::Graph::TriangleVertices&) const;
+        JPH::RVec3 CalculateMiddle(const Types::Level::Graph::Triangle::Vertices&) const;
         JPH::RVec3 CalculateNormal() const;
-        JPH::RVec3 CalculateNormal(const Types::Level::Graph::TriangleVertices&) const;
+        JPH::RVec3 CalculateNormal(const Types::Level::Graph::Triangle::Vertices&) const;
         JPH::Quat CalculateRotationQuat(JPH::RVec3 axis, float degrees);
         void FillGraphVertices(Types::Level::Graph &) const;
         void FillGraphVerticesAndCreateInterface(Types::Level::Graph&, const Config&) const;

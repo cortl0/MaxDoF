@@ -5,10 +5,10 @@
 
 #pragma once
 
+#include "Common/Types/MeshData.h"
+#include "Common/Types/Poses.h"
 #include "Game/Core/MaxDoFGraphicsSystem.h"
 #include "Game/UI/TextOverleyManager.h"
-#include "Common/Types/Types3d.h"
-#include "Common/Types/Poses.h"
 
 namespace MaxDoF::Game::World
 {

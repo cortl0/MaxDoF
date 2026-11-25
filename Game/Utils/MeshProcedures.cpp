@@ -7,14 +7,14 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Vec3.h>
 
-#include <OgreSceneManager.h>
 #include <OgreManualObject2.h>
 #include <OgreMesh2.h>
 #include <OgreMeshManager.h>
 #include <OgreMeshManager2.h>
+#include <OgreSceneManager.h>
 
+#include "Common/Types/MeshData.h"
 #include "Common/Utils/SystemUtils.h"
-#include "Common/Types/Types3d.h"
 
 namespace MaxDoF::Game::Utils
 {

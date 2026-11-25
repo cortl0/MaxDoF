@@ -13,6 +13,7 @@
 #include "Common/Maps/Samples/TetrahedronGraphGenerator.h"
 #include "Common/Meshes/MeshBuilder.h"
 #include "Common/Meshes/Tetrahedron.h"
+#include "Common/Types/Entity.h"
 
 namespace MaxDoF::Common::Scenes
 {
@@ -38,7 +39,7 @@ namespace MaxDoF::Common::Scenes
                 .orientation = JPH::Quat::sIdentity()
             };
             mWorldManager.createCube(
-                Types::Level::Graph::EntityType::cAsteroid, pose,
+                Types::Entity::Type::cAsteroid, pose,
                 JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false
             );
         }
@@ -52,7 +53,7 @@ namespace MaxDoF::Common::Scenes
                 .orientation = JPH::Quat::sIdentity()
             };
             mWorldManager.createCube(
-                Types::Level::Graph::EntityType::cAsteroid, pose,
+                Types::Entity::Type::cAsteroid, pose,
                 JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false
             );
         }
@@ -66,7 +67,7 @@ namespace MaxDoF::Common::Scenes
                 .orientation = JPH::Quat::sIdentity()
             };
             mWorldManager.createCube(
-                Types::Level::Graph::EntityType::cAsteroid, pose,
+                Types::Entity::Type::cAsteroid, pose,
                 JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false
             );
         }
@@ -80,7 +81,7 @@ namespace MaxDoF::Common::Scenes
                 .orientation = JPH::Quat::sIdentity()
             };
             mWorldManager.createCube(
-                Types::Level::Graph::EntityType::cAsteroid, pose,
+                Types::Entity::Type::cAsteroid, pose,
                 JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false
             );
         }
@@ -94,7 +95,7 @@ namespace MaxDoF::Common::Scenes
                 .orientation = JPH::Quat::sIdentity()
             };
             mWorldManager.createCube(
-                Types::Level::Graph::EntityType::cAsteroid, pose,
+                Types::Entity::Type::cAsteroid, pose,
                 JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false
             );
         }
@@ -108,7 +109,7 @@ namespace MaxDoF::Common::Scenes
                 .orientation = JPH::Quat::sIdentity()
             };
             mWorldManager.createCube(
-                Types::Level::Graph::EntityType::cAsteroid, pose,
+                Types::Entity::Type::cAsteroid, pose,
                 JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false
             );
         }
@@ -142,7 +143,7 @@ namespace MaxDoF::Common::Scenes
                     if(!mWorldManager.PhysicsHavePlace())
                         return;
 
-                    mWorldManager.createCube(Types::Level::Graph::EntityType::cOtherObject,
+                    mWorldManager.createCube(Types::Entity::Type::cOtherObject,
                         {
                             .position = JPH::RVec3(offset.GetX() + i * 1.1f, offset.GetY() + j * 1.1f, offset.GetZ() + k * 1.1f),
                             .orientation = JPH::Quat::sIdentity()
@@ -170,7 +171,7 @@ namespace MaxDoF::Common::Scenes
         if(!mWorldManager.PhysicsHavePlace())
             return;
 
-        // mWorldManager.createSphere(Types3d::EntityType::cOtherObject, Types::PhysPose
+        // mWorldManager.createSphere(Types3d::Entity::Type::cOtherObject, Types::PhysPose
         //     {
         //         .position = JPH::RVec3( 0.0f, 0.0f, -30.0f ),
         //         .orientation = JPH::Quat::sIdentity()

@@ -9,10 +9,10 @@
 
 namespace MaxDoF::Common::LevelGraphs
 {
-    void Triangle::SetVertices(const Types::Level::Graph& graph, const Types::Level::Graph::Triangle& triangleInterface)
+    void Triangle::SetVertices(const Types::Level::Graph& graph, const Types::Level::Graph::Triangle& triangle)
     {
         for(std::size_t i = 0; i < 3; ++i)
-            vertices[i] = graph.vertices[triangleInterface.verticesIndices[i]];
+            vertices[i] = graph.vertices[triangle.vertexKeys[i]];
     }
 
     JPH::RVec3 Triangle::CalculateMiddle() const
@@ -20,7 +20,7 @@ namespace MaxDoF::Common::LevelGraphs
         return CalculateMiddle(vertices);
     }
 
-    JPH::RVec3 Triangle::CalculateMiddle(const Types::Level::Graph::TriangleVertices& v) const
+    JPH::RVec3 Triangle::CalculateMiddle(const Types::Level::Graph::Triangle::Vertices& v) const
     {
         JPH::RVec3 result = v[0];
 
@@ -35,7 +35,7 @@ namespace MaxDoF::Common::LevelGraphs
         return CalculateNormal(vertices);
     }
 
-    JPH::RVec3 Triangle::CalculateNormal(const Types::Level::Graph::TriangleVertices& v) const
+    JPH::RVec3 Triangle::CalculateNormal(const Types::Level::Graph::Triangle::Vertices& v) const
     {
         return (v[1] - v[0]).Cross((v[2] - v[0])).Normalized();
     }
@@ -72,7 +72,7 @@ namespace MaxDoF::Common::LevelGraphs
 
         graph.triangles.push_back
         ({
-            .verticesIndices = {baseVertexIndex, baseVertexIndex + 1, baseVertexIndex + 2}
+            .vertexKeys = {baseVertexIndex, baseVertexIndex + 1, baseVertexIndex + 2}
         });
 
         graph.orientedTriangles.push_back

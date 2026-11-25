@@ -10,9 +10,10 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
-#include "Common/Types/Poses.h"
-#include "Common/Types/Types3d.h"
 #include "Common/Types/LevelGraph.h"
+#include "Common/Types/MeshData.h"
+#include "Common/Types/Poses.h"
+#include "Common/Types/Entity.h"
 
 namespace JPH
 {
@@ -41,15 +42,15 @@ namespace MaxDoF::Common::World
         Physics();
         ~Physics();
 
-        JPH::BodyID createBox(Types::Level::Graph::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD);
+        JPH::BodyID createBox(Types::Entity::Type userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD);
         JPH::BodyID createMesh(const Types::MeshData&);
-        JPH::BodyID createSphere(Types::Level::Graph::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD);
+        JPH::BodyID createSphere(Types::Entity::Type userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD);
         void destroyBody(JPH::BodyID);
         JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
         JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysicsSystem; }
         void initialize(unsigned int maxBodies);
         void setBodyInterface(JPH::BodyInterface* bodyInterface) { mBodyInterface = bodyInterface; }
-        JPH::BodyID setBodySettings(Types::Level::Graph::EntityType userData, const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD);
+        JPH::BodyID setBodySettings(Types::Entity::Type userData, const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD);
         void update(float timeSinceLast);
     };
 }
