@@ -30,9 +30,9 @@ namespace MaxDoF::Common::Scenes
 
         Types::Level::Graph graph;
         Maps::RaceGenerator::GenerateGraph(graph,
-            {0.0f, 0.0f, 0.0f}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+            JPH::RVec3::sZero(), JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
             {
-                {false, true}, true,
+                {true, false}, false,
                 {
                     Types::Level::Graph::Graph::OrientedTriangle::Type::OpenSpace,
                     Types::Level::Graph::Graph::OrientedTriangle::Type::OpenSpace

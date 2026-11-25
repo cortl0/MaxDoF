@@ -41,7 +41,7 @@ namespace MaxDoF::Common::LevelGraphs
     void Tetrahedron::FillGraph(Types::Level::Graph& graph, const Config& config)
     {
         const auto baseVertexIndex = graph.vertices.size();
-        const auto baseTriangleIndex = graph.triangles.size();
+        const auto baseOrientedTriangleIndex = graph.orientedTriangles.size();
 
         for(const auto& vertex : vertices)
             graph.vertices.push_back(vertex);
@@ -60,7 +60,7 @@ namespace MaxDoF::Common::LevelGraphs
         for(std::size_t i = 0; i < 4; ++i)
             graph.orientedTriangles.push_back
             ({
-                .triangleId = baseTriangleIndex + i,
+                .triangleId = baseOrientedTriangleIndex + i,
                 .type = config.interfaceTypes[i],
                 .inverted = config.invertInterfaces[i]
             });
@@ -68,13 +68,13 @@ namespace MaxDoF::Common::LevelGraphs
         graph.nodes.push_back(
             Types::Level::Graph::Node
             {
-                .type = Types::Level::Graph::Node::Type::Tetrahedron,
-                .orientedInterfacesKeys = Types::Level::Graph::Node::OrientedTriangleKeys
+                .type = Types::Level::Graph::Node::Type::cTetrahedron,
+                .orientedTriangleKeys = Types::Level::Graph::Node::OrientedTriangleKeys
                 {
-                    graph.orientedTriangles.size(),
-                    graph.orientedTriangles.size() + 1,
-                    graph.orientedTriangles.size() + 2,
-                    graph.orientedTriangles.size() + 3
+                    baseOrientedTriangleIndex,
+                    baseOrientedTriangleIndex + 1,
+                    baseOrientedTriangleIndex + 2,
+                    baseOrientedTriangleIndex + 3
                 }
             }
         );

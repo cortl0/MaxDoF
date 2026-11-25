@@ -14,7 +14,7 @@ namespace MaxDoF::Common::Maps
     void DeathmatchSpaceGraphGenerator::GenerateGraph(Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 10.0f;
-        const auto& interfacesBaseIndex = graph.orientedTriangles.size();
+        const auto& nodesBaseIndex = graph.nodes.size();
         LevelGraphs::Tetrahedron tetrahedron;
         LevelGraphs::Pipe pipe;
 
@@ -46,16 +46,18 @@ namespace MaxDoF::Common::Maps
 
         for (size_t i = 0; i < 4; ++i)
         {
-            pipe.SetTriangleKeys({
-                    graph.orientedTriangles[interfacesBaseIndex + i].triangleId,
-                    graph.orientedTriangles[interfacesBaseIndex + i + 4].triangleId
-            });
+            const auto& tetrahedronNode0 = graph.nodes[nodesBaseIndex];
+            const auto& tetrahedronNode1 = graph.nodes[nodesBaseIndex + 1];
             pipe.FillGraph(graph,
                 {
                     {false, true}, true,
                     {
                         Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                        Types::Level::Graph::OrientedTriangle::Type::UnDefined
+                        Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                    },
+                    {
+                        tetrahedronNode0.orientedTriangleKeys[i],
+                        tetrahedronNode1.orientedTriangleKeys[i]
                     }
                 }
             );

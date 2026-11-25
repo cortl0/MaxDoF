@@ -8,6 +8,7 @@
 #include "Common/Meshes/Constants.h"
 #include "Common/Meshes/Triangle.h"
 #include "Common/Utils/PipeMath.h"
+#include "Common/Utils/PipeSplinePlanner.h"
 
 namespace MaxDoF::Common::Maps
 {
@@ -18,45 +19,53 @@ namespace MaxDoF::Common::Maps
         const LevelGraphs::Pipe::Config& config
     )
     {
-        // const auto& interfacesBaseIndex = graph.triangles.size();
-        LevelGraphs::Triangle triangle;
-        const float cPipeRadius = LevelGraph::cMinTriangleEdgeLength * 2.0;
-        const float cPipeLength = 10.0f;
-        const Types::PhysPose p0{{0.0, 0.0, -cPipeLength}, JPH::Quat::sIdentity()};
-        Types::PhysPose p1{p0};
-        Types::PhysPose p2{p1};
-        Types::PhysPose p3{p1};
+        const float cPipeDiameter = LevelGraph::cMinTriangleEdgeLength * 5.0f;
+        const float cPipeRadius   = cPipeDiameter * 0.5f;
 
+        const Types::PhysPose startPose{{50.0, 50.0, 50.0}, JPH::Quat::sIdentity()};
+        const Types::PhysPose endPose{halfSize, endRotation};
+
+        const auto plan = Utils::PipeSplinePlanner::Plan(
+            startPose,
+            endPose,
+            {
+                .pipeDiameter      = cPipeDiameter,
+                .maxTurnDeg        = 30.0f,
+                .maxTwistPerSegDeg = 10.0f
+            }
+        );
+
+        LevelGraphs::Triangle triangle;
         LevelGraphs::Pipe pipe;
 
-        for(int i = 0; i < 100; ++i)
+        for (size_t i = 0; i < plan.poses.size(); ++i)
         {
             triangle.GenerateRegularTriangleVertices(cPipeRadius);
-            triangle.Translate(p1.position);
-            triangle.RotateAroundPivot(p1.position, p1.orientation);
-            triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false});
+            triangle.Translate(plan.poses[i].position);
+            triangle.RotateAroundPivot(plan.poses[i].position, plan.poses[i].orientation);
+            triangle.FillGraphVerticesAndCreateInterface(graph, {config.orientedTriangleTypes[0], false});
 
-            if(i > 1)
+            if (i > 0)
             {
-                pipe.SetTriangleKeys({graph.orientedTriangles.size() - 2, graph.orientedTriangles.size() - 1});
-                pipe.FillGraph(graph, {{true, false}, true,
-                    {
-                        Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                        Types::Level::Graph::OrientedTriangle::Type::SolidRock
-                    }}
-                );
+                LevelGraphs::Pipe::Config cfg = config;
+                cfg.triangleKeys =
+                {
+                    graph.orientedTriangles.size() - 2,
+                    graph.orientedTriangles.size() - 1
+                };
+                pipe.FillGraph(graph, cfg);
             }
+        }
 
-            p2 = p1;
-            p3 = p1;
-            p2.orientation = Utils::rotateLocal(p2.orientation, Utils::getRandomEulerRotation30Deg());
-            p3.orientation = Utils::rotateLocal(p3.orientation, Utils::getRandomEulerRotation30Deg());
-            p2.position = p1.position + Utils::Vec3_To_RVec3(p2.orientation * Utils::RVec3_To_Vec3(JPH::RVec3{0.0, 0.0, -cPipeLength}));
-            p3.position = p1.position + Utils::Vec3_To_RVec3(p3.orientation * Utils::RVec3_To_Vec3(JPH::RVec3{0.0, 0.0, -cPipeLength}));
-            if(Utils::ChooseOptimalPose(p1, p2, p3) == 2)
-                p1 = p2;
-            else
-                p1 = p3;
+        if (plan.isClosedLoop && plan.poses.size() > 2)
+        {
+            LevelGraphs::Pipe::Config closeCfg = config;
+            closeCfg.triangleKeys =
+            {
+                graph.orientedTriangles.size() - 1,
+                0
+            };
+            pipe.FillGraph(graph, closeCfg);
         }
     }
 }

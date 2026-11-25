@@ -13,13 +13,12 @@ namespace MaxDoF::Common::LevelGraphs
     void Pipe::FillGraph(Types::Level::Graph& graph, const Config& config)
     {
         graph.nodes.push_back(
-            Types::Level::Graph::Node
             {
-                .type = Types::Level::Graph::Node::Type::PipeTunnel,
-                .orientedInterfacesKeys = Types::Level::Graph::Node::OrientedTriangleKeys
+                .type = Types::Level::Graph::Node::Type::cAntiprism,
+                .orientedTriangleKeys =
                 {
-                    graph.orientedTriangles.size() - 2,
-                    graph.orientedTriangles.size() - 1
+                    config.triangleKeys[0],
+                    config.triangleKeys[1]
                 },
                 .inverted = config.invertPipe
             }

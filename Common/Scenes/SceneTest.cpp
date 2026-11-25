@@ -166,68 +166,92 @@ namespace MaxDoF::Common::Scenes
 #ifdef MAXDOF_CLIENT_BUILD
         // createStaticLights();
 #endif
-        // createBoxes({0.0, 0.0, -50.0});
+        createBoxes({0.0, 0.0, -50.0});
 
         if(!mWorldManager.PhysicsHavePlace())
             return;
 
-        // mWorldManager.createSphere(Types3d::Entity::Type::cOtherObject, Types::PhysPose
-        //     {
-        //         .position = JPH::RVec3( 0.0f, 0.0f, -30.0f ),
-        //         .orientation = JPH::Quat::sIdentity()
-        //     }, 0.5f, 1000.0f);
+        mWorldManager.createSphere(Types::Entity::Type::cOtherObject, Types::PhysPose
+            {
+                .position = JPH::RVec3( 0.0f, 0.0f, -30.0f ),
+                .orientation = JPH::Quat::sIdentity()
+            }, 0.5f, 1000.0f);
 
         LevelGraphs::Tetrahedron tetrahedron;
         tetrahedron.GenerateVetrices(JPH::RVec3::sZero(), 1.0);
         auto places = tetrahedron.GetVertices();
-        // const double pipePos = 15.0;
-        // const double pipePosZ = 75.0;
+        const double pipePos = 15.0;
+        const double pipePosZ = 75.0;
 
         JPH::RVec3 tetrahedronOffset{places[0] * 100.0};
         JPH::RVec3 deathmatchOffset{places[1] * 140.0};
         JPH::RVec3 deathmatchSpaceOffset{places[2] * 100.0};
         JPH::RVec3 deathmatchAsteroidOffset{places[3] * 100.0};
 
-        // createBoxes(tetrahedronOffset);
-        // createBoxes(deathmatchOffset);
-        // createBoxes(deathmatchSpaceOffset);
-        // createBoxes(deathmatchAsteroidOffset);
+        createBoxes(tetrahedronOffset);
+        createBoxes(deathmatchOffset);
+        createBoxes(deathmatchSpaceOffset);
+        createBoxes(deathmatchAsteroidOffset);
 
         Types::Level::Graph levelGraph;
-        // Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
-        //     {{false, true}, true,
-        //     {
-        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock
-        //     }}
-        // );
-        // Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
-        //     {{false, true}, true,
-        //     {
-        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock
-        //     }}
-        // );
-        // Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
-        //     {{true, false}, false,
-        //     {
-        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock
-        //     }}
-        // );
-        // Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
-        //     {{true, false}, false,
-        //     {
-        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock
-        //     }}
-        // );
-        // Maps::TetrahedronGraphGenerator::GenerateInvertedGraph(levelGraph, -tetrahedronOffset);
-        // Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, tetrahedronOffset);
+        Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+            {
+                {false, true}, true,
+                {
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                },
+                {
+                    levelGraph.orientedTriangles.size(),
+                    levelGraph.orientedTriangles.size() + 1
+                }
+            }
+        );
+        Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
+            {
+                {false, true}, true,
+                {
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                },
+                {
+                    levelGraph.orientedTriangles.size(),
+                    levelGraph.orientedTriangles.size() + 1
+                }
+            }
+        );
+        Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+            {
+                {true, false}, false,
+                {
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                },
+                {
+                    levelGraph.orientedTriangles.size(),
+                    levelGraph.orientedTriangles.size() + 1
+                }
+            }
+        );
+        Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
+            {
+                {true, false}, false,
+                {
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                },
+                {
+                    levelGraph.orientedTriangles.size(),
+                    levelGraph.orientedTriangles.size() + 1
+                }
+            }
+        );
+        Maps::TetrahedronGraphGenerator::GenerateInvertedGraph(levelGraph, -tetrahedronOffset);
+        Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, tetrahedronOffset);
         Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, deathmatchOffset);
-        // Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, deathmatchSpaceOffset);
-        // Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, deathmatchAsteroidOffset);
-        // Maps::DeathmatchAsteroidRotGraphGenerator::GenerateGraph(levelGraph, JPH::RVec3::sZero());
+        Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, deathmatchSpaceOffset);
+        Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, deathmatchAsteroidOffset);
+        Maps::DeathmatchAsteroidRotGraphGenerator::GenerateGraph(levelGraph, JPH::RVec3::sZero());
 
         Types::MeshData meshData;
         Meshes::MeshBuilder::CreateMeshData(meshData, levelGraph);

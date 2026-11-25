@@ -42,7 +42,7 @@ namespace MaxDoF::Common::Types::Level
             Triangle::Key triangleId;
             Type type{Type::UnDefined};
 
-            // false — прямой обход вершин (как заложено в faceLayout)
+            // false — прямой обход вершин (как заложено в Triangle)
             // true — инвертированный обход вершин (зеркальный разворот)
             bool inverted{false};
         };
@@ -54,17 +54,12 @@ namespace MaxDoF::Common::Types::Level
 
             enum class Type
             {
-                PipeTunnel,  // Объёмный узел: Труба-антипризма (6 треугольников складок)
-                Tetrahedron  // Объёмный узел: Тетраэдр (4 треугольные грани комнаты)
+                cAntiprism,
+                cTetrahedron
             };
 
             Type type;
-
-            // Список ID плоских треугольников-стыков (TriangleInterface), которыми этот объём ограничен.
-            // Для PipeTunnel — строго до 2-х интерфейсов (вход и выход).
-            // Для Tetrahedron — строго 4 интерфейса (как открытых, так и глухих).
-            // Единый вектор ориентированных стыков-интерфейсов для любых фигур
-            OrientedTriangleKeys orientedInterfacesKeys;
+            OrientedTriangleKeys orientedTriangleKeys;
             bool inverted{false};
         };
 
@@ -73,9 +68,9 @@ namespace MaxDoF::Common::Types::Level
         using Triangles = std::vector<Triangle>;
         using Vertices = std::vector<Vertex>;
 
-        Nodes nodes; // Все материальные комнаты, коридоры и тупики
-        OrientedTriangles orientedTriangles;
-        Triangles triangles; // Все плоские швы, стены и порталы между ними
-        Vertices vertices; // Сквозной массив точек графа. Все сущности должны ссылаться на него и не иметь своихточек
+        Nodes nodes; // Сквозной массив узлов
+        OrientedTriangles orientedTriangles; // Сквозной массив ориентированных треугольникев
+        Triangles triangles; // Сквозной массив треугольникев
+        Vertices vertices; // Сквозной массив точек
     };
 }

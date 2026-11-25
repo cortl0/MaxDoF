@@ -23,23 +23,10 @@
         {
             InvertInterfaces invertInterfaces;
             bool invertPipe;
-            OrientedTriangleTypes interfaceTypes;
+            OrientedTriangleTypes orientedTriangleTypes;
+            TriangleKeys triangleKeys;
         };
 
-    private:
-        TriangleKeys triangleKeys;
-        // TrianglesVerticesIndices interfaces
-        // {{
-        //     {0, 1, 2}, // Торец 0 Передний
-        //     {3, 4, 5}  // Торец 1 Задний
-        // }};
-
-    public:
-        // const TrianglesVerticesIndices& GetInterfaces() const noexcept { return interfaces; }
-        // const Vertices& GetVertices() const noexcept { return vertices; }
-        // void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
-        void SetTriangleKeys(const TriangleKeys& Keys){ triangleKeys = Keys; }
-        // void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
         void FillGraph(Types::Level::Graph&, const Config&);
     };
 }

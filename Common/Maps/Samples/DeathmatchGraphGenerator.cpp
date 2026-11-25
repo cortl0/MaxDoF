@@ -15,7 +15,7 @@ namespace MaxDoF::Common::Maps
     void DeathmatchGraphGenerator::GenerateGraph(Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 50.0f;
-        const auto& interfacesBaseIndex = graph.orientedTriangles.size();
+        const auto& nodesBaseIndex = graph.nodes.size();
         LevelGraphs::Tetrahedron tetrahedron;
         LevelGraphs::Triangle triangle;
         LevelGraphs::Pipe pipe;
@@ -35,21 +35,25 @@ namespace MaxDoF::Common::Maps
             }
         );
 
-        for (size_t i = 0; i < 1; ++i)
+        for (std::size_t i = 0; i < 4; ++i)
         {
-            triangle.SetVertices(graph, graph.triangles[graph.orientedTriangles[interfacesBaseIndex + i].triangleId]);
+            const auto& tetrahedronNode = graph.nodes[nodesBaseIndex];
+            triangle.SetVertices(graph,
+                graph.triangles[
+                    graph.orientedTriangles[tetrahedronNode.orientedTriangleKeys[i]].triangleId]
+            );
             triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);
-            triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::OpenSpace, false});
-            pipe.SetTriangleKeys({
-                    graph.orientedTriangles[interfacesBaseIndex + i].triangleId,
-                    graph.orientedTriangles[interfacesBaseIndex + i + 4].triangleId
-            });
+            triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false});
             pipe.FillGraph(graph,
                 {
                     {true, false}, false,
                     {
                         Types::Level::Graph::OrientedTriangle::Type::UnDefined,
                         Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                    },
+                    {
+                        tetrahedronNode.orientedTriangleKeys[i],
+                        graph.orientedTriangles.size() - 1
                     }
                 }
             );

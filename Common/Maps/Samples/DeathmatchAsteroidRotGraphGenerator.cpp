@@ -16,6 +16,7 @@ namespace MaxDoF::Common::Maps
     {
         const float cArenaRadius = 5.0f;
         const auto& interfacesBaseIndex = graph.orientedTriangles.size();
+        const auto& nodesBaseIndex = graph.nodes.size();
         LevelGraphs::Tetrahedron tetrahedron;
         LevelGraphs::Triangle triangle;
         LevelGraphs::Pipe pipe;
@@ -48,21 +49,22 @@ namespace MaxDoF::Common::Maps
 
         for (size_t i = 0; i < 4; ++i)
         {
+            const auto& tetrahedronNode = graph.nodes[nodesBaseIndex];
             triangle.SetVertices(graph, graph.triangles[graph.orientedTriangles[interfacesBaseIndex + i].triangleId]);
             auto normal = triangle.CalculateNormal();
             triangle.RotateAroundPivot(triangle.CalculateMiddle(), triangle.CalculateRotationQuat(-normal, -15.0f));
             triangle.Translate(-normal * cArenaRadius * 1.0);
             triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::OpenSpace, false});
-            pipe.SetTriangleKeys({
-                    graph.orientedTriangles[interfacesBaseIndex + i].triangleId,
-                    graph.orientedTriangles[interfacesBaseIndex + i + 4].triangleId
-            });
             pipe.FillGraph(graph,
                 {
                     {true, false}, false,
                     {
                         Types::Level::Graph::OrientedTriangle::Type::UnDefined,
                         Types::Level::Graph::OrientedTriangle::Type::UnDefined
+                    },
+                    {
+                        tetrahedronNode.orientedTriangleKeys[i],
+                        graph.orientedTriangles.size() - 1
                     }
                 }
             );
@@ -70,18 +72,18 @@ namespace MaxDoF::Common::Maps
 
         for (size_t i = 0; i < 4; ++i)
         {
-            pipe.SetTriangleKeys({
-                    graph.orientedTriangles[interfacesBaseIndex + 8 + i].triangleId,
-                    graph.orientedTriangles[interfacesBaseIndex + 4 + i].triangleId
-                // graph.triangles[interfacesBaseIndex + 8 + i].id,
-                // graph.triangles[interfacesBaseIndex + 4 + i].id
-            });
+            const auto& pipeNode = graph.nodes[nodesBaseIndex + 2 + i];
+            const auto& tetrahedronNode = graph.nodes[nodesBaseIndex + 1];
             pipe.FillGraph(graph,
                 {
                     {true, false}, false,
                     {
                         Types::Level::Graph::OrientedTriangle::Type::UnDefined,
                         Types::Level::Graph::OrientedTriangle::Type::UnDefined
+                    },
+                    {
+                        pipeNode.orientedTriangleKeys[1],
+                        tetrahedronNode.orientedTriangleKeys[i]
                     }
                 }
             );

@@ -161,26 +161,22 @@ namespace MaxDoF::Common::Meshes
             // =========================================================================
             // ЭТАП 1: СБОРКА СЛОЖНОЙ ОБЪЕМНОЙ ГЕОМЕТРИИ (СТЕНЫ ТРУБ)
             // =========================================================================
-            if(node.type == Graph::Node::Type::PipeTunnel)
+            if(node.type == Graph::Node::Type::cAntiprism)
             {
-                if(node.orientedInterfacesKeys.size() < 2)
+                if(node.orientedTriangleKeys.size() < 2)
                     MaxDoF_LOG_AND_ABORT("bad data")
 
                 // Натягиваем 6 боковых прямоугольников-складок
                 AddAntiprism(meshData, graph, node,
-                    graph.orientedTriangles[node.orientedInterfacesKeys[0]].triangleId,
-                    graph.orientedTriangles[node.orientedInterfacesKeys[1]].triangleId
+                    graph.orientedTriangles[node.orientedTriangleKeys[0]].triangleId,
+                    graph.orientedTriangles[node.orientedTriangleKeys[1]].triangleId
                 );
             }
         }
-        // Для тетраэдра на этом этапе ничего делать не нужно — у него нет боковых складок,
-        // его геометрия полностью состоит из плоских граней-интерфейсов!
 
         // =========================================================================
         // ЭТАП 2: УНИВЕРСАЛЬНАЯ СБОРКА ЗАГЛУШЕК ДЛЯ АБСОЛЮТНО ВСЕХ УЗЛОВ ГРАФА
         // =========================================================================
-        // Проходим по всем узлам еще раз и заставляем каждый из них честно
-        // проверить свои интерфейсы на наличие глухих тупиков
         for (const auto& orientedInterface : graph.orientedTriangles)// node.orientedInterfacesKeys)
         {
             const auto& face = graph.triangles[orientedInterface.triangleId];
