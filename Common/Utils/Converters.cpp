@@ -48,4 +48,4 @@ namespace MaxDoF::Common::Utils
 
         return localVelocity;
     }
-}  // namespace MaxDoF::Common::Utils
+}

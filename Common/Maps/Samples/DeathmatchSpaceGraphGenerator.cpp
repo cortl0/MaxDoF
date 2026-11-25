@@ -11,12 +11,12 @@
 
 namespace MaxDoF::Common::Maps
 {
-    void DeathmatchSpaceGraphGenerator::GenerateGraph(Common::Types::Level::Graph& graph, JPH::RVec3 offset)
+    void DeathmatchSpaceGraphGenerator::GenerateGraph(Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 10.0f;
-        const auto& interfacesBaseIndex = graph.triangles.size();
-        Common::LevelGraphs::Tetrahedron tetrahedron;
-        Common::LevelGraphs::Pipe pipe;
+        const auto& interfacesBaseIndex = graph.orientedTriangles.size();
+        LevelGraphs::Tetrahedron tetrahedron;
+        LevelGraphs::Pipe pipe;
 
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
@@ -46,9 +46,9 @@ namespace MaxDoF::Common::Maps
 
         for (size_t i = 0; i < 4; ++i)
         {
-            pipe.SetTriangleInterfaceKeys({
-                graph.triangles[interfacesBaseIndex + i].id,
-                graph.triangles[interfacesBaseIndex + i + 4].id
+            pipe.SetTriangleKeys({
+                    graph.orientedTriangles[interfacesBaseIndex + i].triangleId,
+                    graph.orientedTriangles[interfacesBaseIndex + i + 4].triangleId
             });
             pipe.FillGraph(graph,
                 {

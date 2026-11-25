@@ -10,29 +10,35 @@
 
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Vec3.h>
-
 #include "Common/Types/Types3d.h"
+
+#include <Jolt/Jolt.h>
+#include <Jolt/Math/Real.h>
 
 namespace MaxDoF::Common::Types::Level
 {
     struct Graph
     {
+        using Vertex = JPH::RVec3;
+        using VertexKey = std::size_t;
+        using TriangleVertices = std::array<Vertex, 3>;
+        using TriangleVertexKeys = std::array<VertexKey, 3>;
+        using UserDataType = JPH::uint64;
+
+        enum class EntityType : UserDataType
+        {
+            cUndefined,
+            cAsteroid,
+            cShip,
+            cBullet,
+            cOtherObject
+        };
+
         struct Triangle
         {
             using Key = std::size_t;
 
-            Key id;
-            Types3d::TriangleVerticesIndices verticesIndices;
-
-            void Print() const
-            {
-                std::cout
-                    << "====TriangleInterface id: " << std::to_string(id)<< std::endl
-                    << std::to_string(verticesIndices[0]) << std::endl
-                    << std::to_string(verticesIndices[1]) << std::endl
-                    << std::to_string(verticesIndices[2]) << std::endl
-                    << "====" << std::endl;
-            }
+            TriangleVertexKeys verticesIndices;
         };
 
         struct OrientedTriangle
@@ -46,7 +52,7 @@ namespace MaxDoF::Common::Types::Level
                 UnDefined           // Неопределено
             };
 
-            Triangle::Key id;
+            Triangle::Key triangleId;
             Type type{Type::UnDefined};
 
             // false — прямой обход вершин (как заложено в faceLayout)
@@ -65,7 +71,6 @@ namespace MaxDoF::Common::Types::Level
                 Tetrahedron  // Объёмный узел: Тетраэдр (4 треугольные грани комнаты)
             };
 
-            Key id;
             Type type;
 
             // Список ID плоских треугольников-стыков (TriangleInterface), которыми этот объём ограничен.
@@ -79,28 +84,11 @@ namespace MaxDoF::Common::Types::Level
         using Nodes = std::vector<Node>;
         using OrientedTriangles = std::vector<OrientedTriangle>;
         using Triangles = std::vector<Triangle>;
-        using Vertices = std::vector<Types3d::Vertex>;
+        using Vertices = std::vector<Vertex>;
 
         Nodes nodes; // Все материальные комнаты, коридоры и тупики
         OrientedTriangles orientedTriangles;
         Triangles triangles; // Все плоские швы, стены и порталы между ними
         Vertices vertices; // Сквозной массив точек графа. Все сущности должны ссылаться на него и не иметь своихточек
-
-        void PrintVertices()
-        {
-            for(auto i = vertices.size() - vertices.size(); i < vertices.size(); ++i)
-            std::cout
-                << "====PureLevelGraph::Vertex id: " << std::to_string(i)<< std::endl
-                << std::to_string(vertices[i].GetX()) << std::endl
-                << std::to_string(vertices[i].GetY()) << std::endl
-                << std::to_string(vertices[i].GetZ()) << std::endl
-                << "====" << std::endl;
-        }
-
-        void PrintInterfaces()
-        {
-            for(const auto& i : triangles)
-                i.Print();
-        }
     };
 }

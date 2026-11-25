@@ -14,32 +14,32 @@
     class Pipe : public Primitive
     {
     public:
-        using Vertices = std::array<Types3d::TriangleVertices, 2>;
-        using TrianglesVerticesIndices = std::array<Types3d::TriangleVerticesIndices, 2>;
-        using TriangleInterfaceKeys = std::array<Types::Level::Graph::Triangle::Key, 2>;
-        using InterfaceTypes = std::array<Types::Level::Graph::OrientedTriangle::Type, 2>;
+        using Vertices = std::array<Types::Level::Graph::TriangleVertices, 2>;
+        using TrianglesVerticesIndices = std::array<Types::Level::Graph::TriangleVertexKeys, 2>;
+        using TriangleKeys = std::array<Types::Level::Graph::Triangle::Key, 2>;
+        using OrientedTriangleTypes = std::array<Types::Level::Graph::OrientedTriangle::Type, 2>;
         using InvertInterfaces = std::array<bool, 2>;
 
         struct Config
         {
             InvertInterfaces invertInterfaces;
             bool invertPipe;
-            InterfaceTypes interfaceTypes;
+            OrientedTriangleTypes interfaceTypes;
         };
 
     private:
-        TriangleInterfaceKeys mTriangleInterfaceKeys;
-        TrianglesVerticesIndices interfaces
-        {{
-            {0, 1, 2}, // Торец 0 Передний
-            {3, 4, 5}  // Торец 1 Задний
-        }};
+        TriangleKeys triangleKeys;
+        // TrianglesVerticesIndices interfaces
+        // {{
+        //     {0, 1, 2}, // Торец 0 Передний
+        //     {3, 4, 5}  // Торец 1 Задний
+        // }};
 
     public:
         // const TrianglesVerticesIndices& GetInterfaces() const noexcept { return interfaces; }
         // const Vertices& GetVertices() const noexcept { return vertices; }
         // void SetInterfaces(const TrianglesVerticesIndices& interfaces){ this->interfaces = interfaces; }
-        void SetTriangleInterfaceKeys(const TriangleInterfaceKeys& Keys){ mTriangleInterfaceKeys = Keys; }
+        void SetTriangleKeys(const TriangleKeys& Keys){ triangleKeys = Keys; }
         // void SetVertices(const Vertices& vertices){ this->vertices = vertices; }
         void FillGraph(Types::Level::Graph&, const Config&);
     };

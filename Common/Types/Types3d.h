@@ -5,31 +5,14 @@
 
 #pragma once
 
-#include <iostream>
+#include <vector>
 
-#include <Jolt/Jolt.h>
-#include <Jolt/Math/Real.h>
-
-namespace MaxDoF::Common::Types3d
+namespace MaxDoF::Common::Types
 {
-    using UserDataType = JPH::uint64;
-
-    enum class EntityType : UserDataType
-    {
-        cUndefined,
-        cAsteroid,
-        cShip,
-        cBullet,
-        cOtherObject
-    };
-
-    using Vertex = JPH::RVec3;
-    using TriangleVertices = std::array<Vertex, 3>;
-    using VerticesIndexKey = std::size_t;
-    using TriangleVerticesIndices = std::array<VerticesIndexKey, 3>;
-
     struct MeshData
     {
+        using VertexKey = std::size_t;
+
         struct Vertex
         {
             double x, y, z;
@@ -39,8 +22,8 @@ namespace MaxDoF::Common::Types3d
         };
 
         using Vertices = std::vector<Vertex>;
-        using VerticeIndices = std::vector<VerticesIndexKey>;
+        using VertexKeys = std::vector<VertexKey>;
         Vertices vertices;
-        VerticeIndices indices;
+        VertexKeys vertexKeys;
     };
 }

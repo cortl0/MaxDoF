@@ -34,7 +34,7 @@ namespace MaxDoF::Game::World
     {
     }
 
-    void Graphics::_notifyGraphicsSystem( MaxDoF::Game::Core::MaxDoFGraphicsSystem* graphicsSystem)
+    void Graphics::_notifyGraphicsSystem(Core::MaxDoFGraphicsSystem* graphicsSystem)
     {
         mGraphicsSystem = graphicsSystem;
     }
@@ -184,7 +184,7 @@ namespace MaxDoF::Game::World
         createMaterials();
         Utils::createProceduralSphereV2(sceneManager, cOrtSphereMeshName, 0.5f, 16, 16);
         Utils::createProceduralCubeV2(sceneManager, cOrtCubeMeshName, 0.5f, 0.5f, 0.5f);
-        //Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, MaxDoF::Common::Types::mMeshData);
+        //Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, Common::Types::mMeshData);
         printAllMaterials();
 
         // Ogre::Item* item = sceneManager->createItem("cube_d.mesh");
@@ -205,12 +205,12 @@ namespace MaxDoF::Game::World
         return node;
     }
 
-    Ogre::SceneNode* Graphics::createMesh(const Common::Types3d::MeshData& meshData)
+    Ogre::SceneNode* Graphics::createMesh(const Common::Types::MeshData& meshData)
     {
         auto* sceneManager = mGraphicsSystem->getSceneManager();
         Utils::createMeshFromMeshData(sceneManager, cAsteroidMeshName, meshData);
 
-        return createShape(cAsteroidMeshName, MaxDoF::Common::Types::GraphPose{
+        return createShape(cAsteroidMeshName, Common::Types::GraphPose{
             .position = Ogre::Vector3::ZERO,
             .orientation = Ogre::Quaternion::IDENTITY
         });

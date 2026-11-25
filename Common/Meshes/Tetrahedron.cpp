@@ -41,22 +41,33 @@ namespace MaxDoF::Common::LevelGraphs
     void Tetrahedron::FillGraph(Types::Level::Graph& graph, const Config& config)
     {
         const auto baseVertexIndex = graph.vertices.size();
-        const auto baseInterfaceIndex = graph.triangles.size();
+        const auto baseTriangleIndex = graph.triangles.size();
 
         for(const auto& vertex : vertices)
             graph.vertices.push_back(vertex);
 
         for(const auto& interface : interfaces)
-            graph.triangles.push_back(Types::Level::Graph::Triangle{
-                .id = graph.triangles.size(),
-                .verticesIndices = Types3d::TriangleVerticesIndices{interface[0] + baseVertexIndex, interface[1] + baseVertexIndex, interface[2] + baseVertexIndex}
-            }
-        );
+            graph.triangles.push_back
+            ({
+                .verticesIndices =
+                {
+                    interface[0] + baseVertexIndex,
+                    interface[1] + baseVertexIndex,
+                    interface[2] + baseVertexIndex
+                }
+            });
+
+        for(std::size_t i = 0; i < 4; ++i)
+            graph.orientedTriangles.push_back
+            ({
+                .triangleId = baseTriangleIndex + i,
+                .type = config.interfaceTypes[i],
+                .inverted = config.invertInterfaces[i]
+            });
 
         graph.nodes.push_back(
             Types::Level::Graph::Node
             {
-                .id = graph.nodes.size(),
                 .type = Types::Level::Graph::Node::Type::Tetrahedron,
                 .orientedInterfacesKeys = Types::Level::Graph::Node::OrientedTriangleKeys
                 {
@@ -67,18 +78,5 @@ namespace MaxDoF::Common::LevelGraphs
                 }
             }
         );
-
-        for(std::size_t i = 0; i < 4; ++i)
-        {
-            graph.orientedTriangles.push_back
-            (
-                Types::Level::Graph::OrientedTriangle
-                {
-                    .id = baseInterfaceIndex + i,
-                    .type = config.interfaceTypes[i],
-                    .inverted = config.invertInterfaces[i]
-                }
-            );
-        }
     }
 }

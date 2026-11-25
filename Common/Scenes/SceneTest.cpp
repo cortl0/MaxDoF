@@ -37,7 +37,10 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(-mapHalfSize, 0.0f, 0.0f),
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(
+                Types::Level::Graph::EntityType::cAsteroid, pose,
+                JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false
+            );
         }
 
         {
@@ -48,7 +51,10 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(mapHalfSize, 0.0f, 0.0f), // Смещение вправо по X
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(
+                Types::Level::Graph::EntityType::cAsteroid, pose,
+                JPH::Vec3(mapWallHalfThickness, mapHalfSize, mapHalfSize), 10000.0f, false
+            );
         }
 
         {
@@ -59,7 +65,10 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(0.0f, -mapHalfSize, 0.0f), // Смещение вниз по Y
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(
+                Types::Level::Graph::EntityType::cAsteroid, pose,
+                JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false
+            );
         }
 
         {
@@ -70,7 +79,10 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(0.0f, mapHalfSize, 0.0f), // Смещение вверх по Y
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false);
+            mWorldManager.createCube(
+                Types::Level::Graph::EntityType::cAsteroid, pose,
+                JPH::Vec3(mapHalfSize, mapWallHalfThickness, mapHalfSize), 10000.0f, false
+            );
         }
 
         {
@@ -81,7 +93,10 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(0.0f, 0.0f, -mapHalfSize), // Смещение назад по Z
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
+            mWorldManager.createCube(
+                Types::Level::Graph::EntityType::cAsteroid, pose,
+                JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false
+            );
         }
 
         {
@@ -92,7 +107,10 @@ namespace MaxDoF::Common::Scenes
                 .position = JPH::RVec3(0.0f, 0.0f, mapHalfSize), // Смещение вперед по Z
                 .orientation = JPH::Quat::sIdentity()
             };
-            mWorldManager.createCube(Common::Types3d::EntityType::cAsteroid, pose, JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false);
+            mWorldManager.createCube(
+                Types::Level::Graph::EntityType::cAsteroid, pose,
+                JPH::Vec3(mapHalfSize, mapHalfSize, mapWallHalfThickness), 10000.0f, false
+            );
         }
     }
 
@@ -124,7 +142,7 @@ namespace MaxDoF::Common::Scenes
                     if(!mWorldManager.PhysicsHavePlace())
                         return;
 
-                    mWorldManager.createCube(Common::Types3d::EntityType::cOtherObject,
+                    mWorldManager.createCube(Types::Level::Graph::EntityType::cOtherObject,
                         {
                             .position = JPH::RVec3(offset.GetX() + i * 1.1f, offset.GetY() + j * 1.1f, offset.GetZ() + k * 1.1f),
                             .orientation = JPH::Quat::sIdentity()
@@ -141,77 +159,77 @@ namespace MaxDoF::Common::Scenes
         if(!mWorldManager.PhysicsHavePlace())
             return;
 
-        mShip = new Common::Ships::Ship(mWorldManager);
+        mShip = new Ships::Ship(mWorldManager);
 
         // createMapBoundaries();
 #ifdef MAXDOF_CLIENT_BUILD
         // createStaticLights();
 #endif
-        createBoxes({0.0, 0.0, -50.0});
+        // createBoxes({0.0, 0.0, -50.0});
 
         if(!mWorldManager.PhysicsHavePlace())
             return;
 
-        mWorldManager.createSphere(Common::Types3d::EntityType::cOtherObject, Types::PhysPose
-            {
-                .position = JPH::RVec3( 0.0f, 0.0f, -30.0f ),
-                .orientation = JPH::Quat::sIdentity()
-            }, 0.5f, 1000.0f);
+        // mWorldManager.createSphere(Types3d::EntityType::cOtherObject, Types::PhysPose
+        //     {
+        //         .position = JPH::RVec3( 0.0f, 0.0f, -30.0f ),
+        //         .orientation = JPH::Quat::sIdentity()
+        //     }, 0.5f, 1000.0f);
 
-        Common::LevelGraphs::Tetrahedron tetrahedron;
+        LevelGraphs::Tetrahedron tetrahedron;
         tetrahedron.GenerateVetrices(JPH::RVec3::sZero(), 1.0);
         auto places = tetrahedron.GetVertices();
-        const double pipePos = 15.0;
-        const double pipePosZ = 75.0;
+        // const double pipePos = 15.0;
+        // const double pipePosZ = 75.0;
 
         JPH::RVec3 tetrahedronOffset{places[0] * 100.0};
         JPH::RVec3 deathmatchOffset{places[1] * 140.0};
         JPH::RVec3 deathmatchSpaceOffset{places[2] * 100.0};
         JPH::RVec3 deathmatchAsteroidOffset{places[3] * 100.0};
 
-        createBoxes(tetrahedronOffset);
-        createBoxes(deathmatchOffset);
-        createBoxes(deathmatchSpaceOffset);
-        createBoxes(deathmatchAsteroidOffset);
+        // createBoxes(tetrahedronOffset);
+        // createBoxes(deathmatchOffset);
+        // createBoxes(deathmatchSpaceOffset);
+        // createBoxes(deathmatchAsteroidOffset);
 
-        Common::Types::Level::Graph levelGraph;
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
-            {{false, true}, true,
-            {
-                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock
-            }}
-        );
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
-            {{false, true}, true,
-            {
-                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock
-            }}
-        );
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
-            {{true, false}, false,
-            {
-                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock
-            }}
-        );
-        Common::Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
-            {{true, false}, false,
-            {
-                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                Common::Types::Level::Graph::OrientedTriangle::Type::SolidRock
-            }}
-        );
-        Common::Maps::TetrahedronGraphGenerator::GenerateInvertedGraph(levelGraph, -tetrahedronOffset);
-        Common::Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, tetrahedronOffset);
-        Common::Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, deathmatchOffset);
-        Common::Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, deathmatchSpaceOffset);
-        Common::Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, deathmatchAsteroidOffset);
-        Common::Maps::DeathmatchAsteroidRotGraphGenerator::GenerateGraph(levelGraph, JPH::RVec3::sZero());
+        Types::Level::Graph levelGraph;
+        // Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+        //     {{false, true}, true,
+        //     {
+        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock
+        //     }}
+        // );
+        // Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
+        //     {{false, true}, true,
+        //     {
+        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock
+        //     }}
+        // );
+        // Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+        //     {{true, false}, false,
+        //     {
+        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock
+        //     }}
+        // );
+        // Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
+        //     {{true, false}, false,
+        //     {
+        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+        //         Types::Level::Graph::OrientedTriangle::Type::SolidRock
+        //     }}
+        // );
+        // Maps::TetrahedronGraphGenerator::GenerateInvertedGraph(levelGraph, -tetrahedronOffset);
+        // Maps::TetrahedronGraphGenerator::GenerateGraph(levelGraph, tetrahedronOffset);
+        Maps::DeathmatchGraphGenerator::GenerateGraph(levelGraph, deathmatchOffset);
+        // Maps::DeathmatchSpaceGraphGenerator::GenerateGraph(levelGraph, deathmatchSpaceOffset);
+        // Maps::DeathmatchAsteroidGraphGenerator::GenerateGraph(levelGraph, deathmatchAsteroidOffset);
+        // Maps::DeathmatchAsteroidRotGraphGenerator::GenerateGraph(levelGraph, JPH::RVec3::sZero());
 
-        Common::Types3d::MeshData meshData;
-        MaxDoF::Common::Meshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
+        Types::MeshData meshData;
+        Meshes::MeshBuilder::CreateMeshData(meshData, levelGraph);
 
         if(!mWorldManager.PhysicsHavePlace())
             return;

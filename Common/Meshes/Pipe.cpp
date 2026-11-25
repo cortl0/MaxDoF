@@ -15,28 +15,14 @@ namespace MaxDoF::Common::LevelGraphs
         graph.nodes.push_back(
             Types::Level::Graph::Node
             {
-                .id = graph.nodes.size(),
                 .type = Types::Level::Graph::Node::Type::PipeTunnel,
                 .orientedInterfacesKeys = Types::Level::Graph::Node::OrientedTriangleKeys
                 {
-                    graph.orientedTriangles.size(),
-                    graph.orientedTriangles.size() + 1
+                    graph.orientedTriangles.size() - 2,
+                    graph.orientedTriangles.size() - 1
                 },
                 .inverted = config.invertPipe
             }
         );
-
-        for(std::size_t i = 0; i < 4; ++i)
-        {
-            graph.orientedTriangles.push_back
-            (
-                Types::Level::Graph::OrientedTriangle
-                {
-                    .id = mTriangleInterfaceKeys[i],
-                    .type = config.interfaceTypes[i],
-                    .inverted = config.invertInterfaces[i]
-                }
-            );
-        }
     }
 }

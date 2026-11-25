@@ -12,13 +12,13 @@
 
 namespace MaxDoF::Common::Maps
 {
-    void DeathmatchAsteroidGraphGenerator::GenerateGraph(Common::Types::Level::Graph& graph, JPH::RVec3 offset)
+    void DeathmatchAsteroidGraphGenerator::GenerateGraph(Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 10.0f;
-        const auto& interfacesBaseIndex = graph.triangles.size();
-        Common::LevelGraphs::Tetrahedron tetrahedron;
-        Common::LevelGraphs::Triangle triangle;
-        Common::LevelGraphs::Pipe pipe;
+        const auto& interfacesBaseIndex = graph.orientedTriangles.size();
+        LevelGraphs::Tetrahedron tetrahedron;
+        LevelGraphs::Triangle triangle;
+        LevelGraphs::Pipe pipe;
 
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
@@ -48,12 +48,12 @@ namespace MaxDoF::Common::Maps
 
         for (size_t i = 0; i < 4; ++i)
         {
-            triangle.SetVertices(graph, graph.triangles[interfacesBaseIndex + i]);
+            triangle.SetVertices(graph, graph.triangles[graph.orientedTriangles[interfacesBaseIndex + i].triangleId]);
             triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);
-            triangle.FillGraphVerticesAndCreateInterface(graph);
-            pipe.SetTriangleInterfaceKeys({
-                graph.triangles[interfacesBaseIndex + i].id,
-                graph.triangles[graph.triangles.size() - 1].id
+            triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::OpenSpace, false});
+            pipe.SetTriangleKeys({
+                    graph.orientedTriangles[interfacesBaseIndex + i].triangleId,
+                    graph.orientedTriangles[interfacesBaseIndex + i + 4].triangleId
             });
             pipe.FillGraph(graph,
                 {
@@ -68,9 +68,11 @@ namespace MaxDoF::Common::Maps
 
         for (size_t i = 0; i < 4; ++i)
         {
-            pipe.SetTriangleInterfaceKeys({
-                graph.triangles[interfacesBaseIndex + 8 + i].id,
-                graph.triangles[interfacesBaseIndex + 4 + i].id
+            pipe.SetTriangleKeys({
+                    graph.orientedTriangles[interfacesBaseIndex + 8 + i].triangleId,
+                    graph.orientedTriangles[interfacesBaseIndex + 4 + i].triangleId
+                // graph.triangles[interfacesBaseIndex + 8 + i].id,
+                // graph.triangles[interfacesBaseIndex + 4 + i].id
             });
             pipe.FillGraph(graph,
                 {

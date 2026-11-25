@@ -38,4 +38,4 @@ namespace MaxDoF::Game::Input
 
         return outData;
     }
-}  // namespace MaxDoF::Game::Input
+}

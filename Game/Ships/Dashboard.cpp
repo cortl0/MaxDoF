@@ -18,7 +18,7 @@ namespace MaxDoF::Game::Ships
         mDashboardNode->setPosition(position);
         mDashboardNode->pitch(-Ogre::Radian(position.y / position.z));
 
-        deskCube.node = mGraphics.createCube(MaxDoF::Common::Types::GraphPose{
+        deskCube.node = mGraphics.createCube(Common::Types::GraphPose{
             .position = {0.0f, 0.0f, 0.0f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
@@ -26,7 +26,7 @@ namespace MaxDoF::Game::Ships
         //deskCube.entity->setCastShadows(false);
         deskCube.node->setVisible(visible);
 
-        gyroscopeCube.node = mGraphics.createCube(MaxDoF::Common::Types::GraphPose{
+        gyroscopeCube.node = mGraphics.createCube(Common::Types::GraphPose{
             .position = {0.0f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, Ogre::Vector3{0.5f, 0.5f, 0.5f}, mDashboardNode);
@@ -34,7 +34,7 @@ namespace MaxDoF::Game::Ships
         //gyroscopeCube.entity->setCastShadows(false);
         gyroscopeCube.node->setVisible(visible);
 
-        angularVelocityCube.node = mGraphics.createSphere(MaxDoF::Common::Types::GraphPose{
+        angularVelocityCube.node = mGraphics.createSphere(Common::Types::GraphPose{
             .position = {-0.015f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, 0.5f, mDashboardNode);
@@ -42,7 +42,7 @@ namespace MaxDoF::Game::Ships
         //angularVelocityCube.entity->setCastShadows(false);
         angularVelocityCube.node->setVisible(visible);
 
-        velocityCube.node = mGraphics.createSphere(MaxDoF::Common::Types::GraphPose{
+        velocityCube.node = mGraphics.createSphere(Common::Types::GraphPose{
             .position = {0.015f, 0.0f, 0.015f},
             .orientation = Ogre::Quaternion::IDENTITY
         }, 0.5f, mDashboardNode);

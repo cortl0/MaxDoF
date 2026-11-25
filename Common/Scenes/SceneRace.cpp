@@ -26,22 +26,22 @@ namespace MaxDoF::Common::Scenes
         if(!mWorldManager.PhysicsHavePlace())
             return;
 
-        mShip = new Common::Ships::Ship(mWorldManager);
+        mShip = new Ships::Ship(mWorldManager);
 
-        Common::Types::Level::Graph graph;
-        Common::Maps::RaceGenerator::GenerateGraph(graph,
+        Types::Level::Graph graph;
+        Maps::RaceGenerator::GenerateGraph(graph,
             {0.0f, 0.0f, 0.0f}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
             {
                 {false, true}, true,
                 {
-                    Common::Types::Level::Graph::Graph::OrientedTriangle::Type::OpenSpace,
-                    Common::Types::Level::Graph::Graph::OrientedTriangle::Type::OpenSpace
+                    Types::Level::Graph::Graph::OrientedTriangle::Type::OpenSpace,
+                    Types::Level::Graph::Graph::OrientedTriangle::Type::OpenSpace
                 }
             }
         );
 
-        Common::Types3d::MeshData meshData;
-        MaxDoF::Common::Meshes::MeshBuilder::CreateMeshData(meshData, graph);
+        Types::MeshData meshData;
+        Meshes::MeshBuilder::CreateMeshData(meshData, graph);
 
         if(!mWorldManager.PhysicsHavePlace())
             return;

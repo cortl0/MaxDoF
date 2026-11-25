@@ -12,6 +12,7 @@
 
 #include "Common/Types/Poses.h"
 #include "Common/Types/Types3d.h"
+#include "Common/Types/LevelGraph.h"
 
 namespace JPH
 {
@@ -40,15 +41,15 @@ namespace MaxDoF::Common::World
         Physics();
         ~Physics();
 
-        JPH::BodyID createBox(Common::Types3d::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD);
-        JPH::BodyID createMesh(const Types3d::MeshData&);
-        JPH::BodyID createSphere(Common::Types3d::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD);
+        JPH::BodyID createBox(Types::Level::Graph::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD);
+        JPH::BodyID createMesh(const Types::MeshData&);
+        JPH::BodyID createSphere(Types::Level::Graph::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD);
         void destroyBody(JPH::BodyID);
         JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
         JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysicsSystem; }
         void initialize(unsigned int maxBodies);
         void setBodyInterface(JPH::BodyInterface* bodyInterface) { mBodyInterface = bodyInterface; }
-        JPH::BodyID setBodySettings(Common::Types3d::EntityType userData, const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD);
+        JPH::BodyID setBodySettings(Types::Level::Graph::EntityType userData, const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD);
         void update(float timeSinceLast);
     };
 }

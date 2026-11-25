@@ -20,17 +20,17 @@ namespace MaxDoF::Common::Meshes
         };
 
     public:
-        static void AddNonPlanarQuad(Common::Types3d::MeshData &meshData, bool reverseDiagonal,
+        static void AddNonPlanarQuad(Types::MeshData &meshData, bool reverseDiagonal,
             const UVVertex &a, const UVVertex &b, const UVVertex &c, const UVVertex &d);
-        static void AddAntiprism(Common::Types3d::MeshData &meshData, bool reverseDiagonals,
+        static void AddAntiprism(Types::MeshData &meshData, bool reverseDiagonals,
             const std::array<UVVertex, 3> &begin, const std::array<UVVertex, 3> &end);
-        static void AddTriangle(Common::Types3d::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2);
-        static void AddAntiprism(Common::Types3d::MeshData& meshData,
+        static void AddTriangle(Types::MeshData& meshData, const UVVertex& p0, const UVVertex& p1, const UVVertex& p2);
+        static void AddAntiprism(Types::MeshData& meshData,
             const Types::Level::Graph&,
             const Types::Level::Graph::Node& pipeNode,
-            const Types::Level::Graph::Triangle& begin,
-            const Types::Level::Graph::Triangle& end);
+            const Types::Level::Graph::Triangle::Key& begin,
+            const Types::Level::Graph::Triangle::Key& end);
 
-        static void CreateMeshData(Common::Types3d::MeshData&, const Common::Types::Level::Graph&);
+        static void CreateMeshData(Types::MeshData&, const Types::Level::Graph&);
     };
 }

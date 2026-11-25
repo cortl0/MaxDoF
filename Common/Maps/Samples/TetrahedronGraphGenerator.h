@@ -15,6 +15,6 @@ namespace MaxDoF::Common::Maps
         TetrahedronGraphGenerator() = delete;
 
         static void GenerateGraph(Types::Level::Graph&, JPH::RVec3 offset);
-        static void GenerateInvertedGraph(Common::Types::Level::Graph&, JPH::RVec3 offset);
+        static void GenerateInvertedGraph(Types::Level::Graph&, JPH::RVec3 offset);
     };
 }

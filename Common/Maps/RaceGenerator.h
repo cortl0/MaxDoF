@@ -19,7 +19,7 @@ namespace MaxDoF::Common::Maps
             Types::Level::Graph&,
             JPH::RVec3 halfSize,
             JPH::Quat endRotation,
-            const Common::LevelGraphs::Pipe::Config&
+            const LevelGraphs::Pipe::Config&
         );
     };
 }

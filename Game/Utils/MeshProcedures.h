@@ -13,6 +13,6 @@ namespace MaxDoF::Game::Utils
 {
     void createProceduralCubeV2( Ogre::SceneManager*, const Ogre::String &meshName, float halfX, float halfY, float halfZ );
     void createProceduralSphereV2( Ogre::SceneManager*, const Ogre::String& meshName, float radius, unsigned int rings, unsigned int segments );
-    void createMeshFromMeshData(Ogre::SceneManager *sceneManager, const Ogre::String &meshName, const MaxDoF::Common::Types3d::MeshData &meshData);
+    void createMeshFromMeshData(Ogre::SceneManager *sceneManager, const Ogre::String &meshName, const Common::Types::MeshData &meshData);
     void removeMesh(const Ogre::String& meshName);
 }

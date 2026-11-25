@@ -151,14 +151,14 @@ namespace MaxDoF::Game::Utils
         sceneManager->destroyManualObject(manual);
     }
 
-    void createMeshFromMeshData(Ogre::SceneManager* sceneManager, const Ogre::String& meshName, const MaxDoF::Common::Types3d::MeshData& meshData)
+    void createMeshFromMeshData(Ogre::SceneManager* sceneManager, const Ogre::String& meshName, const Common::Types::MeshData& meshData)
     {
         if (Ogre::MeshManager::getSingleton().resourceExists(meshName))
         {
             return;
         }
 
-        if (meshData.vertices.empty() || meshData.indices.empty())
+        if (meshData.vertices.empty() || meshData.vertexKeys.empty())
         {
             MaxDoF_LOG_AND_ABORT("bad data")
         }
@@ -167,20 +167,20 @@ namespace MaxDoF::Game::Utils
 
         // По нашему Flat-алгоритму количество вершин в ManualObject станет
         // строго равно количеству индексов, так как каждый треугольник получает свои уникальные вершины!
-        manual->estimateVertexCount(meshData.indices.size());
-        manual->estimateIndexCount(meshData.indices.size());
+        manual->estimateVertexCount(meshData.vertexKeys.size());
+        manual->estimateIndexCount(meshData.vertexKeys.size());
         manual->begin("CubeMaterial", Ogre::OT_TRIANGLE_LIST);
 
         // Счетчик добавленных графических вершин
-        Common::Types3d::VerticesIndexKey vertexCounter = 0;
+        Common::Types::MeshData::VertexKey vertexCounter = 0;
 
         // Идем строго тройками индексов (обрабатываем каждый треугольник отдельно)
-        for (size_t i = 0; i < meshData.indices.size(); i += 3)
+        for (size_t i = 0; i < meshData.vertexKeys.size(); i += 3)
         {
             // 1. Извлекаем исходные данные вершин треугольника из MeshData
-            const auto& v0 = meshData.vertices[meshData.indices[i]];
-            const auto& v1 = meshData.vertices[meshData.indices[i + 1]];
-            const auto& v2 = meshData.vertices[meshData.indices[i + 2]];
+            const auto& v0 = meshData.vertices[meshData.vertexKeys[i]];
+            const auto& v1 = meshData.vertices[meshData.vertexKeys[i + 1]];
+            const auto& v2 = meshData.vertices[meshData.vertexKeys[i + 2]];
 
             // 2. Строим Jolt-векторы позиций
             JPH::Vec3 p0(v0.x, v0.y, v0.z);

@@ -160,18 +160,22 @@ namespace MaxDoF::Common::World
 #endif
     }
 
-    Types::Entity& Manager::createCube(Common::Types3d::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
+    Types::Entity& Manager::createCube(
+        Types::Level::Graph::EntityType userData,
+        const Types::PhysPose& pose, const JPH::Vec3& halfSize,
+        float mass, bool dynamic, bool onCCD
+    )
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
-            mGraphics.createCube(MaxDoF::Game::Utils::PhysPoseToGraphPose(pose), MaxDoF::Game::Utils::JphVec3ToOgreVector3(halfSize)),
+            mGraphics.createCube(Game::Utils::PhysPoseToGraphPose(pose), Game::Utils::JphVec3ToOgreVector3(halfSize)),
 #endif
             mPhysics.createBox(userData, pose, halfSize, mass, dynamic, onCCD));
     }
 
-    Types::Entity& Manager::createMesh(const Common::Types3d::MeshData& meshData)
+    Types::Entity& Manager::createMesh(const Types::MeshData& meshData)
     {
-        if (meshData.vertices.empty() || meshData.indices.empty())
+        if (meshData.vertices.empty() || meshData.vertexKeys.empty())
         {
             MaxDoF_LOG_AND_ABORT("bad data")
         }
@@ -187,37 +191,40 @@ namespace MaxDoF::Common::World
             mPhysics.createMesh(meshData));
     }
 
-    Types::Entity& Manager::createSphere(Common::Types3d::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
+    Types::Entity& Manager::createSphere(
+        Types::Level::Graph::EntityType userData,
+        const Types::PhysPose& pose, float radius, float mass, bool onCCD
+    )
     {
         return createEntity(
 #ifdef MAXDOF_CLIENT_BUILD
-            mGraphics.createSphere( MaxDoF::Game::Utils::PhysPoseToGraphPose( pose ), radius ),
+            mGraphics.createSphere( Game::Utils::PhysPoseToGraphPose( pose ), radius ),
 #endif
             mPhysics.createSphere(userData, pose, radius, mass, onCCD));
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
-    void Manager::addMeshToAudio(const Common::Types3d::MeshData& meshData)
+    void Manager::addMeshToAudio(const Types::MeshData& meshData)
     {
         Game::Audio::AcousticWorld::Vertices wallVerts;
         wallVerts.reserve(meshData.vertices.size());
         Game::Audio::AcousticWorld::Triangles wallTris;
-        wallTris.reserve(meshData.indices.size() / 3);
+        wallTris.reserve(meshData.vertexKeys.size() / 3);
 
         for (const auto& v : meshData.vertices)
             wallVerts.push_back(IPLVector3{.x = static_cast<float>(v.x), .y = static_cast<float>(v.y), .z = static_cast<float>(v.z)});
 
-        if (meshData.indices.size() % 3 != 0)
+        if (meshData.vertexKeys.size() % 3 != 0)
             MaxDoF_LOG_AND_ABORT("bad data")
 
-        for (size_t i = 0; i + 2 < meshData.indices.size(); i += 3)
+        for (size_t i = 0; i + 2 < meshData.vertexKeys.size(); i += 3)
         {
-            if (i + 2 < meshData.indices.size())
+            if (i + 2 < meshData.vertexKeys.size())
             {
                 IPLTriangle ite{};
-                ite.indices[0] = static_cast<IPLint32>(meshData.indices[i]);
-                ite.indices[1] = static_cast<IPLint32>(meshData.indices[i + 1]);
-                ite.indices[2] = static_cast<IPLint32>(meshData.indices[i + 2]);
+                ite.indices[0] = static_cast<IPLint32>(meshData.vertexKeys[i]);
+                ite.indices[1] = static_cast<IPLint32>(meshData.vertexKeys[i + 1]);
+                ite.indices[2] = static_cast<IPLint32>(meshData.vertexKeys[i + 2]);
                 wallTris.push_back(ite);
             }
         }

@@ -16,7 +16,7 @@ namespace MaxDoF::Game::World
     {
     protected:
         UI::TextOverleyManager mTextOverleyManager;
-        MaxDoF::Game::Core::MaxDoFGraphicsSystem* mGraphicsSystem{ nullptr };
+        Core::MaxDoFGraphicsSystem* mGraphicsSystem{ nullptr };
         Ogre::SceneNode* globalStaticNode{ nullptr };
 
     public:
@@ -27,15 +27,15 @@ namespace MaxDoF::Game::World
         Graphics( const Ogre::String &helpDescription );
         ~Graphics();
 
-        MaxDoF::Game::Core::MaxDoFGraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
-        void _notifyGraphicsSystem(MaxDoF::Game::Core::MaxDoFGraphicsSystem*);
+        Core::MaxDoFGraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
+        void _notifyGraphicsSystem(Core::MaxDoFGraphicsSystem*);
         void destroyAllObjects(Ogre::SceneNode*);
         void destroyNodeRecursively(Ogre::SceneNode*);
         void initialize();
         void changeTexture(Ogre::Item*, const Ogre::String& newTextureFileName);
         void changeUniqueTexture(Ogre::Item*, const Ogre::String& newTextureFileName, const Ogre::String& uniqueMaterialName);
         Ogre::SceneNode* createCube(const Common::Types::GraphPose&, const Ogre::Vector3& halfSize, Ogre::SceneNode* parent = nullptr);
-        Ogre::SceneNode* createMesh(const Common::Types3d::MeshData& meshData);
+        Ogre::SceneNode* createMesh(const Common::Types::MeshData& meshData);
         Ogre::SceneNode* createPointLight(Ogre::Vector3 position);
         Ogre::SceneNode* createShape( const Ogre::String& meshName, const Common::Types::GraphPose&, Ogre::SceneNode* parent = nullptr);
         Ogre::SceneNode* createSphere(const Common::Types::GraphPose&, float radius, Ogre::SceneNode* parent = nullptr);

@@ -7,6 +7,10 @@
 
 #include <cmath>
 #include <algorithm>
+#include <random>
+
+#include <Jolt/Jolt.h>
+#include <Jolt/Math/Math.h>
 
 namespace MaxDoF::Common::Utils
 {
@@ -48,5 +52,66 @@ namespace MaxDoF::Common::Utils
 
     int ChooseOptimalPose(const Types::PhysPose& pose1, const Types::PhysPose& pose2, const Types::PhysPose& pose3) {
         return (TunnelCost(pose2, pose1) <= TunnelCost(pose3, pose1)) ? 2 : 3;
+    }
+
+    float getRandomFloat(float min, float max) {
+        // static гарантирует, что генератор инициализируется один раз,
+        // а не при каждом вызове функции
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+        
+        std::uniform_real_distribution<float> dis(min, max);
+        return dis(gen);
+    }
+
+    JPH::Quat getRandomEulerRotation30Deg()
+    {
+        static std::random_device rd;
+        static std::mt19937 gen(rd());
+
+        constexpr float max_rad = JPH::DegreesToRadians(30.0f);
+        std::uniform_real_distribution<float> dist(-max_rad, max_rad);
+
+        // Генерируем случайные углы для всех трёх осей (в радианах)
+        float pitch = dist(gen); // Тангаж (вращение вокруг X)
+        float yaw   = dist(gen); // Рысканье (вращение вокруг Y)
+        float roll  = dist(gen); // Крен (вращение вокруг Z)
+
+        // Собираем кватернион из углов Эйлера
+        return JPH::Quat::sEulerAngles(JPH::Vec3(pitch, yaw, roll));
+    }
+
+    JPH::Vec3 RVec3_To_Vec3(const JPH::RVec3& p)
+    {
+        return
+        {
+            static_cast<float>(p.GetX()),
+            static_cast<float>(p.GetY()),
+            static_cast<float>(p.GetZ())
+        };
+    }
+
+    JPH::RVec3 Vec3_To_RVec3(const JPH::Vec3& p)
+    {
+        return
+        {
+            static_cast<double>(p.GetX()),
+            static_cast<double>(p.GetY()),
+            static_cast<double>(p.GetZ())
+        };
+    }
+
+    // 1. Локальный поворот (относительно осей самого объекта)
+    // Например: повернуть самолёт вверх по его собственному тангажу
+    JPH::Quat rotateLocal(const JPH::Quat& base_rot, const JPH::Quat& delta_rot)
+    {
+        return (base_rot * delta_rot).Normalized();
+    }
+
+    // 2. Глобальный поворот (относительно мировых осей)
+    // Например: закрутить объект вокруг мировой вертикальной оси Y
+    JPH::Quat rotateGlobal(const JPH::Quat& base_rot, const JPH::Quat& delta_rot)
+    {
+        return (delta_rot * base_rot).Normalized();
     }
 }

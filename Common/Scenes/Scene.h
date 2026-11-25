@@ -15,15 +15,15 @@ namespace MaxDoF::Common::Scenes
     {
     protected:
         World::Manager& mWorldManager;
-        Common::Ships::Ship* mShip;
-        Common::GameLogic::BattleLogic mBattleLogic;
+        Ships::Ship* mShip;
+        GameLogic::BattleLogic mBattleLogic;
 
     public:
         Scene(World::Manager&);
         virtual ~Scene();
 
         virtual void CreateScene() = 0;
-        Common::Ships::Ship& GetShip() { return *mShip; }
+        Ships::Ship& GetShip() { return *mShip; }
         void Update();
     };
 }

@@ -10,10 +10,10 @@
 
 namespace MaxDoF::Common::Maps
 {
-    void TetrahedronGraphGenerator::GenerateGraph(Common::Types::Level::Graph& graph, JPH::RVec3 offset)
+    void TetrahedronGraphGenerator::GenerateGraph(Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 50.0f;
-        Common::LevelGraphs::Tetrahedron tetrahedron;
+        LevelGraphs::Tetrahedron tetrahedron;
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
             {
@@ -28,10 +28,10 @@ namespace MaxDoF::Common::Maps
         );
     }
 
-    void TetrahedronGraphGenerator::GenerateInvertedGraph(Common::Types::Level::Graph& graph, JPH::RVec3 offset)
+    void TetrahedronGraphGenerator::GenerateInvertedGraph(Types::Level::Graph& graph, JPH::RVec3 offset)
     {
         const float cArenaRadius = 10.0f;
-        Common::LevelGraphs::Tetrahedron tetrahedron;
+        LevelGraphs::Tetrahedron tetrahedron;
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
             {

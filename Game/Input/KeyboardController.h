@@ -3,8 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_Game_Input_KeyboardController_H_
-#define MaxDoF_Game_Input_KeyboardController_H_
+#pragma once
 
 #include <SDL_events.h>
 #include <OgreVector3.h>
@@ -40,6 +39,4 @@ namespace MaxDoF::Game::Input
         /// Сброс состояний (опционально, например при потере фокуса окна)
         void reset();
     };
-}  // namespace MaxDoF::Game::Input
-
-#endif
+}

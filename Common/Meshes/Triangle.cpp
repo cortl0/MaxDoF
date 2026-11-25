@@ -20,7 +20,7 @@ namespace MaxDoF::Common::LevelGraphs
         return CalculateMiddle(vertices);
     }
 
-    JPH::RVec3 Triangle::CalculateMiddle(const Types3d::TriangleVertices& v) const
+    JPH::RVec3 Triangle::CalculateMiddle(const Types::Level::Graph::TriangleVertices& v) const
     {
         JPH::RVec3 result = v[0];
 
@@ -35,7 +35,7 @@ namespace MaxDoF::Common::LevelGraphs
         return CalculateNormal(vertices);
     }
 
-    JPH::RVec3 Triangle::CalculateNormal(const Types3d::TriangleVertices& v) const
+    JPH::RVec3 Triangle::CalculateNormal(const Types::Level::Graph::TriangleVertices& v) const
     {
         return (v[1] - v[0]).Cross((v[2] - v[0])).Normalized();
     }
@@ -65,17 +65,22 @@ namespace MaxDoF::Common::LevelGraphs
             graph.vertices.push_back(vertex);
     }
 
-    void Triangle::FillGraphVerticesAndCreateInterface(Types::Level::Graph& graph) const
+    void Triangle::FillGraphVerticesAndCreateInterface(Types::Level::Graph& graph, const Config& config) const
     {
         const auto baseVertexIndex = graph.vertices.size();
         FillGraphVertices(graph);
 
-        graph.triangles.push_back(Types::Level::Graph::Triangle
-            {
-                .id = graph.triangles.size(),
-                .verticesIndices = {baseVertexIndex, baseVertexIndex + 1, baseVertexIndex + 2}
-            }
-        );
+        graph.triangles.push_back
+        ({
+            .verticesIndices = {baseVertexIndex, baseVertexIndex + 1, baseVertexIndex + 2}
+        });
+
+        graph.orientedTriangles.push_back
+        ({
+            .triangleId = graph.triangles.size() - 1,
+            .type = config.type,
+            .inverted = config.inverted
+        });
     }
 
     void Triangle::GenerateRegularTriangleVertices(float radius)

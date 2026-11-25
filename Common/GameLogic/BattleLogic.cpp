@@ -4,10 +4,11 @@
 // See LICENSE file in the project root for full license information
 
 #include "Common/GameLogic/BattleLogic.h"
+#include "Common/Types/LevelGraph.h"
 
 namespace MaxDoF::Common::GameLogic
 {
-    BattleLogic::BattleLogic(Common::World::Manager& worldManager) : mWorldManager(worldManager)
+    BattleLogic::BattleLogic(World::Manager& worldManager) : mWorldManager(worldManager)
     {
     }
 
@@ -15,22 +16,25 @@ namespace MaxDoF::Common::GameLogic
     {
     }
 
-    bool BulletWith(const Types3d::EntityType type)
+    bool BulletWith(const Types::Level::Graph::EntityType type)
     {
-        return !(type == Types3d::EntityType::cAsteroid || type == Types3d::EntityType::cShip);
+        return !(
+            type == Types::Level::Graph::EntityType::cAsteroid ||
+            type == Types::Level::Graph::EntityType::cShip
+        );
     }
 
 #ifdef MAXDOF_CLIENT_BUILD
     void BattleLogic::CreateSound(uint64_t userData, const JPH::RVec3& contactPoint, const JPH::BodyID& bodyId)
     {
-        if(static_cast<Types3d::EntityType>(userData) == Types3d::EntityType::cBullet)
+        if(static_cast<Types::Level::Graph::EntityType>(userData) == Types::Level::Graph::EntityType::cBullet)
         {
             auto position = mWorldManager.getBodyInterface()->GetPosition(bodyId);
             mWorldManager.CreateSound(position, Game::Types::Sounds::cExplosion);
             return;
         }
 
-        if(static_cast<Types3d::EntityType>(userData) == Types3d::EntityType::cShip)
+        if(static_cast<Types::Level::Graph::EntityType>(userData) == Types::Level::Graph::EntityType::cShip)
         {
             auto position = (contactPoint + mWorldManager.getBodyInterface()->GetPosition(bodyId)) / 2.0f;
             mWorldManager.CreateSound(position, Game::Types::Sounds::cBarrel);
@@ -39,14 +43,17 @@ namespace MaxDoF::Common::GameLogic
     }
 #endif
 
-    std::pair<bool, bool> NeedDestroy(const Types3d::EntityType type1, const Types3d::EntityType type2)
+    std::pair<bool, bool> NeedDestroy(
+        const Types::Level::Graph::EntityType type1,
+        const Types::Level::Graph::EntityType type2
+    )
     {
-        if(type1 == Types3d::EntityType::cBullet)
+        if(type1 == Types::Level::Graph::EntityType::cBullet)
         {
             return {true, BulletWith(type2)};
         }
 
-        if(type2 == Types3d::EntityType::cBullet)
+        if(type2 == Types::Level::Graph::EntityType::cBullet)
         {
             return {BulletWith(type1), true};
         }
@@ -62,8 +69,8 @@ namespace MaxDoF::Common::GameLogic
             auto index2 = contact.body2.GetIndex();
 
             std::pair<bool, bool> needDestroy = NeedDestroy(
-                static_cast<Types3d::EntityType>(contact.userData1),
-                static_cast<Types3d::EntityType>(contact.userData2)
+                static_cast<Types::Level::Graph::EntityType>(contact.userData1),
+                static_cast<Types::Level::Graph::EntityType>(contact.userData2)
             );
 
 #ifdef MAXDOF_CLIENT_BUILD

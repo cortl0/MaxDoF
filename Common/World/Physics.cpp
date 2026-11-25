@@ -104,7 +104,10 @@ namespace MaxDoF::Common::World
         );
     }
 
-    JPH::BodyID Physics::setBodySettings(Common::Types3d::EntityType userData, const JPH::ShapeSettings::ShapeResult &shapeResult, const Types::PhysPose &pose, float mass, bool dynamic, bool onCCD)
+    JPH::BodyID Physics::setBodySettings(
+        Types::Level::Graph::EntityType userData,
+        const JPH::ShapeSettings::ShapeResult &shapeResult,
+        const Types::PhysPose &pose, float mass, bool dynamic, bool onCCD)
     {
         JPH::BodyCreationSettings bodySettings(
             shapeResult.Get(),
@@ -127,7 +130,7 @@ namespace MaxDoF::Common::World
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createBox(Common::Types3d::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
+    JPH::BodyID Physics::createBox(Types::Level::Graph::EntityType userData, const Types::PhysPose& pose, const JPH::Vec3& halfSize, float mass, bool dynamic, bool onCCD)
     {
         JPH::BoxShapeSettings shapeSettings( halfSize );
         shapeSettings.mUserData = static_cast<JPH::uint64>(userData);
@@ -147,7 +150,7 @@ namespace MaxDoF::Common::World
         return settings;
     }
 
-    JPH::BodyID Physics::createMesh(const Types3d::MeshData &meshData)
+    JPH::BodyID Physics::createMesh(const Types::MeshData &meshData)
     {
         JPH::VertexList joltVertices;
         joltVertices.reserve(meshData.vertices.size());
@@ -157,15 +160,15 @@ namespace MaxDoF::Common::World
         }
 
         JPH::IndexedTriangleList joltTriangles;
-        joltTriangles.reserve(meshData.indices.size() / 3);
-        for (size_t i = 0; i < meshData.indices.size(); i += 3)
+        joltTriangles.reserve(meshData.vertexKeys.size() / 3);
+        for (size_t i = 0; i < meshData.vertexKeys.size(); i += 3)
         {
-            if (i + 2 < meshData.indices.size())
+            if (i + 2 < meshData.vertexKeys.size())
             {
                 joltTriangles.push_back(JPH::IndexedTriangle(
-                    meshData.indices[i],
-                    meshData.indices[i + 1],
-                    meshData.indices[i + 2]
+                    meshData.vertexKeys[i],
+                    meshData.vertexKeys[i + 1],
+                    meshData.vertexKeys[i + 2]
                 ));
             }
             else
@@ -179,13 +182,13 @@ namespace MaxDoF::Common::World
         JPH::Shape::ShapeResult shapeResult = meshSettings.Create();
         JPH::ShapeRefC mapShape = shapeResult.Get();
         auto bodySettings = CreateMeshBodySettings(mapShape);
-        bodySettings.mUserData = static_cast<JPH::uint64>(Common::Types3d::EntityType::cAsteroid);
+        bodySettings.mUserData = static_cast<JPH::uint64>(Types::Level::Graph::EntityType::cAsteroid);
 
         // Возвращаем ID тела статического уровня для контроля памяти (очистки при смене карты)
         return mBodyInterface->CreateAndAddBody(bodySettings, JPH::EActivation::Activate);
     }
 
-    JPH::BodyID Physics::createSphere(Common::Types3d::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
+    JPH::BodyID Physics::createSphere(Types::Level::Graph::EntityType userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD)
     {
         JPH::SphereShapeSettings shapeSettings(radius);
         shapeSettings.mUserData = static_cast<JPH::uint64>(userData);

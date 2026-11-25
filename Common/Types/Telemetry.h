@@ -3,8 +3,7 @@
 // Licensed under the GNU Affero General Public License v3.0 or later
 // See LICENSE file in the project root for full license information
 
-#ifndef MaxDoF_Common_Types_Telemetry_H_
-#define MaxDoF_Common_Types_Telemetry_H_
+#pragma once
 
 namespace MaxDoF::Common::Types
 {
@@ -21,6 +20,4 @@ namespace MaxDoF::Common::Types
         Vector localVelocity;
         Vector localAngularVelocity;
     };
-}  // namespace MaxDoF::Common::Types
-
-#endif
+}

@@ -94,7 +94,11 @@ namespace MaxDoF::Common::Ships
 
             Types::PhysPose projectilePose{shipPos + JPH::RVec3(globalForwardDirection) * (0.5f + bulletRadius + 0.1f), shipRot};
 
-            auto& bullet = mWorldManager.createSphere(Types3d::EntityType::cBullet, projectilePose, bulletRadius, bulletMass, true);
+            auto& bullet = mWorldManager.createSphere(
+                Types::Level::Graph::EntityType::cBullet,
+                projectilePose, bulletRadius, bulletMass, true
+            );
+
             JPH::Vec3 projectileImpulse = shipVelocity + (globalForwardDirection * bulletMass * 100.0f);
             bodyInterface->AddImpulse(bullet.physId, projectileImpulse);
 
@@ -126,8 +130,7 @@ namespace MaxDoF::Common::Ships
     Types::Entity& Ship::createShipEntity()
     {
         return mWorldManager.createSphere(
-            Common::Types3d::EntityType::cShip,
-            Common::Types::PhysPose
+            Types::Level::Graph::EntityType::cShip,
             {
                 .position = JPH::RVec3{0.0, 0.0, 0.0},
                 .orientation = JPH::Quat{0.0f, 0.0f, 0.0f, 1.0f}.Normalized()

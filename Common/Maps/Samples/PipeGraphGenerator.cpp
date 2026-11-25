@@ -15,10 +15,9 @@ namespace MaxDoF::Common::Maps
         Types::Level::Graph& graph,
         JPH::RVec3 halfSize,
         JPH::Quat endRotation,
-        const Common::LevelGraphs::Pipe::Config& config
+        const LevelGraphs::Pipe::Config& config
     )
     {
-        const auto& interfacesBaseIndex = graph.triangles.size();
         LevelGraphs::Triangle triangle0, triangle1;
         LevelGraphs::Pipe pipe;
         const float cPipeRadius = LevelGraph::cMinTriangleEdgeLength * 2.0;
@@ -30,9 +29,14 @@ namespace MaxDoF::Common::Maps
         triangle0.Translate(pBegin + halfSize);
         triangle1.RotateAroundPivot(pBegin, endRotation);
         triangle1.Translate(pEnd + halfSize);
-        triangle0.FillGraphVerticesAndCreateInterface(graph);
-        triangle1.FillGraphVerticesAndCreateInterface(graph);
-        pipe.SetTriangleInterfaceKeys({graph.triangles[interfacesBaseIndex].id, graph.triangles[interfacesBaseIndex + 1].id});
+        triangle0.FillGraphVerticesAndCreateInterface(graph, {config.interfaceTypes[0], config.invertInterfaces[0]});
+        triangle1.FillGraphVerticesAndCreateInterface(graph, {config.interfaceTypes[1], config.invertInterfaces[1]});
+        pipe.SetTriangleKeys(
+            {
+                graph.orientedTriangles[graph.orientedTriangles.size() - 2].triangleId,
+                graph.orientedTriangles[graph.orientedTriangles.size() - 1].triangleId
+            }
+        );
         pipe.FillGraph(graph, config);
     }
 }

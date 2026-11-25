@@ -13,19 +13,25 @@
     class Triangle
     {
     private:
-        Types3d::TriangleVertices vertices;
+        Types::Level::Graph::TriangleVertices vertices;
 
     public:
-        const Types3d::TriangleVertices& GetVertices() const noexcept { return vertices; }
-        void SetVertices(const Types3d::TriangleVertices& vertices){ this->vertices = vertices; }
+        struct Config
+        {
+            Types::Level::Graph::OrientedTriangle::Type type;
+            bool inverted;
+        };
+
+        const Types::Level::Graph::TriangleVertices& GetVertices() const noexcept { return vertices; }
+        void SetVertices(const Types::Level::Graph::TriangleVertices& vertices){ this->vertices = vertices; }
         void SetVertices(const Types::Level::Graph&, const Types::Level::Graph::Triangle&);
         JPH::RVec3 CalculateMiddle() const;
-        JPH::RVec3 CalculateMiddle(const Types3d::TriangleVertices&) const;
+        JPH::RVec3 CalculateMiddle(const Types::Level::Graph::TriangleVertices&) const;
         JPH::RVec3 CalculateNormal() const;
-        JPH::RVec3 CalculateNormal(const Types3d::TriangleVertices&) const;
+        JPH::RVec3 CalculateNormal(const Types::Level::Graph::TriangleVertices&) const;
         JPH::Quat CalculateRotationQuat(JPH::RVec3 axis, float degrees);
         void FillGraphVertices(Types::Level::Graph &) const;
-        void FillGraphVerticesAndCreateInterface(Types::Level::Graph&) const;
+        void FillGraphVerticesAndCreateInterface(Types::Level::Graph&, const Config&) const;
         void GenerateRegularTriangleVertices(float radius);
         void Rotate(const JPH::Quat& rotation);
         void RotateAroundPivot(const JPH::RVec3& pivot, const JPH::Quat& rotation);

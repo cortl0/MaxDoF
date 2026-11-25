@@ -15,6 +15,7 @@
 #endif
 
 #include "Common/World/Physics.h"
+#include "Common/Types/LevelGraph.h"
 
 namespace Ogre { class SceneNode; }
 
@@ -36,7 +37,7 @@ namespace MaxDoF::Common::World
         Physics mPhysics;
 
 #ifdef MAXDOF_CLIENT_BUILD
-        MaxDoF::Game::World::Graphics mGraphics;
+        Game::World::Graphics mGraphics;
         
         Game::Audio::AudioEngine mAudioEngine;
         std::vector<int> staticAudioMeshIds;
@@ -48,8 +49,8 @@ namespace MaxDoF::Common::World
         ~Manager();
 
 #ifdef MAXDOF_CLIENT_BUILD
-        MaxDoF::Game::World::Graphics& getGraphics(){ return mGraphics; }
-        void addMeshToAudio(const Common::Types3d::MeshData &meshData);
+        Game::World::Graphics& getGraphics(){ return mGraphics; }
+        void addMeshToAudio(const Types::MeshData &meshData);
         void CreateSound(const JPH::RVec3& position, Game::Types::Sounds);
         void initAudio();
 #endif
@@ -66,8 +67,15 @@ namespace MaxDoF::Common::World
         bool PhysicsHavePlace();
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
         JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
-        Types::Entity& createCube(Common::Types3d::EntityType userData, const Types::PhysPose&, const JPH::Vec3& halfSize, float mass, bool dynamic = true, bool onCCD = false);
-        Types::Entity& createMesh(const Common::Types3d::MeshData& meshData);
-        Types::Entity& createSphere(Common::Types3d::EntityType userData, const Types::PhysPose&, float radius, float mass, bool onCCD = false);
+        Types::Entity& createCube(
+            Types::Level::Graph::EntityType userData,
+            const Types::PhysPose&, const JPH::Vec3& halfSize,
+            float mass, bool dynamic = true, bool onCCD = false
+        );
+        Types::Entity& createMesh(const Types::MeshData& meshData);
+        Types::Entity& createSphere(
+            Types::Level::Graph::EntityType userData,
+            const Types::PhysPose&, float radius, float mass, bool onCCD = false
+        );
     };
 }

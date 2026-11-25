@@ -14,6 +14,6 @@ namespace MaxDoF::Common::Maps
     public:
         DeathmatchAsteroidRotGraphGenerator() = delete;
 
-        static void GenerateGraph(Common::Types::Level::Graph&, JPH::RVec3 offset);
+        static void GenerateGraph(Types::Level::Graph&, JPH::RVec3 offset);
     };
 }
