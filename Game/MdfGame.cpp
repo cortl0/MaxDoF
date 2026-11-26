@@ -44,7 +44,7 @@ namespace MaxDoF::Game
 
     void MdfGame::createScene01()
     {
-        const int scene{0};
+        const int scene{1};
         switch (scene)
         {
         case 0:
@@ -80,6 +80,83 @@ namespace MaxDoF::Game
         );
     }
 
+    Ogre::String GetKeysString(const Ships::ShipController::ControllerData& d)
+    {
+        Ogre::String s;
+
+        {
+            if(d.moveDir.y > 0.0f)
+                s += " SPACE\n";
+            else
+                s += " space\n";
+
+            if(d.moveDir.z < 0.0f)
+                s += "   W\n";
+            else
+                s += "   w\n";
+
+            if(d.moveDir.x < 0.0f)
+                s += " A";
+            else
+                s += " a";
+
+            if(d.moveDir.z > 0.0f)
+                s += " S";
+            else
+                s += " s";
+
+            if(d.moveDir.x > 0.0f)
+                s += " D\n";
+            else
+                s += " d\n";
+
+            if(d.moveDir.y < 0.0f)
+                s += " SHIFT\n";
+            else
+                s += " shift\n";
+        }
+
+        {
+            if(d.leftMouseButtonPressed)
+                s += "LBM ";
+            else
+                s += "lbm ";
+
+            if(d.rightMouseButtonPressed)
+                s += "RBM\n";
+            else
+                s += "rbm\n";
+        }
+
+        {
+            constexpr int coef_dx{16};
+            constexpr int coef_dy{8};
+            constexpr int size{5};
+            s += "m_dx [";
+
+            for(int i = -size; i <= +size; ++i)
+                if(static_cast<int>(d.mouse_dx) / coef_dx < i && i < 0)
+                    s += "*";
+                else if(static_cast<int>(d.mouse_dx) / coef_dx > i && i > 0)
+                    s += "*";
+                else
+                s += " ";
+
+            s += "]\nm_dy [";
+
+            for(int i = -size; i <= +size; ++i)
+                if(static_cast<int>(-d.mouse_dy) / coef_dy < i && i < 0)
+                    s += "*";
+                else if(static_cast<int>(-d.mouse_dy) / coef_dy > i && i > 0)
+                    s += "*";
+                else
+                s += " ";
+
+            s += "]\n";
+        }
+        return s;
+    }
+
     void MdfGame::update( float timeSinceLast )
     {
         auto data = mInputTranslator.translate( &mKeyboardController, &mMouseController );
@@ -95,7 +172,8 @@ namespace MaxDoF::Game
         if( mTextOverleyManager.mDisplayHelpMode != 0 )
         {
             auto telemetry = mShipController->getTelemetry( timeSinceLast );
-            //mTextOverleyManager.generateDebugText( timeSinceLast, telemetry );
+            Ogre::String keyPressed = GetKeysString(data);
+            mTextOverleyManager.generateDebugText(timeSinceLast, telemetry, keyPressed);
             mScene->GetShip().update( timeSinceLast, telemetry );
         }
 #endif
@@ -139,7 +217,7 @@ namespace MaxDoF::Game
                 mTextOverleyManager.mDisplayHelpMode = ( mTextOverleyManager.mDisplayHelpMode + 1 ) % mTextOverleyManager.mNumDisplayHelpModes;
                 const float timeSinceLast = 0.0f;
                 auto telemetry = mShipController->getTelemetry( timeSinceLast );
-                mTextOverleyManager.generateDebugText( timeSinceLast, telemetry );
+                mTextOverleyManager.generateDebugText(timeSinceLast, telemetry, {});
             }
 #endif
         }

@@ -24,7 +24,13 @@ namespace MaxDoF::Game::UI
         Ogre::uint16 mNumDisplayHelpModes;
 
         virtual void createDebugTextOverlay();
-        virtual void generateDebugText( float timeSinceLast, const Common::Types::Telemetry& );
+
+        virtual void generateDebugText
+        (
+            float timeSinceLast,
+            const Common::Types::Telemetry&,
+            const Ogre::String& inputData
+        );
 
         TextOverleyManager( const Ogre::String &helpDescription );
         virtual ~TextOverleyManager();

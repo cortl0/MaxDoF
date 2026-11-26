@@ -132,27 +132,6 @@ namespace MaxDoF::Common::Scenes
     }
 #endif
 
-    void SceneTest::createBoxes(JPH::RVec3 offset)
-    {
-        int size = 2;
-
-        for(int i = -size; i <= size; ++i)
-            for(int j = -size; j <= size; ++j)
-                for(int k = -size; k <= size; ++k)
-                {
-                    if(!mWorldManager.PhysicsHavePlace())
-                        return;
-
-                    mWorldManager.createCube(Types::Entity::Type::cOtherObject,
-                        {
-                            .position = JPH::RVec3(offset.GetX() + i * 1.1f, offset.GetY() + j * 1.1f, offset.GetZ() + k * 1.1f),
-                            .orientation = JPH::Quat::sIdentity()
-                        },
-                        Types::cUnitScaleVector * 0.5f, 1000.0f
-                    );
-                }
-    }
-
     void SceneTest::CreateScene()
     {
         mWorldManager.getPhysicsSystem()->SetContactListener( &mBattleLogic.GetMyContactListener() );

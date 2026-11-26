@@ -107,7 +107,7 @@ namespace MaxDoF::Common::Meshes
             posB[i] = rawPosB[(i + bestShift) % 3];
         }
 
-        // 3. Строим каждую из 3 боковых сторон со своей локальной 2D-разверткой 1:1 в метрах
+        // 3. Строим каждую из 3 боковых сторон с изометрической разверткой и привязкой ко входу (a0 -> a1)
         for (int i = 0; i < 3; ++i)
         {
             int next = (i + 1) % 3;
@@ -117,43 +117,88 @@ namespace MaxDoF::Common::Meshes
             const auto& b0 = posB[i];
             const auto& b1 = posB[next];
 
-            // Локальная ось U идет строго вдоль нижнего ребра стороны (a0 -> a1)
-            JPH::DVec3 edgeU = a1 - a0;
-            double lenU = edgeU.Length();
-            JPH::DVec3 axisU = (lenU > 0.0001) ? (edgeU / lenU) : edgeU;
+            double diag01Len = (b1 - a0).Length();
+            double diag10Len = (b0 - a1).Length();
 
-            // Вектор подъема вдоль боковой стороны
-            JPH::DVec3 edgeUp = b0 - a0;
+            auto projectThirdVertex = [](
+                const JPH::DVec3& pOrigin,
+                const JPH::DVec3& axisU,
+                const JPH::DVec3& pTarget,
+                double signV) -> std::pair<float, float>
+            {
+                JPH::DVec3 vec = pTarget - pOrigin;
+                double u = vec.Dot(axisU);
+                double v = (vec - axisU * u).Length() * signV;
+                return { static_cast<float>(u), static_cast<float>(v) };
+            };
 
-            // Нормаль боковой грани и перпендикулярная ось V строго в плоскости этой грани
-            JPH::DVec3 normal = edgeU.Cross(edgeUp);
-            double normLen = normal.Length();
-            if (normLen > 0.0001)
-                normal = normal / normLen;
-
-            JPH::DVec3 axisV = normal.Cross(axisU);
-
-            // Проецируем все 4 угла боковой стороны на её локальные оси U и V с явным кастом в float
             UVVertex va0{ a0, 0.0f, 0.0f };
-            UVVertex va1{ a1, static_cast<float>(lenU), 0.0f };
+            UVVertex va1{ a1, 0.0f, 0.0f };
+            UVVertex vb0{ b0, 0.0f, 0.0f };
+            UVVertex vb1{ b1, 0.0f, 0.0f };
 
-            JPH::DVec3 diffB0 = b0 - a0;
-            UVVertex vb0{
-                b0,
-                static_cast<float>(diffB0.Dot(axisU)),
-                static_cast<float>(diffB0.Dot(axisV))
-            };
+            const bool useDiag01 = (diag01Len <= diag10Len);
 
-            JPH::DVec3 diffB1 = b1 - a0;
-            UVVertex vb1{
-                b1,
-                static_cast<float>(diffB1.Dot(axisU)),
-                static_cast<float>(diffB1.Dot(axisV))
-            };
+            if (useDiag01)
+            {
+                JPH::DVec3 axisU = (diag01Len > 0.0001) ? ((b1 - a0) / diag01Len) : JPH::DVec3::sAxisX();
+                vb1.u = static_cast<float>(diag01Len);
 
-            // Добавляем 2 треугольника текущей стороны
-            AddTriangle(meshData, va0, va1, vb1);
-            AddTriangle(meshData, va0, vb1, vb0);
+                auto [uA1, vA1] = projectThirdVertex(a0, axisU, a1, -1.0);
+                auto [uB0, vB0] = projectThirdVertex(a0, axisU, b0, +1.0);
+
+                va1.u = uA1; va1.v = vA1;
+                vb0.u = uB0; vb0.v = vB0;
+            }
+            else
+            {
+                JPH::DVec3 axisU = (diag10Len > 0.0001) ? ((b0 - a1) / diag10Len) : JPH::DVec3::sAxisX();
+                va1.u = 0.0f; va1.v = 0.0f;
+                vb0.u = static_cast<float>(diag10Len); vb0.v = 0.0f;
+
+                auto [uA0, vA0] = projectThirdVertex(a1, axisU, a0, -1.0);
+                auto [uB1, vB1] = projectThirdVertex(a1, axisU, b1, +1.0);
+
+                va0.u = uA0; va0.v = vA0;
+                vb1.u = uB1; vb1.v = vB1;
+            }
+
+            // 4. Жесткий 2D-поворот и сдвиг выкройки: выравниваем входное ребро (va0 -> va1) строго вдоль оси U
+            const float originU = va0.u;
+            const float originV = va0.v;
+            const float edgeU   = va1.u - originU;
+            const float edgeV   = va1.v - originV;
+            const float edgeLen = std::hypot(edgeU, edgeV);
+
+            if (edgeLen > 0.0001f)
+            {
+                const float cosA = edgeU / edgeLen;
+                const float sinA = edgeV / edgeLen;
+
+                auto alignToEntrance = [&](UVVertex& vert)
+                {
+                    const float du = vert.u - originU;
+                    const float dv = vert.v - originV;
+                    vert.u = du * cosA + dv * sinA;
+                    vert.v = -du * sinA + dv * cosA;
+                };
+
+                alignToEntrance(va0);
+                alignToEntrance(va1);
+                alignToEntrance(vb0);
+                alignToEntrance(vb1);
+            }
+
+            if (useDiag01)
+            {
+                AddTriangle(meshData, va0, va1, vb1);
+                AddTriangle(meshData, va0, vb1, vb0);
+            }
+            else
+            {
+                AddTriangle(meshData, va0, va1, vb0);
+                AddTriangle(meshData, va1, vb1, vb0);
+            }
         }
     }
 

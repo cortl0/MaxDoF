@@ -18,6 +18,8 @@ namespace MaxDoF::Common::Scenes
         Ships::Ship* mShip;
         GameLogic::BattleLogic mBattleLogic;
 
+        void createBoxes(JPH::RVec3 offset);
+
     public:
         Scene(World::Manager&);
         virtual ~Scene();

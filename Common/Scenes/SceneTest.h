@@ -13,8 +13,6 @@ namespace MaxDoF::Common::Scenes
     {
         static constexpr double mapHalfSize{75.0f};
 
-        void createBoxes(JPH::RVec3 offset);
-
 #ifdef MAXDOF_CLIENT_BUILD
         void createStaticLights();
 #endif

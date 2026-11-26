@@ -46,6 +46,8 @@ namespace MaxDoF::Common::Scenes
         else
             return;
 
+        createBoxes({0.0, 0.0, 0.0});
+
         Types::Level::Graph graph;
         Types::MeshData meshData;
         Maps::RaceGenerator::GenerateGraph(graph);

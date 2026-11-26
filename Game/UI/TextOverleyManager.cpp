@@ -62,7 +62,12 @@ namespace MaxDoF::Game::UI
         overlay->show();
     }
 
-    void TextOverleyManager::generateDebugText( float timeSinceLast, const Common::Types::Telemetry& telemetry )
+    void TextOverleyManager::generateDebugText
+    (
+        float timeSinceLast,
+        const Common::Types::Telemetry& telemetry,
+        const Ogre::String& inputData
+    )
     {
         Ogre::String finalText;
         if( mDisplayHelpMode == 0 )
@@ -93,7 +98,11 @@ namespace MaxDoF::Game::UI
             finalText += Ogre::StringConverter::toString( frameStats->getRollingAverageFps() );
             //finalText += "\n\nPress F1 to toggle help";
         }
-        finalText += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+        finalText += "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+        finalText += inputData;
+
+#if(false)
+        finalText += "\n\n\n";
         finalText += std::string("\nShip Position")
             + ": x[" + std::to_string(telemetry.position.x)
             + "] y[" + std::to_string(telemetry.position.y)
@@ -110,6 +119,8 @@ namespace MaxDoF::Game::UI
             + "] x[" + std::to_string(telemetry.localAngularVelocity.x)
             + "] y[" + std::to_string(telemetry.localAngularVelocity.y)
             + "] z[" + std::to_string(telemetry.localAngularVelocity.z) + "]\n";
+#endif
+
         mDebugText->setCaption( finalText );
         mDebugTextShadow->setCaption( finalText );
     }

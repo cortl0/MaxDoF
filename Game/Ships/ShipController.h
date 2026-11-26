@@ -26,9 +26,9 @@ namespace MaxDoF::Game::Ships
         Common::Ships::Ship& mShip;
         JPH::BodyInterface*   mBodyInterface{ nullptr };
 
-        const float           mSensitivityPitch{ 1.0f };
+        const float           mSensitivityPitch{ 1.3f };
         const float           mSensitivityYaw{ 0.5f };
-        const float           mSensitivityRoll{ 0.5f };
+        const float           mSensitivityRoll{ 0.8f };
         const float           mThrustMultiplier{ 0.5f };
 
         float                 mThrustPower; // Сила тяги маршевых двигателей в Ньютонах

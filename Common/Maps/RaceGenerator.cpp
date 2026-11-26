@@ -34,7 +34,8 @@ namespace MaxDoF::Common::Maps
             {
                 .pipeDiameter      = cPipeDiameter,
                 .maxTurnDeg        = 15.0f,
-                .maxTwistPerSegDeg = 15.0f
+                .maxTwistPerSegDeg = 15.0f,
+                .minBendRadius     = cPipeDiameter * 5.0
             }
         );
 

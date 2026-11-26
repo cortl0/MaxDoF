@@ -16,9 +16,10 @@ namespace MaxDoF::Common::Utils
     public:
         struct Params
         {
-            float pipeDiameter      = 1.0f;  // Диаметр трубы (м)
-            float maxTurnDeg        = 12.0f; // Макс. угол изгиба между сегментами (градусы)
-            float maxTwistPerSegDeg = 10.0f; // Макс. закрутка крена на сегмент (градусы)
+            float pipeDiameter      = 10.0f;  // Диаметр трубы (м)
+            float maxTurnDeg        = 15.0f; // Макс. угол изгиба между сегментами (градусы)
+            float maxTwistPerSegDeg = 15.0f; // Макс. закрутка крена на сегмент (градусы)
+            double minBendRadius{pipeDiameter * 5.0};
         };
 
         struct Result

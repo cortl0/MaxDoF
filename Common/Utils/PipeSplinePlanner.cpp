@@ -124,7 +124,6 @@ namespace MaxDoF::Common::Utils
     {
         Result result;
         const double D = static_cast<double>(params.pipeDiameter);
-        const double minBendRadius = D * 2.5;
 
         result.isClosedLoop = ((endPose.position - startPose.position).Length() < 1e-3);
 
@@ -159,8 +158,8 @@ namespace MaxDoF::Common::Utils
         }
         else
         {
-            SplineSpanData directTest = AnalyzeSpan(startPose, endPose, minBendRadius, 128);
-            const double maxAllowedCurvature = 1.0 / minBendRadius;
+            SplineSpanData directTest = AnalyzeSpan(startPose, endPose, params.minBendRadius, 128);
+            const double maxAllowedCurvature = 1.0 / params.minBendRadius;
 
             if (directTest.maxCurvature <= maxAllowedCurvature)
             {
@@ -182,7 +181,7 @@ namespace MaxDoF::Common::Utils
                     outOfPlane = startPose.orientation.RotateAxisY();
                 outOfPlane = outOfPlane.Normalized();
 
-                double spiralRadius = std::max(minBendRadius * 1.8, chordLen * 0.6);
+                double spiralRadius = std::max(params.minBendRadius * 1.8, chordLen * 0.6);
 
                 JPH::RVec3 midCenter = (startPose.position + endPose.position) * 0.5;
                 JPH::RVec3 dir0 = Vec3_To_RVec3(f0);
@@ -193,7 +192,7 @@ namespace MaxDoF::Common::Utils
                                       + normal3D * (spiralRadius * 1.6)
                                       + (dir0 - dir1) * (spiralRadius * 0.6);
 
-                JPH::Vec3 apexTangent = (chordLen < minBendRadius)
+                JPH::Vec3 apexTangent = (chordLen < params.minBendRadius)
                     ? (-f0 + outOfPlane.Cross(f0)).Normalized()
                     : chordDir;
 
@@ -214,7 +213,7 @@ namespace MaxDoF::Common::Utils
 
         for (size_t w = 0; w + 1 < waypoints.size(); ++w)
         {
-            SplineSpanData span = AnalyzeSpan(waypoints[w], waypoints[w + 1], minBendRadius, cSamples);
+            SplineSpanData span = AnalyzeSpan(waypoints[w], waypoints[w + 1], params.minBendRadius, cSamples);
             result.totalLength += span.arcLength;
             globalMaxCurvature = std::max(globalMaxCurvature, span.maxCurvature);
             totalAbsTwist += std::abs(span.totalTwistAngle);
