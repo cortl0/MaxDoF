@@ -36,7 +36,7 @@ namespace MaxDoF::Common::Scenes
     {
 
 #ifdef MAXDOF_CLIENT_BUILD
-        createStaticLights();
+        // createStaticLights();
 #endif
 
         mWorldManager.getPhysicsSystem()->SetContactListener( &mBattleLogic.GetMyContactListener() );

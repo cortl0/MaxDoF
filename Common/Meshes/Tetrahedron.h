@@ -15,8 +15,6 @@ namespace MaxDoF::Common::LevelGraphs
     public:
         using Vertices = std::array<JPH::RVec3, 4>;
         using TriangleVertexKeys = std::array<Types::Level::Graph::Triangle::VertexKeys, 4>;
-        using InterfaceTypes = std::array<Types::Level::Graph::OrientedTriangle::Type, 4>;
-        using InvertInterfaces = std::array<bool, 4>;
 
         struct Config
         {

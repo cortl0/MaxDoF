@@ -79,6 +79,11 @@ namespace MaxDoF::Common::Meshes
             std::swap(rawPosB.at(1), rawPosB.at(2));
         }
 
+        if (pipeNode.invertedAntiprismEnd)
+        {
+            std::swap(rawPosB.at(1), rawPosB.at(2));
+        }
+
         // 2. Выравниваем торцы по минимальному расстоянию (убираем скручивание 120°/240°)
         int bestShift = 0;
         double minTotalDist = 1e30;
@@ -185,7 +190,7 @@ namespace MaxDoF::Common::Meshes
         {
             const auto& face = graph.triangles[orientedInterface.triangleKey];
             // Если грань официально ведет в монолитный камень — строим заглушку!
-            if (orientedInterface.type == Types::Level::Graph::OrientedTriangle::Type::SolidRock)
+            if (orientedInterface.type == Types::Level::Graph::OrientedTriangle::Type::cSolidRock)
             {
                 const auto& pos0 = graph.vertices[face.vertexKeys[0]];
                 const auto& pos1 = graph.vertices[face.vertexKeys[1]];

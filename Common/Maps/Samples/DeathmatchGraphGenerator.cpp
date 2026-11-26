@@ -27,10 +27,10 @@ namespace MaxDoF::Common::Maps
             {
                 .sides
                 {{
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false}
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false}
                 }}
             }
         );
@@ -43,20 +43,20 @@ namespace MaxDoF::Common::Maps
                     graph.orientedTriangles[tetrahedronNode.orientedTriangleKeys[i]].triangleKey]
             );
             triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);
-            triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false});
+            triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false});
             pipe.FillGraph(graph,
                 {
                     false,
                     .begin
                     {
                         .key = tetrahedronNode.orientedTriangleKeys[i],
-                        .type = Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                        .type = Types::Level::Graph::OrientedTriangle::Type::cUnDefined,
                         .flip = true
                     },
                     .end
                     {
                         .key = graph.orientedTriangles.size() - 1,
-                        .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                        .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                         .flip = false
                     }
                 }

@@ -22,7 +22,7 @@ namespace MaxDoF::Common::Maps
         const Types::Level::Graph::Triangle::Key endTriangleKey
     )
     {
-        const float cPipeDiameter = LevelGraph::cMinTriangleEdgeLength * 5.0f;
+        const float cPipeDiameter = LevelGraph::cMinTriangleEdgeLength * 10.0f;
         const float cPipeRadius = cPipeDiameter * 0.5f;
         Types::Level::Graph::Graph::Triangle::Vertices v1 = graph.GetTriangleVertices(beginTriangleKey);
         Types::Level::Graph::Graph::Triangle::Vertices v2 = graph.GetTriangleVertices(endTriangleKey);
@@ -42,32 +42,44 @@ namespace MaxDoF::Common::Maps
         LevelGraphs::Pipe pipe;
         const LevelGraphs::Pipe::Config config
         {
-            true,
+            false,
             .begin
             {
-                .type = Types::Level::Graph::OrientedTriangle::Type::OpenSpace,
+                .type = Types::Level::Graph::OrientedTriangle::Type::cOpenSpace,
                 .flip = true
             },
             .end
             {
-                .type = Types::Level::Graph::OrientedTriangle::Type::OpenSpace,
+                .type = Types::Level::Graph::OrientedTriangle::Type::cOpenSpace,
                 .flip = false
             }
         };
 
         for (std::size_t i = 0; i < plan.poses.size(); ++i)
         {
-            triangle.GenerateRegularTriangleVertices(cPipeRadius);
-            triangle.Translate(plan.poses[i].position);
-            triangle.RotateAroundPivot(plan.poses[i].position, plan.poses[i].orientation);
-            triangle.FillGraphVerticesAndCreateInterface(graph, {config.begin.type, false});
+            if (i > 0)
+            {
+                triangle.GenerateRegularTriangleVertices(cPipeRadius);
+                triangle.Translate(plan.poses[i].position);
+                triangle.RotateAroundPivot(plan.poses[i].position, plan.poses[i].orientation);
+                triangle.FillGraphVerticesAndCreateInterface(graph, {config.begin.type, false});
+            }
 
+            if (i == 1)
+            {
+                LevelGraphs::Pipe::Config cfg = config;
+                cfg.begin.key = graph.GetOrientedTriangleKeys(0)[beginTriangleKey];
+                cfg.end.key = graph.orientedTriangles.size() - 1;
+                pipe.FillGraph(graph, cfg);
+                continue;
+            }
+            else
             if (i == plan.poses.size() - 1)
             {
                 LevelGraphs::Pipe::Config cfg = config;
-
                 cfg.begin.key = graph.orientedTriangles.size() - 2;
                 cfg.end.key = graph.GetOrientedTriangleKeys(0)[endTriangleKey];
+                cfg.end.flipAntiprismSide = true;
                 pipe.FillGraph(graph, cfg);
             }
             else
@@ -98,10 +110,10 @@ namespace MaxDoF::Common::Maps
             {
                 .sides
                 {{
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true}
+                    {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, true}
                 }}
             }
         );

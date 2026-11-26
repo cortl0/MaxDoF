@@ -13,19 +13,14 @@
     class Pipe : public Primitive
     {
     public:
-        //using Vertices = std::array<Types::Level::Graph::Triangle::Vertices, 2>;
-        //using TriangleVertexKeys = std::array<Types::Level::Graph::Triangle::VertexKeys, 2>;
-        using OrientedTriangleKeys = std::array<Types::Level::Graph::Triangle::Key, 2>;
-        using OrientedTriangleTypes = std::array<Types::Level::Graph::OrientedTriangle::Type, 2>;
-        using InvertInterfaces = std::array<bool, 2>;
-
         struct Config
         {
             struct Side
             {
                 Types::Level::Graph::Triangle::Key key;
                 Types::Level::Graph::OrientedTriangle::Type type;
-                bool flip;
+                bool flip{};
+                bool flipAntiprismSide{};
             };
 
             bool flip;

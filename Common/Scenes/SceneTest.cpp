@@ -200,13 +200,13 @@ namespace MaxDoF::Common::Scenes
                 .begin
                 {
                     .key = levelGraph.orientedTriangles.size(),
-                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                     .flip = false
                 },
                 .end
                 {
                     .key = levelGraph.orientedTriangles.size() + 1,
-                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                     .flip = true
                 }
             }
@@ -217,13 +217,13 @@ namespace MaxDoF::Common::Scenes
                 .begin
                 {
                     .key = levelGraph.orientedTriangles.size(),
-                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                     .flip = false
                 },
                 .end
                 {
                     .key = levelGraph.orientedTriangles.size() + 1,
-                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                     .flip = true
                 }
             }
@@ -234,13 +234,13 @@ namespace MaxDoF::Common::Scenes
                 .begin
                 {
                     .key = levelGraph.orientedTriangles.size(),
-                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                     .flip = true
                 },
                 .end
                 {
                     .key = levelGraph.orientedTriangles.size() + 1,
-                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                     .flip = false
                 }
             }
@@ -251,13 +251,13 @@ namespace MaxDoF::Common::Scenes
                 .begin
                 {
                     .key = levelGraph.orientedTriangles.size(),
-                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                     .flip = true
                 },
                 .end
                 {
                     .key = levelGraph.orientedTriangles.size() + 1,
-                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                     .flip = false
                 }
             }

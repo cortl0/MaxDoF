@@ -21,7 +21,7 @@ namespace MaxDoF::Common::LevelGraphs
                     config.end.key
                 },
                 .inverted = config.flip,
-                .invertedAntiprismEnd = false
+                .invertedAntiprismEnd = config.end.flipAntiprismSide
             }
         );
     }

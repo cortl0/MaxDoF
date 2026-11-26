@@ -19,10 +19,10 @@ namespace MaxDoF::Common::Maps
             {
                 .sides
                 {{
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false}
+                    {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false}
                 }}
             }
         );
@@ -37,10 +37,10 @@ namespace MaxDoF::Common::Maps
             {
                 .sides
                 {{
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true}
+                    {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, true}
                 }}
             }
         );

@@ -44,7 +44,7 @@ namespace MaxDoF::Game
 
     void MdfGame::createScene01()
     {
-        const int scene{1};
+        const int scene{0};
         switch (scene)
         {
         case 0:

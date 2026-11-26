@@ -23,10 +23,10 @@ namespace MaxDoF::Common::Maps
             {
                 .sides
                 {{
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false}
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false}
                 }}
             }
         );
@@ -36,10 +36,10 @@ namespace MaxDoF::Common::Maps
             {
                 .sides
                 {{
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
-                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false}
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false}
                 }}
             }
         );
@@ -54,13 +54,13 @@ namespace MaxDoF::Common::Maps
                     .begin
                     {
                         .key = tetrahedronNode0.orientedTriangleKeys[i],
-                        .type = Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                        .type = Types::Level::Graph::OrientedTriangle::Type::cUnDefined,
                         .flip = false
                     },
                     .end
                     {
                         .key = tetrahedronNode1.orientedTriangleKeys[i],
-                        .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                        .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
                         .flip = true
                     }
                 }

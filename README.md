@@ -5,7 +5,7 @@ Maximum Degrees of Freedom. The Game with Six Degrees of Freedom and First-Perso
 [OGRE-Next 3D](https://github.com/OGRECave/ogre-next) (Object-Oriented Graphics Rendering Engine Next Generation)
 ## Build
 [./Scripts/install_dependencies.sh](https://github.com/cortl0/MaxDoF/blob/main/Scripts/install_dependencies.sh)  
-[./Scripts/prepare_dependencies_and_build.sh](https://github.com/cortl0/MaxDoF/blob/main/Scripts/prepare_dependencies_and_build.sh)
+[./Scripts/build_all.sh](https://github.com/cortl0/MaxDoF/blob/main/Scripts/build_all.sh)
 ## License
 This project is licensed under the GNU AGPLv3.0 - see the LICENSE file for details
 ## Videos
