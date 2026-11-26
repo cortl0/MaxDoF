@@ -73,11 +73,11 @@ namespace MaxDoF::Common::Meshes
             rawPosB[i] = graph.vertices[interfaceEnd.vertexKeys[i]];
         }
 
-    if (pipeNode.inverted)
-    {
-        std::swap(posA.at(1), posA.at(2));
-        std::swap(rawPosB.at(1), rawPosB.at(2));
-    }
+        if (pipeNode.inverted)
+        {
+            std::swap(posA.at(1), posA.at(2));
+            std::swap(rawPosB.at(1), rawPosB.at(2));
+        }
 
         // 2. Выравниваем торцы по минимальному расстоянию (убираем скручивание 120°/240°)
         int bestShift = 0;
@@ -152,7 +152,11 @@ namespace MaxDoF::Common::Meshes
         }
     }
 
-    void MeshBuilder::CreateMeshData(Types::MeshData& meshData, const Types::Level::Graph& graph)
+    void MeshBuilder::CreateMeshData
+    (
+        Types::MeshData& meshData,
+        const Types::Level::Graph& graph
+    )
     {
         using namespace Types::Level;
 
@@ -168,8 +172,8 @@ namespace MaxDoF::Common::Meshes
 
                 // Натягиваем 6 боковых прямоугольников-складок
                 AddAntiprism(meshData, graph, node,
-                    graph.orientedTriangles[node.orientedTriangleKeys[0]].triangleId,
-                    graph.orientedTriangles[node.orientedTriangleKeys[1]].triangleId
+                    graph.orientedTriangles[node.orientedTriangleKeys[0]].triangleKey,
+                    graph.orientedTriangles[node.orientedTriangleKeys[1]].triangleKey
                 );
             }
         }
@@ -179,7 +183,7 @@ namespace MaxDoF::Common::Meshes
         // =========================================================================
         for (const auto& orientedInterface : graph.orientedTriangles)// node.orientedInterfacesKeys)
         {
-            const auto& face = graph.triangles[orientedInterface.triangleId];
+            const auto& face = graph.triangles[orientedInterface.triangleKey];
             // Если грань официально ведет в монолитный камень — строим заглушку!
             if (orientedInterface.type == Types::Level::Graph::OrientedTriangle::Type::SolidRock)
             {

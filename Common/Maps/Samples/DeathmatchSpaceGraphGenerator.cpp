@@ -21,26 +21,26 @@ namespace MaxDoF::Common::Maps
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
             {
-                {
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined
-                },
-                { false, false, false, false }
+                .sides
+                {{
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false}
+                }}
             }
         );
 
         tetrahedron.GenerateVetrices(offset, cArenaRadius * 5);
         tetrahedron.FillGraph(graph,
             {
-                {
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined
-                },
-                { false, false, false, false }
+                .sides
+                {{
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false}
+                }}
             }
         );
 
@@ -50,14 +50,18 @@ namespace MaxDoF::Common::Maps
             const auto& tetrahedronNode1 = graph.nodes[nodesBaseIndex + 1];
             pipe.FillGraph(graph,
                 {
-                    {false, true}, true,
+                    true,
+                    .begin
                     {
-                        Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                        Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                        .key = tetrahedronNode0.orientedTriangleKeys[i],
+                        .type = Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                        .flip = false
                     },
+                    .end
                     {
-                        tetrahedronNode0.orientedTriangleKeys[i],
-                        tetrahedronNode1.orientedTriangleKeys[i]
+                        .key = tetrahedronNode1.orientedTriangleKeys[i],
+                        .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                        .flip = true
                     }
                 }
             );

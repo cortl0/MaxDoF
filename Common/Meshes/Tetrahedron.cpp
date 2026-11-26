@@ -60,9 +60,9 @@ namespace MaxDoF::Common::LevelGraphs
         for(std::size_t i = 0; i < 4; ++i)
             graph.orientedTriangles.push_back
             ({
-                .triangleId = baseOrientedTriangleIndex + i,
-                .type = config.interfaceTypes[i],
-                .inverted = config.invertInterfaces[i]
+                .triangleKey = baseOrientedTriangleIndex + i,
+                .type = config.sides[i].type,
+                .inverted = config.sides[i].flip
             });
 
         graph.nodes.push_back(

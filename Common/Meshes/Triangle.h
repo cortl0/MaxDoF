@@ -18,7 +18,7 @@
         struct Config
         {
             Types::Level::Graph::OrientedTriangle::Type type;
-            bool inverted;
+            bool flip;
         };
 
         const Types::Level::Graph::Triangle::Vertices& GetVertices() const noexcept { return vertices; }

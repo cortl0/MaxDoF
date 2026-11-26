@@ -196,53 +196,69 @@ namespace MaxDoF::Common::Scenes
         Types::Level::Graph levelGraph;
         Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
             {
-                {false, true}, true,
+                true,
+                .begin
                 {
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                    .key = levelGraph.orientedTriangles.size(),
+                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .flip = false
                 },
+                .end
                 {
-                    levelGraph.orientedTriangles.size(),
-                    levelGraph.orientedTriangles.size() + 1
+                    .key = levelGraph.orientedTriangles.size() + 1,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .flip = true
                 }
             }
         );
         Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
             {
-                {false, true}, true,
+                true,
+                .begin
                 {
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                    .key = levelGraph.orientedTriangles.size(),
+                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .flip = false
                 },
+                .end
                 {
-                    levelGraph.orientedTriangles.size(),
-                    levelGraph.orientedTriangles.size() + 1
+                    .key = levelGraph.orientedTriangles.size() + 1,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .flip = true
                 }
             }
         );
         Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
             {
-                {true, false}, false,
+                false,
+                .begin
                 {
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                    .key = levelGraph.orientedTriangles.size(),
+                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .flip = true
                 },
+                .end
                 {
-                    levelGraph.orientedTriangles.size(),
-                    levelGraph.orientedTriangles.size() + 1
+                    .key = levelGraph.orientedTriangles.size() + 1,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .flip = false
                 }
             }
         );
         Maps::PipeGraphGenerator::GenerateGraph(levelGraph, {-pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
             {
-                {true, false}, false,
+                false,
+                .begin
                 {
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                    .key = levelGraph.orientedTriangles.size(),
+                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .flip = true
                 },
+                .end
                 {
-                    levelGraph.orientedTriangles.size(),
-                    levelGraph.orientedTriangles.size() + 1
+                    .key = levelGraph.orientedTriangles.size() + 1,
+                    .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                    .flip = false
                 }
             }
         );

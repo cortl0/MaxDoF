@@ -27,7 +27,8 @@ namespace MaxDoF::Common::Meshes
             const Types::Level::Graph&,
             const Types::Level::Graph::Node& pipeNode,
             const Types::Level::Graph::Triangle::Key& begin,
-            const Types::Level::Graph::Triangle::Key& end);
+            const Types::Level::Graph::Triangle::Key& end
+        );
 
         static void CreateMeshData(Types::MeshData&, const Types::Level::Graph&);
     };

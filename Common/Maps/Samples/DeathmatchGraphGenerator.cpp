@@ -25,13 +25,13 @@ namespace MaxDoF::Common::Maps
         (
             graph,
             {
-                {
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                    Types::Level::Graph::OrientedTriangle::Type::UnDefined
-                },
-                { false, false, false, false }
+                .sides
+                {{
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::UnDefined, false}
+                }}
             }
         );
 
@@ -40,20 +40,24 @@ namespace MaxDoF::Common::Maps
             const auto& tetrahedronNode = graph.nodes[nodesBaseIndex];
             triangle.SetVertices(graph,
                 graph.triangles[
-                    graph.orientedTriangles[tetrahedronNode.orientedTriangleKeys[i]].triangleId]
+                    graph.orientedTriangles[tetrahedronNode.orientedTriangleKeys[i]].triangleKey]
             );
             triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);
             triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false});
             pipe.FillGraph(graph,
                 {
-                    {true, false}, false,
+                    false,
+                    .begin
                     {
-                        Types::Level::Graph::OrientedTriangle::Type::UnDefined,
-                        Types::Level::Graph::OrientedTriangle::Type::SolidRock
+                        .key = tetrahedronNode.orientedTriangleKeys[i],
+                        .type = Types::Level::Graph::OrientedTriangle::Type::UnDefined,
+                        .flip = true
                     },
+                    .end
                     {
-                        tetrahedronNode.orientedTriangleKeys[i],
-                        graph.orientedTriangles.size() - 1
+                        .key = graph.orientedTriangles.size() - 1,
+                        .type = Types::Level::Graph::OrientedTriangle::Type::SolidRock,
+                        .flip = false
                     }
                 }
             );

@@ -29,8 +29,8 @@ namespace MaxDoF::Common::Maps
         triangle0.Translate(pBegin + halfSize);
         triangle1.RotateAroundPivot(pBegin, endRotation);
         triangle1.Translate(pEnd + halfSize);
-        triangle0.FillGraphVerticesAndCreateInterface(graph, {config.orientedTriangleTypes[0], config.invertInterfaces[0]});
-        triangle1.FillGraphVerticesAndCreateInterface(graph, {config.orientedTriangleTypes[1], config.invertInterfaces[1]});
+        triangle0.FillGraphVerticesAndCreateInterface(graph, {config.begin.type, config.begin.flip});
+        triangle1.FillGraphVerticesAndCreateInterface(graph, {config.end.type, config.end.flip});
         pipe.FillGraph(graph, config);
     }
 }

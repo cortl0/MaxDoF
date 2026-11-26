@@ -17,13 +17,13 @@ namespace MaxDoF::Common::Maps
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
             {
-                {
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
-                },
-                { false, false, false, false }
+                .sides
+                {{
+                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, false}
+                }}
             }
         );
     }
@@ -35,13 +35,13 @@ namespace MaxDoF::Common::Maps
         tetrahedron.GenerateVetrices(offset, cArenaRadius);
         tetrahedron.FillGraph(graph,
             {
-                {
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock,
-                    Types::Level::Graph::OrientedTriangle::Type::SolidRock
-                },
-                { true, true, true, true }
+                .sides
+                {{
+                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true},
+                    {Types::Level::Graph::OrientedTriangle::Type::SolidRock, true}
+                }}
             }
         );
     }

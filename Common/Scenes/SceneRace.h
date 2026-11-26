@@ -9,11 +9,14 @@
 
 namespace MaxDoF::Common::Scenes
 {
+    static constexpr double mapHalfSize{150.0f};
+
     class SceneRace : public Scene
     {
     public:
         SceneRace(World::Manager&);
         ~SceneRace() override;
+        void createStaticLights();
         void CreateScene() override;
     };
 }

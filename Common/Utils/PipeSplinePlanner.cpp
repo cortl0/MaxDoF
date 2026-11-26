@@ -124,7 +124,7 @@ namespace MaxDoF::Common::Utils
     {
         Result result;
         const double D = static_cast<double>(params.pipeDiameter);
-        const double minBendRadius = D * 1.5;
+        const double minBendRadius = D * 2.5;
 
         result.isClosedLoop = ((endPose.position - startPose.position).Length() < 1e-3);
 

@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include "Common/Meshes/Pipe.h"
 #include "Common/Types/LevelGraph.h"
 
 namespace MaxDoF::Common::Maps
@@ -15,12 +14,13 @@ namespace MaxDoF::Common::Maps
     public:
         RaceGenerator() = delete;
 
-        static void GenerateGraph(
+        static void GenerateGraph
+        (
             Types::Level::Graph&,
-            JPH::RVec3 halfSize,
-            JPH::Quat endRotation,
-            const LevelGraphs::Pipe::Config&
+            const Types::Level::Graph::Triangle::Key beginTriangleKey,
+            const Types::Level::Graph::Triangle::Key endTriangleKey
         );
+
+        static void GenerateGraph(Types::Level::Graph&);
     };
 }
-

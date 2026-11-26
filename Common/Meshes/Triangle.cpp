@@ -77,9 +77,9 @@ namespace MaxDoF::Common::LevelGraphs
 
         graph.orientedTriangles.push_back
         ({
-            .triangleId = graph.triangles.size() - 1,
+            .triangleKey = graph.triangles.size() - 1,
             .type = config.type,
-            .inverted = config.inverted
+            .inverted = config.flip
         });
     }
 

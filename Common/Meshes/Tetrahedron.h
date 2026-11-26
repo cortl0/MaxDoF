@@ -20,8 +20,13 @@ namespace MaxDoF::Common::LevelGraphs
 
         struct Config
         {
-            InterfaceTypes interfaceTypes;
-            InvertInterfaces invertInterfaces;
+            struct Side
+            {
+                Types::Level::Graph::OrientedTriangle::Type type;
+                bool flip;
+            };
+
+            std::array<Side, 4> sides;
         };
 
     private:

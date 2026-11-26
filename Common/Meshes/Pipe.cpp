@@ -17,10 +17,11 @@ namespace MaxDoF::Common::LevelGraphs
                 .type = Types::Level::Graph::Node::Type::cAntiprism,
                 .orientedTriangleKeys =
                 {
-                    config.triangleKeys[0],
-                    config.triangleKeys[1]
+                    config.begin.key,
+                    config.end.key
                 },
-                .inverted = config.invertPipe
+                .inverted = config.flip,
+                .invertedAntiprismEnd = false
             }
         );
     }

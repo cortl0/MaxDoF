@@ -16,12 +16,13 @@ namespace MaxDoF::Common::Types::Level
 {
     struct Graph
     {
+        using KeyType = std::size_t;
         using Vertex = JPH::RVec3;
-        using VertexKey = std::size_t;
+        using VertexKey = KeyType;
 
         struct Triangle
         {
-            using Key = std::size_t;
+            using Key = KeyType;
             using VertexKeys = std::array<VertexKey, 3>;
             using Vertices = std::array<Vertex, 3>;
 
@@ -30,26 +31,26 @@ namespace MaxDoF::Common::Types::Level
 
         struct OrientedTriangle
         {
-            using Key = std::size_t;
+            using Key = KeyType;
 
             enum class Type : int
             {
-                SolidRock,          // За границей интерфейса находится глухая, монолитная порода астероида (камень)
-                OpenSpace,          // За границей интерфейса находится открытый космос (сквозной шлюз наружу)
-                UnDefined           // Неопределено
+                UnDefined,              // Неопределено
+                OpenSpace = UnDefined,  // За границей интерфейса находится открытый космос (сквозной шлюз наружу)
+                SolidRock               // За границей интерфейса находится глухая, монолитная порода астероида (камень)
             };
 
-            Triangle::Key triangleId;
-            Type type{Type::UnDefined};
+            Triangle::Key triangleKey;
+            Type type{};
 
             // false — прямой обход вершин (как заложено в Triangle)
             // true — инвертированный обход вершин (зеркальный разворот)
-            bool inverted{false};
+            bool inverted{};
         };
 
         struct Node
         {
-            using Key = std::size_t;
+            using Key = KeyType;
             using OrientedTriangleKeys = std::vector<OrientedTriangle::Key>;
 
             enum class Type
@@ -60,7 +61,8 @@ namespace MaxDoF::Common::Types::Level
 
             Type type;
             OrientedTriangleKeys orientedTriangleKeys;
-            bool inverted{false};
+            bool inverted{};
+            bool invertedAntiprismEnd{};
         };
 
         using Nodes = std::vector<Node>;
@@ -68,9 +70,57 @@ namespace MaxDoF::Common::Types::Level
         using Triangles = std::vector<Triangle>;
         using Vertices = std::vector<Vertex>;
 
+    // private:
         Nodes nodes; // Сквозной массив узлов
         OrientedTriangles orientedTriangles; // Сквозной массив ориентированных треугольникев
         Triangles triangles; // Сквозной массив треугольникев
         Vertices vertices; // Сквозной массив точек
+
+    public:
+///*
+        inline const Vertex& GetVertex(const VertexKey vertexKey) const
+        {
+            return vertices[vertexKey];
+        }
+
+        inline const Triangle::VertexKeys& GetTriangleVertexKeys(const Triangle::Key triangleKey) const
+        {
+            return triangles[triangleKey].vertexKeys;
+        }
+
+        inline const Triangle::Key& GetTriangleKey(const OrientedTriangle::Key orientedTriangleKey) const
+        {
+            return orientedTriangles[orientedTriangleKey].triangleKey;
+        }
+
+        inline const Node::OrientedTriangleKeys& GetOrientedTriangleKeys(const Node::Key nodeKey) const
+        {
+            return nodes[nodeKey].orientedTriangleKeys;
+        }
+
+        inline const Node& GetNode(const Node::Key nodeKey) const
+        {
+            return nodes[nodeKey];
+        }
+//*/
+        inline Triangle::Vertices GetTriangleVertices(const Triangle::Key triangleKey) const
+        {
+            return
+            {
+                vertices[triangles[triangleKey].vertexKeys[0]],
+                vertices[triangles[triangleKey].vertexKeys[1]],
+                vertices[triangles[triangleKey].vertexKeys[2]]
+            };
+        }
+// inline const Triangle::VertexKeys& GetTriangleVertexKeys(const Triangle::Key triangleKey) const
+//         inline Triangle::Vertices GetInvertedTriangleVertices(const Triangle::Key triangleKey) const
+//         {
+//             return
+//             {
+//                 vertices[triangles[triangleKey].vertexKeys[0]],
+//                 vertices[triangles[triangleKey].vertexKeys[1]],
+//                 vertices[triangles[triangleKey].vertexKeys[2]]
+//             };
+//         }
     };
 }
