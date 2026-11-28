@@ -27,7 +27,7 @@ namespace MaxDoF::Game::World
         Graphics( const Ogre::String &helpDescription );
         ~Graphics();
 
-        Core::MaxDoFGraphicsSystem* getGraphicsSystem(){ return mGraphicsSystem; }
+        Core::MaxDoFGraphicsSystem* getGraphicsSystem() noexcept { return mGraphicsSystem; }
         void _notifyGraphicsSystem(Core::MaxDoFGraphicsSystem*);
         void destroyAllObjects(Ogre::SceneNode*);
         void destroyNodeRecursively(Ogre::SceneNode*);

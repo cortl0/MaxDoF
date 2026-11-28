@@ -5,10 +5,18 @@
 
 #include "Tetrahedron.h"
 
+#include "Common/Meshes/Triangle.h"
+
 namespace MaxDoF::Common::LevelGraphs
 {
     Tetrahedron::Tetrahedron()
     {
+    }
+
+    void Tetrahedron::AddVertices(Types::Level::Graph& graph, const Vertices& vertices)
+    {
+        for(const auto& vertex : vertices)
+            graph.vertices.push_back(vertex);
     }
 
     void Tetrahedron::GenerateVetrices(JPH::RVec3 offset, double tetrahedronSphereRadius)
@@ -30,7 +38,7 @@ namespace MaxDoF::Common::LevelGraphs
         const double yTop = gateSize;                  // Верхняя точка основания (смотрит вверх по Y)
         const double yBottom = -gateSize / 2.0;       // Нижняя линия основания
 
-        vertices = {
+        mVertices = {
             JPH::RVec3(0.0f, 0.0f, zBack) + offset,                     // Вершина 0 (Сзади, на оси +Z)
             JPH::RVec3(0.0f, yTop, zFront) + offset,                    // Вершина 1 (Вперед-вверх)
             JPH::RVec3(-edgeLength / 2.0f, yBottom, zFront) + offset,   // Вершина 2 (Вперед-влево-вниз)
@@ -38,45 +46,39 @@ namespace MaxDoF::Common::LevelGraphs
         };
     }
 
-    void Tetrahedron::FillGraph(Types::Level::Graph& graph, const Config& config)
+    void Tetrahedron::FillGraph(Types::Level::Graph& graph, const Config& config) const
     {
         const auto baseVertexIndex = graph.vertices.size();
         const auto baseOrientedTriangleIndex = graph.orientedTriangles.size();
 
-        for(const auto& vertex : vertices)
-            graph.vertices.push_back(vertex);
+        AddVertices(graph, mVertices);
 
-        for(const auto& interface : interfaces)
-            graph.triangles.push_back
+        for(const auto& triangleVertexKeys : mTrianglesVertexKeys)
+            graph.AddTriangle
             ({
-                .vertexKeys =
-                {
-                    interface[0] + baseVertexIndex,
-                    interface[1] + baseVertexIndex,
-                    interface[2] + baseVertexIndex
-                }
+                triangleVertexKeys[0] + baseVertexIndex,
+                triangleVertexKeys[1] + baseVertexIndex,
+                triangleVertexKeys[2] + baseVertexIndex
             });
 
         for(std::size_t i = 0; i < 4; ++i)
-            graph.orientedTriangles.push_back
+            graph.AddOrientedTriangle
             ({
                 .triangleKey = baseOrientedTriangleIndex + i,
                 .type = config.sides[i].type,
-                .inverted = config.sides[i].flip
+                .flip = config.sides[i].flip
             });
 
-        graph.nodes.push_back(
-            Types::Level::Graph::Node
+        graph.AddNode
+        ({
+            .type = Types::Level::Graph::Node::Type::cTetrahedron,
+            .orientedTriangleKeys = Types::Level::Graph::Node::OrientedTriangleKeys
             {
-                .type = Types::Level::Graph::Node::Type::cTetrahedron,
-                .orientedTriangleKeys = Types::Level::Graph::Node::OrientedTriangleKeys
-                {
-                    baseOrientedTriangleIndex,
-                    baseOrientedTriangleIndex + 1,
-                    baseOrientedTriangleIndex + 2,
-                    baseOrientedTriangleIndex + 3
-                }
+                baseOrientedTriangleIndex,
+                baseOrientedTriangleIndex + 1,
+                baseOrientedTriangleIndex + 2,
+                baseOrientedTriangleIndex + 3
             }
-        );
+        });
     }
 }

@@ -42,6 +42,8 @@ namespace MaxDoF::Common::World
         Game::Audio::AudioEngine mAudioEngine;
         std::vector<int> staticAudioMeshIds;
         Game::Audio::SourceId ambientSource = Game::Audio::cInvalidSourceId;
+        Game::Audio::SourceId mEngineSourceId = Game::Audio::cInvalidSourceId;
+
 #endif
         JPH::BodyID mShipBodyId{JPH::BodyID::cInvalidBodyID};
     public:
@@ -49,12 +51,12 @@ namespace MaxDoF::Common::World
         ~Manager();
 
 #ifdef MAXDOF_CLIENT_BUILD
-        Game::World::Graphics& getGraphics(){ return mGraphics; }
+        Game::World::Graphics& getGraphics() noexcept { return mGraphics; }
         void addMeshToAudio(const Types::MeshData &meshData);
         void CreateSound(const JPH::RVec3& position, Game::Types::Sounds);
         void initAudio();
 #endif
-        JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysics.getPhysicsSystem(); }
+        JPH::PhysicsSystem* getPhysicsSystem() noexcept { return mPhysics.getPhysicsSystem(); }
         void initialize(unsigned int maxBodies);
 
         Types::Entity& createEntity(
@@ -65,8 +67,11 @@ namespace MaxDoF::Common::World
 
         void destroyEntity(JPH::uint32 bodyIndex);
         bool PhysicsHavePlace();
+#ifdef MAXDOF_CLIENT_BUILD
+        void SetEngineThrust(float thrust, bool engage = true);
+#endif
         void update(float timeSinceLast, const JPH::BodyID& shipBodyId);
-        JPH::BodyInterface* getBodyInterface() { return mPhysics.getBodyInterface(); }
+        JPH::BodyInterface* getBodyInterface() noexcept { return mPhysics.getBodyInterface(); }
         Types::Entity& createCube(
             Types::Entity::Type userData,
             const Types::PhysPose&, const JPH::Vec3& halfSize,

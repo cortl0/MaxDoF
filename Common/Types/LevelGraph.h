@@ -45,7 +45,7 @@ namespace MaxDoF::Common::Types::Level
 
             // false — прямой обход вершин (как заложено в Triangle)
             // true — инвертированный обход вершин (зеркальный разворот)
-            bool inverted{};
+            bool flip{};
         };
 
         struct Node
@@ -55,11 +55,12 @@ namespace MaxDoF::Common::Types::Level
 
             enum class Type
             {
+                cUnDefined,
                 cAntiprism,
                 cTetrahedron
             };
 
-            Type type;
+            Type type{};
             OrientedTriangleKeys orientedTriangleKeys;
             bool inverted{};
             bool invertedAntiprismEnd{};
@@ -77,7 +78,27 @@ namespace MaxDoF::Common::Types::Level
         Vertices vertices; // Сквозной массив точек
 
     public:
-///*
+        inline void AddTriangleVertices(const Triangle::Vertices& TriangleVertices)
+        {
+            for(const auto vertex : TriangleVertices)
+                vertices.push_back(vertex);
+        }
+
+        inline void AddTriangle(const Triangle::VertexKeys& triangleVertexKeys)
+        {
+            triangles.push_back({.vertexKeys{triangleVertexKeys}});
+        }
+
+        inline void AddOrientedTriangle(const OrientedTriangle& orientedTriangle)
+        {
+            orientedTriangles.push_back(orientedTriangle);
+        }
+
+        inline void AddNode(const Node& node)
+        {
+            nodes.push_back(node);
+        }
+
         inline const Vertex& GetVertex(const VertexKey vertexKey) const
         {
             return vertices[vertexKey];
@@ -93,7 +114,7 @@ namespace MaxDoF::Common::Types::Level
             return orientedTriangles[orientedTriangleKey].triangleKey;
         }
 
-        inline const Node::OrientedTriangleKeys& GetOrientedTriangleKeys(const Node::Key nodeKey) const
+        inline const Node::OrientedTriangleKeys& GetNodeOrientedTriangleKeys(const Node::Key nodeKey) const
         {
             return nodes[nodeKey].orientedTriangleKeys;
         }
@@ -102,7 +123,7 @@ namespace MaxDoF::Common::Types::Level
         {
             return nodes[nodeKey];
         }
-//*/
+
         inline Triangle::Vertices GetTriangleVertices(const Triangle::Key triangleKey) const
         {
             return
@@ -112,15 +133,5 @@ namespace MaxDoF::Common::Types::Level
                 vertices[triangles[triangleKey].vertexKeys[2]]
             };
         }
-// inline const Triangle::VertexKeys& GetTriangleVertexKeys(const Triangle::Key triangleKey) const
-//         inline Triangle::Vertices GetInvertedTriangleVertices(const Triangle::Key triangleKey) const
-//         {
-//             return
-//             {
-//                 vertices[triangles[triangleKey].vertexKeys[0]],
-//                 vertices[triangles[triangleKey].vertexKeys[1]],
-//                 vertices[triangles[triangleKey].vertexKeys[2]]
-//             };
-//         }
     };
 }

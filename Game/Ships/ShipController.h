@@ -8,10 +8,10 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Math/Quat.h>
 #include <Jolt/Math/Vec3.h>
-#include <OgreVector3.h>
 
-#include "Common/Ships/Ship.h"
+#include "Game/Ships/ControllerData.h"
 #include "Common/Types/Telemetry.h"
+#include "Common/Ships/Ship.h"
 
 // Добавляем опережающие объявления Jolt, чтобы не перегружать заголовок
 namespace JPH {
@@ -40,15 +40,6 @@ namespace MaxDoF::Game::Ships
         JPH::Quat mShipPreviousOrientation{JPH::Quat::sIdentity()};
 
     public:
-        struct ControllerData
-        {
-            float mouse_dx{0.0f};
-            float mouse_dy{0.0f};
-            bool leftMouseButtonPressed{false};
-            bool rightMouseButtonPressed{false};
-            Ogre::Vector3 moveDir{Ogre::Vector3::ZERO};
-        };
-
         ShipController(Common::Ships::Ship&, JPH::BodyInterface* bodyInterface);
         Common::Types::Telemetry getTelemetry(float timeDelta);
         bool update( float timeSinceLast, const ControllerData& mControllerData );

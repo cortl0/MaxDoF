@@ -15,7 +15,7 @@ namespace MaxDoF::Game::Input
     class ControllerTranslator
     {
     public:
-        Ships::ShipController::ControllerData translate(
+        Ships::ControllerData translate(
             const KeyboardController* keyboard,
             const MouseController* mouse
         );

@@ -46,8 +46,8 @@ namespace MaxDoF::Common::World
         JPH::BodyID createMesh(const Types::MeshData&);
         JPH::BodyID createSphere(Types::Entity::Type userData, const Types::PhysPose& pose, float radius, float mass, bool onCCD);
         void destroyBody(JPH::BodyID);
-        JPH::BodyInterface* getBodyInterface() { return mBodyInterface; }
-        JPH::PhysicsSystem* getPhysicsSystem(){ return mPhysicsSystem; }
+        JPH::BodyInterface* getBodyInterface() noexcept { return mBodyInterface; }
+        JPH::PhysicsSystem* getPhysicsSystem() noexcept { return mPhysicsSystem; }
         void initialize(unsigned int maxBodies);
         void setBodyInterface(JPH::BodyInterface* bodyInterface) { mBodyInterface = bodyInterface; }
         JPH::BodyID setBodySettings(Types::Entity::Type userData, const JPH::ShapeSettings::ShapeResult& ShapeResult, const Types::PhysPose& pose, float mass, bool dynamic, bool onCCD);

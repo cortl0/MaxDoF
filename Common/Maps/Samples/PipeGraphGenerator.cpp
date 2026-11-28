@@ -11,10 +11,77 @@
 
 namespace MaxDoF::Common::Maps
 {
+    void PipeGraphGenerator::GenerateGraph(Types::Level::Graph& graph)
+    {
+        const double pipePos = 15.0;
+        const double pipePosZ = 75.0;
+
+        Maps::PipeGraphGenerator::GenerateGraph(graph, {pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+            false, true,
+        {
+            .begin
+            {
+                .key = graph.orientedTriangles.size()
+            },
+            .end
+            {
+                .key = graph.orientedTriangles.size() + 1
+            },
+            true
+        });
+
+        Maps::PipeGraphGenerator::GenerateGraph(graph, {-pipePos, pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
+            false, true,
+            {
+                .begin
+                {
+                    .key = graph.orientedTriangles.size()
+                },
+                .end
+                {
+                    .key = graph.orientedTriangles.size() + 1
+                },
+                true
+            }
+        );
+
+        Maps::PipeGraphGenerator::GenerateGraph(graph, {pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, 0.25881905f, 0.96592583f},
+            true, false,
+            {
+                .begin
+                {
+                    .key = graph.orientedTriangles.size()
+                },
+                .end
+                {
+                    .key = graph.orientedTriangles.size() + 1
+                },
+                false
+            }
+        );
+
+        Maps::PipeGraphGenerator::GenerateGraph(graph, {-pipePos, -pipePos, -pipePosZ}, JPH::Quat{0.0f, 0.0f, -0.25881905f, 0.96592583f},
+            true, false,
+            {
+                .begin
+                {
+                    .key = graph.orientedTriangles.size()
+                },
+                .end
+                {
+                    .key = graph.orientedTriangles.size() + 1
+                },
+                false
+            }
+        );
+    }
+
     void PipeGraphGenerator::GenerateGraph(
         Types::Level::Graph& graph,
         JPH::RVec3 halfSize,
         JPH::Quat endRotation,
+        bool beginFlip,
+        bool endFlip,
         const LevelGraphs::Pipe::Config& config
     )
     {
@@ -29,8 +96,9 @@ namespace MaxDoF::Common::Maps
         triangle0.Translate(pBegin + halfSize);
         triangle1.RotateAroundPivot(pBegin, endRotation);
         triangle1.Translate(pEnd + halfSize);
-        triangle0.FillGraphVerticesAndCreateInterface(graph, {config.begin.type, config.begin.flip});
-        triangle1.FillGraphVerticesAndCreateInterface(graph, {config.end.type, config.end.flip});
+        triangle0.FillGraph(graph, {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, beginFlip});
+        triangle1.FillGraph(graph, {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, endFlip});
         pipe.FillGraph(graph, config);
     }
+
 }

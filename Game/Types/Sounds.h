@@ -10,6 +10,7 @@ namespace MaxDoF::Game::Types
     enum class Sounds : int
     {
         cBarrel,
+        cEngine,
         cExplosion,
         cLaunch
     };

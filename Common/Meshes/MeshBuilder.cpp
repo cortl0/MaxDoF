@@ -264,7 +264,7 @@ namespace MaxDoF::Common::Meshes
                 MeshBuilder::UVVertex p1{ pos1, len1, 0.0f };
                 MeshBuilder::UVVertex p2{ pos2, u2,   v2   };
 
-                if (orientedInterface.inverted)
+                if (orientedInterface.flip)
                     AddTriangle(meshData, p0, p2, p1);
                 else
                     AddTriangle(meshData, p0, p1, p2);

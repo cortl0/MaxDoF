@@ -12,12 +12,12 @@ namespace MaxDoF::Common::LevelGraphs
     void Triangle::SetVertices(const Types::Level::Graph& graph, const Types::Level::Graph::Triangle& triangle)
     {
         for(std::size_t i = 0; i < 3; ++i)
-            vertices[i] = graph.vertices[triangle.vertexKeys[i]];
+            mVertices[i] = graph.vertices[triangle.vertexKeys[i]];
     }
 
     JPH::RVec3 Triangle::CalculateMiddle() const
     {
-        return CalculateMiddle(vertices);
+        return CalculateMiddle(mVertices);
     }
 
     JPH::RVec3 Triangle::CalculateMiddle(const Types::Level::Graph::Triangle::Vertices& v) const
@@ -32,7 +32,7 @@ namespace MaxDoF::Common::LevelGraphs
 
     JPH::RVec3 Triangle::CalculateNormal() const
     {
-        return CalculateNormal(vertices);
+        return CalculateNormal(mVertices);
     }
 
     JPH::RVec3 Triangle::CalculateNormal(const Types::Level::Graph::Triangle::Vertices& v) const
@@ -59,27 +59,21 @@ namespace MaxDoF::Common::LevelGraphs
         return JPH::Quat::sRotation(normalized_axis, radians);
     }
 
-    void Triangle::FillGraphVertices(Types::Level::Graph& graph) const
+    void Triangle::FillGraph(Types::Level::Graph& graph, const Config& config) const
     {
-        for(const auto vertex : vertices)
-            graph.vertices.push_back(vertex);
-    }
+        graph.AddTriangleVertices(mVertices);
 
-    void Triangle::FillGraphVerticesAndCreateInterface(Types::Level::Graph& graph, const Config& config) const
-    {
-        const auto baseVertexIndex = graph.vertices.size();
-        FillGraphVertices(graph);
-
-        graph.triangles.push_back
+        graph.AddTriangle
         ({
-            .vertexKeys = {baseVertexIndex, baseVertexIndex + 1, baseVertexIndex + 2}
+            graph.vertices.size() - 3,
+            graph.vertices.size() - 2,
+            graph.vertices.size() - 1
         });
 
-        graph.orientedTriangles.push_back
-        ({
+        graph.AddOrientedTriangle({
             .triangleKey = graph.triangles.size() - 1,
             .type = config.type,
-            .inverted = config.flip
+            .flip = config.flip
         });
     }
 
@@ -93,13 +87,13 @@ namespace MaxDoF::Common::LevelGraphs
             float angle = (120.0f / 180.0f * JPH::JPH_PI * static_cast<float>(i));
             float x2d = radius * std::cos(angle);
             float y2d = radius * std::sin(angle);
-            vertices[i] = x2d * U + y2d * V;
+            mVertices[i] = x2d * U + y2d * V;
         }
     }
 
     void Triangle::Rotate(const JPH::Quat& rotation)
     {
-        for(auto& vertex : vertices)
+        for(auto& vertex : mVertices)
             vertex = JPH::RVec3(rotation * JPH::Vec3(vertex));
     }
 
@@ -112,7 +106,7 @@ namespace MaxDoF::Common::LevelGraphs
 
     void Triangle::Scale(double factor)
     {
-        for(auto& vertex : vertices)
+        for(auto& vertex : mVertices)
             vertex *= factor;
     }
 
@@ -126,6 +120,6 @@ namespace MaxDoF::Common::LevelGraphs
     void Triangle::Translate(JPH::RVec3 offset)
     {
         for(std::size_t i = 0; i < 3; ++i)
-            vertices[i] += offset;
+            mVertices[i] += offset;
     }
 }

@@ -18,16 +18,14 @@
             struct Side
             {
                 Types::Level::Graph::Triangle::Key key;
-                Types::Level::Graph::OrientedTriangle::Type type;
                 bool flip{};
-                bool flipAntiprismSide{};
             };
 
-            bool flip;
             Side begin;
             Side end;
+            bool flip{};
         };
 
-        void FillGraph(Types::Level::Graph&, const Config&);
+        void FillGraph(Types::Level::Graph&, const Config&) const;
     };
 }

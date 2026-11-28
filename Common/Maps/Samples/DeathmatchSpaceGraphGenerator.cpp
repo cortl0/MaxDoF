@@ -50,19 +50,15 @@ namespace MaxDoF::Common::Maps
             const auto& tetrahedronNode1 = graph.nodes[nodesBaseIndex + 1];
             pipe.FillGraph(graph,
                 {
-                    true,
                     .begin
                     {
-                        .key = tetrahedronNode0.orientedTriangleKeys[i],
-                        .type = Types::Level::Graph::OrientedTriangle::Type::cUnDefined,
-                        .flip = false
+                        .key = tetrahedronNode0.orientedTriangleKeys[i]
                     },
                     .end
                     {
-                        .key = tetrahedronNode1.orientedTriangleKeys[i],
-                        .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
-                        .flip = true
-                    }
+                        .key = tetrahedronNode1.orientedTriangleKeys[i]
+                    },
+                    true
                 }
             );
         }

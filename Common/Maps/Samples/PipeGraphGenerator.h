@@ -15,10 +15,13 @@ namespace MaxDoF::Common::Maps
     public:
         PipeGraphGenerator() = delete;
 
+        static void GenerateGraph(Types::Level::Graph&);
         static void GenerateGraph(
             Types::Level::Graph&,
             JPH::RVec3 halfSize,
             JPH::Quat endRotation,
+            bool beginFlip,
+            bool endFlip,
             const LevelGraphs::Pipe::Config&
         );
     };

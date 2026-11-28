@@ -13,6 +13,10 @@
 #include "Common/Types/Telemetry.h"
 #include "Common/World/Manager.h"
 
+#ifdef MAXDOF_CLIENT_BUILD
+#include "Game/Ships/ControllerData.h"
+#endif
+
 namespace MaxDoF::Common::Ships
 {
     class Ship {
@@ -32,7 +36,9 @@ namespace MaxDoF::Common::Ships
         void connectCameraToShip(Ogre::Camera*);
 #endif
         const Types::Entity& getEntity() const { return mEntity; }
-        void update(float timeSinceLastFrame, const Types::Telemetry&);
+#ifdef MAXDOF_CLIENT_BUILD
+        void update(float timeSinceLastFrame, const Types::Telemetry&, const Game::Ships::ControllerData&);
+#endif
         void CreateBullet(float timeSinceLast, bool needCreate);
         Types::Entity& createShipEntity();
     };

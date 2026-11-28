@@ -10,7 +10,7 @@
 
 namespace MaxDoF::Common::LevelGraphs
 {
-    void Pipe::FillGraph(Types::Level::Graph& graph, const Config& config)
+    void Pipe::FillGraph(Types::Level::Graph& graph, const Config& config) const
     {
         graph.nodes.push_back(
             {
@@ -21,7 +21,7 @@ namespace MaxDoF::Common::LevelGraphs
                     config.end.key
                 },
                 .inverted = config.flip,
-                .invertedAntiprismEnd = config.end.flipAntiprismSide
+                .invertedAntiprismEnd = config.end.flip
             }
         );
     }

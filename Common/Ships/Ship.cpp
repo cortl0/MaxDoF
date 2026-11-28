@@ -25,7 +25,7 @@ namespace MaxDoF::Common::Ships
         // lightNode->setPosition(Ogre::Vector3(0.0f, 0.0f, -0.4f));
         light = mSceneMgr->createLight();
         light->setType(Ogre::Light::LT_SPOTLIGHT);
-        light->setPowerScale(5.0f);
+        light->setPowerScale(25.0f);
         constexpr float lightRadius = 500.0f;
         light->setAttenuation(lightRadius, 1.0f, 0.0f, 0.01f);
         light->setSpotlightRange(Ogre::Degree(0), Ogre::Degree(60));
@@ -55,13 +55,28 @@ namespace MaxDoF::Common::Ships
     }
 #endif
 
-    void Ship::update(float timeSinceLastFrame, const Types::Telemetry& telemetry)
-    {
 #ifdef MAXDOF_CLIENT_BUILD
+    void Ship::update(float timeSinceLastFrame, const Types::Telemetry& telemetry, const Game::Ships::ControllerData& mControllerData )
+    {
         mDashboard.update(telemetry);
-#endif
+
+        if(mWorldManager.PhysicsHavePlace())
+        {
+            JPH::BodyInterface* bodyInterface = mWorldManager.getBodyInterface();
+            // JPH::RVec3 shipPos = bodyInterface->GetPosition(mEntity.physId);
+            JPH::Quat shipRot = bodyInterface->GetRotation(mEntity.physId);
+            // JPH::Vec3 localForward = -JPH::Vec3::sAxisZ();
+            JPH::Vec3 localForward{mControllerData.moveDir.x, mControllerData.moveDir.y, mControllerData.moveDir.z};
+            // if(localForward.Length() != 0.0f)
+            {
+                JPH::Vec3 globalForwardDirection = shipRot * localForward;
+                Types::PhysPose projectilePose{/*shipPos +*/ -JPH::RVec3(globalForwardDirection) * 0.5f, shipRot};
+                mWorldManager.CreateSound(projectilePose.position, Game::Types::Sounds::cEngine);
+            }
+        }
     }
 
+#endif
     void Ship::CreateBullet(float timeSinceLast, bool needCreate)
     {
         const float bulletMass{1.0f};

@@ -43,22 +43,18 @@ namespace MaxDoF::Common::Maps
                     graph.orientedTriangles[tetrahedronNode.orientedTriangleKeys[i]].triangleKey]
             );
             triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);
-            triangle.FillGraphVerticesAndCreateInterface(graph, {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false});
+            triangle.FillGraph(graph, {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false});
             pipe.FillGraph(graph,
                 {
-                    false,
                     .begin
                     {
-                        .key = tetrahedronNode.orientedTriangleKeys[i],
-                        .type = Types::Level::Graph::OrientedTriangle::Type::cUnDefined,
-                        .flip = true
+                        .key = tetrahedronNode.orientedTriangleKeys[i]
                     },
                     .end
                     {
-                        .key = graph.orientedTriangles.size() - 1,
-                        .type = Types::Level::Graph::OrientedTriangle::Type::cSolidRock,
-                        .flip = false
-                    }
+                        .key = graph.orientedTriangles.size() - 1
+                    },
+                    false
                 }
             );
         }

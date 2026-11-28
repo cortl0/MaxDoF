@@ -12,11 +12,11 @@
 
 namespace MaxDoF::Game::Input
 {
-    Ships::ShipController::ControllerData ControllerTranslator::translate(
+    Ships::ControllerData ControllerTranslator::translate(
         const KeyboardController* keyboard,
         const MouseController* mouse)
     {
-        Ships::ShipController::ControllerData outData;
+        Ships::ControllerData outData;
 
         KeyboardController::KeyboardRawState keys = keyboard->getRawState();
 

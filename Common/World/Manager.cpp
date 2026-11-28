@@ -8,6 +8,7 @@
 #ifdef MAXDOF_CLIENT_BUILD
 #include <faust/gui/meta.h>
 #include "Barrel.h"
+#include "Engine.h"
 #include "Explosion.h"
 #include "Launch.h"
 #include "Game/Utils/Converters.h"
@@ -40,6 +41,17 @@ namespace MaxDoF::Common::World
         initAudio();
 #endif
     }
+
+#ifdef MAXDOF_CLIENT_BUILD
+    void Manager::SetEngineThrust(float thrust, bool engage)
+    {
+        if (mEngineSourceId == Game::Audio::cInvalidSourceId)
+            return;
+
+        mAudioEngine.SetSourceParam(mEngineSourceId, "thrust", thrust);
+        mAudioEngine.SetSourceParam(mEngineSourceId, "engage", engage ? 1.0f : 0.0f);
+    }
+#endif
 
     void Manager::update(float timeSinceLast, const JPH::BodyID& shipBodyId)
     {
@@ -249,22 +261,49 @@ namespace MaxDoF::Common::World
         Game::Audio::SourceId sourceId{Game::Audio::cInvalidSourceId};
         switch (soundId)
         {
-        case Game::Types::Sounds::cExplosion:
-            sourceId = mAudioEngine.SpawnSource(std::make_unique<Explosion>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
-            mAudioEngine.SetSourceParam(sourceId, "gain", 0.9f);
-            mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
-            duration = 2.5f;
-            break;
         case Game::Types::Sounds::cBarrel:
             sourceId = mAudioEngine.SpawnSource(std::make_unique<Barrel>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
-            mAudioEngine.SetSourceParam(sourceId, "gain", 0.9f);
+            mAudioEngine.SetSourceParam(sourceId, "gain", 1.0f);
             mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
             duration = 1.0f;
+            break;
+        case Game::Types::Sounds::cEngine:
+            if (mEngineSourceId != Game::Audio::cInvalidSourceId)
+            {
+                if(position.Length() != 0.0f)
+                {
+                    //mAudioEngine.SetSourceParam(mEngineSourceId, "thrust", 1.0f); // Мощность тяги (от 0.0 до 1.0)
+                    mAudioEngine.SetSourceParam(mEngineSourceId, "gain", 0.1f);  // Общая громкость
+                }
+                else
+                {
+                    //mAudioEngine.SetSourceParam(mEngineSourceId, "thrust", 1.0f); // Мощность тяги (от 0.0 до 1.0)
+                    mAudioEngine.SetSourceParam(mEngineSourceId, "gain", 0.0f);  // Общая громкость
+                }
+
+                mAudioEngine.SetSourcePosition
+                (
+                    mEngineSourceId,
+                    {
+                        static_cast<float>(position.GetX()),
+                        static_cast<float>(position.GetY()),
+                        static_cast<float>(position.GetZ())
+                    }
+                );
+            }
+            return;
+            break;
+
+        case Game::Types::Sounds::cExplosion:
+            sourceId = mAudioEngine.SpawnSource(std::make_unique<Explosion>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
+            mAudioEngine.SetSourceParam(sourceId, "gain", 1.0f);
+            mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
+            duration = 2.5f;
             break;
         case Game::Types::Sounds::cLaunch:
             sourceId = mAudioEngine.SpawnSource(std::make_unique<Launch>(), {diff.GetX(), diff.GetY(), diff.GetZ()});
             mAudioEngine.SetSourceParam(sourceId, "pitch", 3860.0f);
-            mAudioEngine.SetSourceParam(sourceId, "gain", 0.15f);
+            mAudioEngine.SetSourceParam(sourceId, "gain", 0.25f);
             mAudioEngine.SetSourceParam(sourceId, "gate", 1.0f);
             duration = 0.5f;
             break;
@@ -285,6 +324,11 @@ namespace MaxDoF::Common::World
         mAudioEngine.CommitScene();
         mAudioEngine.Update({0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
         mAudioEngine.Start();
+
+        mEngineSourceId = mAudioEngine.SpawnSource(std::make_unique<Engine>(), {0.0f, 0.0f, 2.0f});
+        mAudioEngine.SetSourceParam(mEngineSourceId, "gain", 0.0f);
+        mAudioEngine.SetSourceParam(mEngineSourceId, "thrust", 1.0f);
+        mAudioEngine.SetSourceParam(mEngineSourceId, "engage", 1.0f);
     }
 #endif
 

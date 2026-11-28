@@ -44,7 +44,7 @@ namespace MaxDoF::Game
 
     void MdfGame::createScene01()
     {
-        const int scene{1};
+        const int scene{0};
         switch (scene)
         {
         case 0:
@@ -80,7 +80,7 @@ namespace MaxDoF::Game
         );
     }
 
-    Ogre::String GetKeysString(const Ships::ShipController::ControllerData& d)
+    Ogre::String GetKeysString(const Ships::ControllerData& d)
     {
         Ogre::String s;
 
@@ -118,14 +118,14 @@ namespace MaxDoF::Game
 
         {
             if(d.leftMouseButtonPressed)
-                s += "LBM ";
+                s += "LMB ";
             else
-                s += "lbm ";
+                s += "lmb ";
 
             if(d.rightMouseButtonPressed)
-                s += "RBM\n";
+                s += "RMB\n";
             else
-                s += "rbm\n";
+                s += "rmb\n";
         }
 
         {
@@ -159,7 +159,7 @@ namespace MaxDoF::Game
 
     void MdfGame::update( float timeSinceLast )
     {
-        auto data = mInputTranslator.translate( &mKeyboardController, &mMouseController );
+        const auto data = mInputTranslator.translate(&mKeyboardController, &mMouseController);
         mMouseController.reset();
 
         if( mShipController )
@@ -174,7 +174,7 @@ namespace MaxDoF::Game
             auto telemetry = mShipController->getTelemetry( timeSinceLast );
             Ogre::String keyPressed = GetKeysString(data);
             mTextOverleyManager.generateDebugText(timeSinceLast, telemetry, keyPressed);
-            mScene->GetShip().update( timeSinceLast, telemetry );
+            mScene->GetShip().update(timeSinceLast, telemetry, data);
         }
 #endif
     }

@@ -35,26 +35,13 @@ namespace MaxDoF::Common::Maps
                 .pipeDiameter      = cPipeDiameter,
                 .maxTurnDeg        = 15.0f,
                 .maxTwistPerSegDeg = 15.0f,
-                .minBendRadius     = cPipeDiameter * 5.0
+                .minBendRadius     = cPipeDiameter * 2.0
             }
         );
 
         LevelGraphs::Triangle triangle;
         LevelGraphs::Pipe pipe;
-        const LevelGraphs::Pipe::Config config
-        {
-            false,
-            .begin
-            {
-                .type = Types::Level::Graph::OrientedTriangle::Type::cOpenSpace,
-                .flip = true
-            },
-            .end
-            {
-                .type = Types::Level::Graph::OrientedTriangle::Type::cOpenSpace,
-                .flip = false
-            }
-        };
+        const LevelGraphs::Pipe::Config config{};
 
         for (std::size_t i = 0; i < plan.poses.size(); ++i)
         {
@@ -63,13 +50,13 @@ namespace MaxDoF::Common::Maps
                 triangle.GenerateRegularTriangleVertices(cPipeRadius);
                 triangle.Translate(plan.poses[i].position);
                 triangle.RotateAroundPivot(plan.poses[i].position, plan.poses[i].orientation);
-                triangle.FillGraphVerticesAndCreateInterface(graph, {config.begin.type, false});
+                triangle.FillGraph(graph, {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, false});
             }
 
             if (i == 1)
             {
                 LevelGraphs::Pipe::Config cfg = config;
-                cfg.begin.key = graph.GetOrientedTriangleKeys(0)[beginTriangleKey];
+                cfg.begin.key = beginTriangleKey;
                 cfg.end.key = graph.orientedTriangles.size() - 1;
                 pipe.FillGraph(graph, cfg);
                 continue;
@@ -79,8 +66,8 @@ namespace MaxDoF::Common::Maps
             {
                 LevelGraphs::Pipe::Config cfg = config;
                 cfg.begin.key = graph.orientedTriangles.size() - 2;
-                cfg.end.key = graph.GetOrientedTriangleKeys(0)[endTriangleKey];
-                cfg.end.flipAntiprismSide = true;
+                cfg.end.key = endTriangleKey;
+                cfg.end.flip = true;
                 pipe.FillGraph(graph, cfg);
             }
             else
@@ -105,21 +92,92 @@ namespace MaxDoF::Common::Maps
     void RaceGenerator::GenerateGraph(Types::Level::Graph& graph)
     {
         const float cArenaRadius = 50.0f;
+        const auto& tetrahedronIndex0 = graph.nodes.size();
         LevelGraphs::Tetrahedron tetrahedron;
+        LevelGraphs::Triangle triangle;
+        LevelGraphs::Pipe pipe;
+
         tetrahedron.GenerateVetrices(JPH::RVec3::sZero(), cArenaRadius);
         tetrahedron.FillGraph(graph,
             {
                 .sides
                 {{
-                    {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, true},
-                    {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, true}
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false},
+                    {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false}
                 }}
             }
         );
 
-        GenerateGraph(graph, 0, 1);
-        GenerateGraph(graph, 2, 3);
+        const auto& pipeIndex0 = graph.nodes.size();
+
+        for (std::size_t i = 0; i < 4; ++i)
+        {
+            const auto& tetrahedronNode = graph.nodes[tetrahedronIndex0];
+            triangle.SetVertices(graph,
+                graph.triangles[
+                    graph.orientedTriangles[tetrahedronNode.orientedTriangleKeys[i]].triangleKey]
+            );
+            triangle.ScaleAroundPivot(triangle.CalculateMiddle(triangle.GetVertices()), 0.5f);
+            triangle.Translate(-triangle.CalculateNormal() * cArenaRadius);
+            triangle.FillGraph(graph, {Types::Level::Graph::OrientedTriangle::Type::cUnDefined, false});
+            pipe.FillGraph(graph,
+                {
+                    .begin
+                    {
+                        .key = tetrahedronNode.orientedTriangleKeys[i]
+                    },
+                    .end
+                    {
+                        .key = graph.orientedTriangles.size() - 1
+                    },
+                    false
+                }
+            );
+        }
+
+        GenerateGraph(graph, 4, 5);
+        GenerateGraph(graph, 6, 7);
+        return;
+
+        const auto& tetrahedronIndex1 = graph.nodes.size();
+        {
+            LevelGraphs::Tetrahedron tetrahedron;
+            tetrahedron.GenerateVetrices(JPH::RVec3::sZero(), cArenaRadius * 6.0f);
+
+            tetrahedron.FillGraph(graph,
+                {
+                    .sides
+                    {{
+                        {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false},
+                        {Types::Level::Graph::OrientedTriangle::Type::cSolidRock, false},
+                        {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, false},
+                        {Types::Level::Graph::OrientedTriangle::Type::cOpenSpace, false}
+                    }}
+                }
+            );
+        }
+
+        for (std::size_t i = 2; i < 4; ++i)
+        {
+            const auto& pipeNode0 = graph.nodes[pipeIndex0 + i];
+            const auto& tetrahedronNode1 = graph.nodes[tetrahedronIndex1];
+            pipe.FillGraph
+            (
+                graph,
+                {
+                    .begin
+                    {
+                        .key = pipeNode0.orientedTriangleKeys[1]
+                    },
+                    .end
+                    {
+                        .key = tetrahedronNode1.orientedTriangleKeys[i]
+                    },
+                    false
+                }
+            );
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace MaxDoF::Common::Scenes
         else
             return;
 
-        createBoxes({0.0, 0.0, 0.0});
+        // createBoxes({0.0, 0.0, 0.0});
 
         Types::Level::Graph graph;
         Types::MeshData meshData;
